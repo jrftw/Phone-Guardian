@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ContentView: View {
+struct DashboardView: View {
     @AppStorage("showBattery") private var showBattery = true
     @AppStorage("showDevice") private var showDevice = true
     @AppStorage("showCPU") private var showCPU = true
@@ -10,16 +10,17 @@ struct ContentView: View {
     @AppStorage("showSensors") private var showSensors = true
 
     var body: some View {
-        TabView {
-            DashboardView()
-                .tabItem {
-                    Label("Dashboard", systemImage: "house")
-                }
-
-            SettingsView()
-                .tabItem {
-                    Label("Settings", systemImage: "gear")
-                }
+        ScrollView {
+            VStack(spacing: 20) {
+                if showDevice { DeviceInfoView() }
+                if showBattery { BatteryInfoView() }
+                if showCPU { CPUInfoView() }
+                if showRAM { RAMInfoView() }
+                if showStorage { StorageInfoView() }
+                if showNetwork { NetworkInfoView() }
+                if showSensors { SensorInfoView() }
+            }
+            .padding()
         }
     }
 }
