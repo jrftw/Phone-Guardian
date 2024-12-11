@@ -20,7 +20,7 @@ struct DashboardView: View {
                     }
             } else {
                 VStack {
-                    if !(iapManager.hasGoldSubscription || iapManager.hasToolsSubscription) {
+                    if !(iapManager.hasGoldSubscription || iapManager.hasToolsSubscription) && !iapManager.hasRemoveAds {
                         AdBannerView()
                             .frame(height: 50)
                             .padding(.bottom, 10)
@@ -32,7 +32,7 @@ struct DashboardView: View {
                                 DashboardModuleCardView(moduleName: module.name, moduleContent: module.view)
                                     .padding(.horizontal)
 
-                                if !(iapManager.hasGoldSubscription || iapManager.hasToolsSubscription) {
+                                if !(iapManager.hasGoldSubscription || iapManager.hasToolsSubscription) && !iapManager.hasRemoveAds {
                                     AdBannerView()
                                         .frame(height: 50)
                                         .padding(.vertical, 10)

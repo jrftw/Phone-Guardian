@@ -1,3 +1,5 @@
+// ToolsView.swift
+
 import SwiftUI
 import os
 
@@ -70,7 +72,6 @@ struct ToolsView: View {
                             EmptyView()
                         }
                     } else {
-                        // Check environment before showing "Watch Ad"
                         if !PGEnvironment.isSimulator && !PGEnvironment.isTestFlight {
                             Button(action: {
                                 watchAdForFeature(feature.name)
@@ -83,7 +84,6 @@ struct ToolsView: View {
                                     .cornerRadius(5)
                             }
                         } else {
-                            // In simulator or TestFlight, no "Watch Ad" - just locked
                             Text("Locked")
                                 .foregroundColor(.gray)
                         }
@@ -138,3 +138,4 @@ struct ToolsView: View {
         }
     }
 }
+

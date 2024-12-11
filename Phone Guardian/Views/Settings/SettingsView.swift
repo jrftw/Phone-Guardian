@@ -14,7 +14,7 @@ struct SettingsView: View {
     var body: some View {
         VStack(spacing: 0) {
             List {
-                if !(iapManager.hasGoldSubscription || iapManager.hasToolsSubscription) {
+                if !(iapManager.hasGoldSubscription || iapManager.hasToolsSubscription) && !iapManager.hasRemoveAds {
                     AdBannerView()
                         .frame(height: 50)
                         .listRowInsets(EdgeInsets())
@@ -27,10 +27,7 @@ struct SettingsView: View {
                 }
 
                 Section(header: Text("General Settings")) {
-                    GeneralSectionView(
-                        updateFrequency: $updateFrequency,
-                        enableLogging: $enableLogging
-                    )
+                    GeneralSectionView(updateFrequency: $updateFrequency, enableLogging: $enableLogging)
                 }
 
                 Section(header: Text("Appearance")) {

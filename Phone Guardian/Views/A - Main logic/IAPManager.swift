@@ -1,3 +1,5 @@
+// IAPManager.swift
+
 import Foundation
 import StoreKit
 import os
@@ -9,7 +11,7 @@ class IAPManager: ObservableObject {
 
     @Published var hasGoldSubscription: Bool = false
     @Published var hasToolsSubscription: Bool = false
-    @Published var hasRemoveAds: Bool = false // New boolean for remove ads add-on
+    @Published var hasRemoveAds: Bool = false
 
     var hasGoldAccess: Bool {
         return hasGoldSubscription
@@ -17,7 +19,7 @@ class IAPManager: ObservableObject {
 
     private let goldProductID = "com.phoneguardian.gold"
     private let toolsProductID = "com.phoneguardian.tools"
-    private let removeAdsProductID = "com.phoneguardian.removeads" // New product ID
+    private let removeAdsProductID = "com.phoneguardian.removeads"
 
     private var updatesTask: Task<Void, Never>?
 
@@ -50,10 +52,8 @@ class IAPManager: ObservableObject {
 
     func restorePurchases() async {
         do {
-            logger.info("Attempting to restore purchases...")
             try await AppStore.sync()
             await updatePurchasedProducts()
-            logger.info("Restore completed successfully.")
         } catch {
             logger.error("Restore purchases error: \(error.localizedDescription)")
         }
@@ -70,16 +70,14 @@ class IAPManager: ObservableObject {
     private func handle(transactionResult: VerificationResult<Transaction>) async {
         switch transactionResult {
         case .verified(let transaction):
-            logger.info("Verified transaction for product ID: \(transaction.productID)")
             await transaction.finish()
             await updatePurchasedProducts()
         case .unverified:
-            logger.error("Unverified transaction detected, ignoring.")
+            break
         }
     }
 
     private func updatePurchasedProducts() async {
-        logger.info("Updating purchased products...")
         var hasGold = false
         var hasTools = false
         var hasAdsRemoved = false
@@ -95,7 +93,6 @@ class IAPManager: ObservableObject {
                 case toolsProductID:
                     hasTools = true
                 case removeAdsProductID:
-                    // remove ads is a non-consumable, once purchased always true
                     hasAdsRemoved = true
                 default:
                     break

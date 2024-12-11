@@ -1,3 +1,5 @@
+// AddOnsView.swift
+
 import SwiftUI
 import os
 
@@ -14,7 +16,7 @@ struct AddOnsView: View {
                 Picker("Add-Ons", selection: $selection) {
                     Text("Tools").tag("Tools")
                     Text("Gold").tag("Gold")
-                    Text("Remove Ads").tag("Remove Ads") // New tab for Remove Ads
+                    Text("Remove Ads").tag("Remove Ads")
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()
@@ -116,12 +118,10 @@ struct AddOnsView: View {
     }
 
     private func showAdForFeature(_ feature: AdFeatureUnlock) {
-        // Only show ads if remove ads not purchased
         guard !iapManager.hasRemoveAds else {
             feature.completion(false)
             return
         }
-
         guard InterstitialAdHandler.shared.isAdReady else {
             logger.info("Ad not ready, cannot show ad for feature: \(feature.featureName)")
             feature.completion(false)
