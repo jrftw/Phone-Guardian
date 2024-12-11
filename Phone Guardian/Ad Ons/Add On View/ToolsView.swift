@@ -72,7 +72,7 @@ struct ToolsView: View {
                             EmptyView()
                         }
                     } else {
-                        if !PGEnvironment.isSimulator && !PGEnvironment.isTestFlight {
+                        if !PGEnvironment.isSimulator && !PGEnvironment.isTestFlight && InterstitialAdHandler.shared.isAdReady {
                             Button(action: {
                                 watchAdForFeature(feature.name)
                             }) {
@@ -138,4 +138,3 @@ struct ToolsView: View {
         }
     }
 }
-
