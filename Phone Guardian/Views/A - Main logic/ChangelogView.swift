@@ -28,6 +28,8 @@ struct ChangelogView: View {
                           VStack(alignment: .leading, spacing: 5) {
                               Text("**Build 1**:")
                               Text("• Bug fixes with face ID not being reconized on iPhone 15 Pro Max")
+                              Text("**Build 2**:")
+                              Text("• Bug fixes with ad not showing and unlocking features")
                           }
                       }
             // New Section: Version 1.08 - Build 1
