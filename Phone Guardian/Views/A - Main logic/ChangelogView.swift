@@ -24,12 +24,14 @@ struct ChangelogView: View {
                           }
                       }
             // New Section: Version 1.09 - Build 1
-                      Section(header: Text("Version 1.09 - Builds 1")) {
+                      Section(header: Text("Version 1.09 - Builds 1 - 3")) {
                           VStack(alignment: .leading, spacing: 5) {
                               Text("**Build 1**:")
                               Text("• Bug fixes with face ID not being reconized on iPhone 15 Pro Max")
                               Text("**Build 2**:")
                               Text("• Bug fixes with ad not showing and unlocking features")
+                              Text("**Build 3**:")
+                              Text("• Bug fixes with watch ad not showing and unlocking features correctly")
                           }
                       }
             // New Section: Version 1.08 - Build 1
