@@ -1,3 +1,5 @@
+// VideoAdView.swift
+
 import SwiftUI
 import GoogleMobileAds
 import os
@@ -25,7 +27,7 @@ struct VideoAdView: View {
             Color.black.ignoresSafeArea()
             if !isTestFlightOrSimulator {
                 if isAdLoaded {
-                    Text("Ad Loaded. Presenting...")
+                    Text("Presenting Ad...")
                         .foregroundColor(.white)
                         .onAppear {
                             showRewardedAd()
@@ -35,7 +37,6 @@ struct VideoAdView: View {
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 }
             } else {
-                // No ads in test flight or simulator
                 Text("No Ads in test environment.")
                     .foregroundColor(.white)
                     .onAppear {
@@ -55,10 +56,8 @@ struct VideoAdView: View {
 
     private func loadRewardedAd() {
         let request = GADRequest()
-        GADRewardedAd.load(withAdUnitID:"ca-app-pub-6815311336585204/REWARDED_AD_UNIT_ID",
-                           request: request) { ad, error in
-            if let error = error {
-                logger.error("Failed to load rewarded ad: \(error.localizedDescription)")
+        GADRewardedAd.load(withAdUnitID:"ca-app-pub-6815311336585204/5224354917", request: request) { ad, error in
+            if error != nil {
                 DispatchQueue.main.async {
                     onAdDismissed(false)
                     dismiss()
@@ -80,10 +79,7 @@ struct VideoAdView: View {
             dismiss()
             return
         }
-
         rewardedAd.present(fromRootViewController: rootViewController) {
-            // User earned reward callback
-            // For simplicity, we treat ad shown successfully as onAdDismissed(true)
             onAdDismissed(true)
             dismiss()
         }

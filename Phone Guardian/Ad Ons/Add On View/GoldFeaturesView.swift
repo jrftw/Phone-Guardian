@@ -1,3 +1,5 @@
+// GoldFeaturesView.swift
+
 import SwiftUI
 import os
 
@@ -55,7 +57,6 @@ struct GoldFeaturesView: View {
                     Spacer()
 
                     if feature.name == "Ad-Free Experience" {
-                        // If unlocked or user has Gold (unlocked anyway)
                         if unlocked {
                             Text("Enabled")
                                 .foregroundColor(.green)
@@ -64,7 +65,6 @@ struct GoldFeaturesView: View {
                                 .background(Color.white.opacity(0.2))
                                 .cornerRadius(5)
                         } else {
-                            // Locked ad-free experience, no watch ad in any environment
                             Text("Locked")
                                 .foregroundColor(.gray)
                         }
@@ -87,7 +87,6 @@ struct GoldFeaturesView: View {
                                 EmptyView()
                             }
                         } else {
-                            // Check environment before showing "Watch Ad"
                             if !PGEnvironment.isSimulator && !PGEnvironment.isTestFlight {
                                 Button(action: {
                                     watchAdForFeature(feature.name)
@@ -100,7 +99,6 @@ struct GoldFeaturesView: View {
                                         .cornerRadius(5)
                                 }
                             } else {
-                                // In simulator or TestFlight, just show locked
                                 Text("Locked")
                                     .foregroundColor(.gray)
                             }
@@ -111,7 +109,9 @@ struct GoldFeaturesView: View {
 
             if !unlocked {
                 Button(action: {
-                    purchaseGold()
+                    Task {
+                        await iapManager.purchaseGold()
+                    }
                 }) {
                     Text("Purchase Gold for $2.99")
                         .foregroundColor(.white)
@@ -121,7 +121,9 @@ struct GoldFeaturesView: View {
                         .cornerRadius(8)
                 }
                 Button(action: {
-                    restorePurchases()
+                    Task {
+                        await iapManager.restorePurchases()
+                    }
                 }) {
                     Text("Restore Purchases")
                         .foregroundColor(.blue)
@@ -142,17 +144,5 @@ struct GoldFeaturesView: View {
             }
         }
         onAdRequest(unlockAction)
-    }
-
-    private func purchaseGold() {
-        Task {
-            await iapManager.purchaseGold()
-        }
-    }
-
-    private func restorePurchases() {
-        Task {
-            await iapManager.restorePurchases()
-        }
     }
 }

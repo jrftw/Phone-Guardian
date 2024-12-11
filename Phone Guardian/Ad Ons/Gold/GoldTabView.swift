@@ -19,6 +19,9 @@ struct GoldTabView: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
 }
+// UnlockPromptView 
+
+import SwiftUI
 
 struct UnlockPromptView: View {
     let feature: String

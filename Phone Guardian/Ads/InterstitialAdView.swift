@@ -1,3 +1,5 @@
+// InterstitialAdView.swift
+
 import SwiftUI
 
 struct InterstitialAdView: UIViewControllerRepresentable {
@@ -5,13 +7,9 @@ struct InterstitialAdView: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> UIViewController {
         let viewController = UIViewController()
-        // Immediately try to show the ad from here if isAdReady
         if InterstitialAdHandler.shared.isAdReady {
-            InterstitialAdHandler.shared.show(from: viewController) { success in
-                // If success or fail doesn't matter; the delegate of InterstitialAdHandler handles dismissal
-            }
+            InterstitialAdHandler.shared.show(from: viewController) { _ in }
         } else {
-            // No ad ready, dismiss immediately
             DispatchQueue.main.async {
                 onAdDismissed()
             }

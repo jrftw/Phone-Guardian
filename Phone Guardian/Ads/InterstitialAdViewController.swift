@@ -1,3 +1,5 @@
+// InterstitialAdViewController.swift
+
 import UIKit
 import GoogleMobileAds
 
@@ -12,12 +14,8 @@ class InterstitialAdViewController: UIViewController {
 
     func loadInterstitialAd() {
         let request = GADRequest()
-        GADInterstitialAd.load(
-            withAdUnitID: "ca-app-pub-6815311336585204/7741700785", // Replace with your Ad Unit ID
-            request: request
-        ) { [weak self] ad, error in
-            if let error = error {
-                print("Failed to load interstitial ad: \(error.localizedDescription)")
+        GADInterstitialAd.load(withAdUnitID: "ca-app-pub-6815311336585204/7741700785", request: request) { [weak self] ad, error in
+            if error != nil {
                 self?.onAdDismissed?()
                 return
             }
@@ -31,7 +29,6 @@ class InterstitialAdViewController: UIViewController {
         if let interstitial = interstitial {
             interstitial.present(fromRootViewController: self)
         } else {
-            print("Ad not ready")
             onAdDismissed?()
         }
     }
@@ -39,7 +36,6 @@ class InterstitialAdViewController: UIViewController {
 
 extension InterstitialAdViewController: GADFullScreenContentDelegate {
     func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-        print("Ad was dismissed.")
         onAdDismissed?()
         dismiss(animated: true)
     }
