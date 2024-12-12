@@ -54,6 +54,7 @@ struct VideoAdView: View {
         }
     }
 
+    // MARK: Load
     private func loadRewardedAd() {
         let request = GADRequest()
         GADRewardedAd.load(withAdUnitID:"ca-app-pub-6815311336585204/5224354917", request: request) { ad, error in
@@ -69,6 +70,7 @@ struct VideoAdView: View {
         }
     }
 
+    // MARK: Show
     private func showRewardedAd() {
         guard let rewardedAd = rewardedAd,
               let rootViewController = UIApplication.shared.connectedScenes

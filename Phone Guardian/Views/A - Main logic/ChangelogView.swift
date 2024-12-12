@@ -14,6 +14,7 @@ struct ChangelogView: View {
             // New Section: Upcoming features
                       Section(header: Text("Upcoming Features")) {
                           VStack(alignment: .leading, spacing: 5) {
+                              Text("Referral Rewards")
                               Text("Ai+")
                               Text("Cloud+")
                               Text("Storage+")
@@ -32,6 +33,8 @@ struct ChangelogView: View {
                               Text("• Bug fixes with ad not showing and unlocking features")
                               Text("**Build 3**:")
                               Text("• Bug fixes with watch ad not showing and unlocking features correctly")
+                              Text("**Build 3**:")
+                              Text("• Bug fixes & Stability improvements with watch ad not showing and unlocking features correctly on iPad OS")
                           }
                       }
             // New Section: Version 1.08 - Build 1

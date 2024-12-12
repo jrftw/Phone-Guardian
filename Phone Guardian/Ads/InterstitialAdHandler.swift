@@ -9,7 +9,6 @@ import GoogleMobileAds
 class InterstitialAdHandler: NSObject, GADFullScreenContentDelegate {
     static let shared = InterstitialAdHandler()
     private let logger = Logger(subsystem: "com.phoneguardian.ads", category: "InterstitialAdHandler")
-
     private(set) var isAdReady: Bool = false
     private var interstitial: GADInterstitialAd?
 
@@ -17,6 +16,7 @@ class InterstitialAdHandler: NSObject, GADFullScreenContentDelegate {
         super.init()
     }
 
+    // MARK: Environment Check
     private var isTestFlightOrSimulator: Bool {
         #if targetEnvironment(simulator)
         return true
@@ -28,6 +28,7 @@ class InterstitialAdHandler: NSObject, GADFullScreenContentDelegate {
         #endif
     }
 
+    // MARK: Preload
     func preloadAd() {
         guard !isTestFlightOrSimulator else {
             isAdReady = false
@@ -46,6 +47,7 @@ class InterstitialAdHandler: NSObject, GADFullScreenContentDelegate {
         }
     }
 
+    // MARK: Show
     func show(from viewController: UIViewController, completion: @escaping (Bool) -> Void) {
         guard !isTestFlightOrSimulator else {
             completion(false)
@@ -61,6 +63,7 @@ class InterstitialAdHandler: NSObject, GADFullScreenContentDelegate {
         }
     }
 
+    // MARK: Delegate
     func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
         isAdReady = false
         interstitial = nil

@@ -1,5 +1,9 @@
 // Environment.swift
 
+// PGEnvironment.swift
+
+// PGEnvironment.swift
+
 import Foundation
 
 struct PGEnvironment {
@@ -12,8 +16,10 @@ struct PGEnvironment {
     }
 
     static var isTestFlight: Bool {
-        guard let appStoreReceiptURL = Bundle.main.appStoreReceiptURL else { return false }
-        return appStoreReceiptURL.lastPathComponent == "sandboxReceipt"
+        if let appStoreReceiptURL = Bundle.main.appStoreReceiptURL {
+            return appStoreReceiptURL.lastPathComponent == "sandboxReceipt"
+        }
+        return false
     }
 }
 

@@ -3,17 +3,26 @@
 import SwiftUI
 import os
 
+private struct ToolsFeatureToUnlock: Identifiable {
+    let id = UUID()
+    let name: String
+}
+
 struct ToolsView: View {
     @EnvironmentObject var iapManager: IAPManager
     let onAdRequest: (AdFeatureUnlock) -> Void
-    private let logger = Logger(subsystem: "com.phoneguardian.toolsview", category: "ToolsView")
     @State private var unlockedFeatures: Set<String> = []
+    @State private var currentFeatureToUnlock: ToolsFeatureToUnlock?
+    private let logger = Logger(subsystem: "com.phoneguardian.toolsview", category: "ToolsView")
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 if iapManager.hasToolsSubscription {
-                    featureCard(title: "Tools", description: "All Tools are unlocked.", features: toolsFeatures, unlocked: true)
+                    featureCard(title: "Tools",
+                                description: "All Tools are unlocked.",
+                                features: toolsFeatures,
+                                unlocked: true)
                 } else {
                     featureCard(title: "Tools",
                                 description: "Unlock the Tools Add-on for just $2.99 and enjoy access to these powerful utilities:",
@@ -25,6 +34,13 @@ struct ToolsView: View {
         }
         .background(Color.black.ignoresSafeArea())
         .colorScheme(.dark)
+        .fullScreenCover(item: $currentFeatureToUnlock) { feature in
+            VideoAdView { success in
+                if success {
+                    unlockedFeatures.insert(feature.name)
+                }
+            }
+        }
     }
 
     private var toolsFeatures: [FeatureItem] {
@@ -42,11 +58,9 @@ struct ToolsView: View {
                 .font(.title2)
                 .bold()
                 .foregroundColor(.white)
-
             Text(description)
                 .font(.subheadline)
                 .foregroundColor(.white)
-
             ForEach(features, id: \.name) { feature in
                 HStack {
                     Image(systemName: feature.icon)
@@ -90,7 +104,6 @@ struct ToolsView: View {
                     }
                 }
             }
-
             if !unlocked {
                 Button(action: {
                     purchaseTools()
@@ -124,6 +137,7 @@ struct ToolsView: View {
             }
         }
         onAdRequest(unlockAction)
+        currentFeatureToUnlock = ToolsFeatureToUnlock(name: feature)
     }
 
     private func purchaseTools() {

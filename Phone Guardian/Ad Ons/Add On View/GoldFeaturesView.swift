@@ -3,17 +3,27 @@
 import SwiftUI
 import os
 
+private struct FeatureToUnlock: Identifiable {
+    let id = UUID()
+    let name: String
+}
+
 struct GoldFeaturesView: View {
     @EnvironmentObject var iapManager: IAPManager
     let onAdRequest: (AdFeatureUnlock) -> Void
-    private let logger = Logger(subsystem: "com.phoneguardian.goldfeatures", category: "GoldFeaturesView")
     @State private var unlockedFeatures: Set<String> = []
+    @State private var showVideoAd = false
+    @State private var currentFeatureToUnlock: FeatureToUnlock?
+    private let logger = Logger(subsystem: "com.phoneguardian.goldfeatures", category: "GoldFeaturesView")
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 if iapManager.hasGoldSubscription {
-                    featureCard(title: "Gold", description: "All Gold features are unlocked!", features: goldFeatures, unlocked: true)
+                    featureCard(title: "Gold",
+                                description: "All Gold features are unlocked!",
+                                features: goldFeatures,
+                                unlocked: true)
                 } else {
                     featureCard(title: "Gold",
                                 description: "Unlock Gold for just $2.99 and enjoy premium features:",
@@ -25,6 +35,13 @@ struct GoldFeaturesView: View {
         }
         .background(Color.black.ignoresSafeArea())
         .colorScheme(.dark)
+        .fullScreenCover(item: $currentFeatureToUnlock) { feature in
+            VideoAdView { success in
+                if success {
+                    unlockedFeatures.insert(feature.name)
+                }
+            }
+        }
     }
 
     private var goldFeatures: [FeatureItem] {
@@ -43,11 +60,9 @@ struct GoldFeaturesView: View {
                 .font(.title2)
                 .bold()
                 .foregroundColor(.white)
-
             Text(description)
                 .font(.subheadline)
                 .foregroundColor(.white)
-
             ForEach(features, id: \.name) { feature in
                 HStack {
                     Image(systemName: feature.icon)
@@ -55,7 +70,6 @@ struct GoldFeaturesView: View {
                     Text(feature.name)
                         .foregroundColor(.white)
                     Spacer()
-
                     if feature.name == "Ad-Free Experience" {
                         if unlocked {
                             Text("Enabled")
@@ -106,7 +120,6 @@ struct GoldFeaturesView: View {
                     }
                 }
             }
-
             if !unlocked {
                 Button(action: {
                     Task {
@@ -144,5 +157,6 @@ struct GoldFeaturesView: View {
             }
         }
         onAdRequest(unlockAction)
+        currentFeatureToUnlock = FeatureToUnlock(name: feature)
     }
 }

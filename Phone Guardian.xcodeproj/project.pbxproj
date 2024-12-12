@@ -15,6 +15,7 @@
 		79575D2E2CF7672D00CF85F9 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 79575D2D2CF7672D00CF85F9 /* ZIPFoundation */; };
 		7983B28A2CF78372002CF52D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7983B2892CF78372002CF52D /* StoreKit.framework */; };
 		7983B2BA2CF787A4002CF52D /* PhoneGuardian Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 7983B2B92CF787A4002CF52D /* PhoneGuardian Watch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		79AA88042D0B777F008AB91B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79AA88032D0B777F008AB91B /* CloudKit.framework */; };
 		79B50E6F2CEE55DC0095B386 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 79B50E6E2CEE55DC0095B386 /* GoogleMobileAds */; };
 		79C9BABE2CF2D506009606BA /* SwiftyPing in Frameworks */ = {isa = PBXBuildFile; productRef = 79C9BABD2CF2D506009606BA /* SwiftyPing */; };
 /* End PBXBuildFile section */
@@ -58,6 +59,7 @@
 		7983B2892CF78372002CF52D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		7983B2942CF787A3002CF52D /* PhoneGuardian Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PhoneGuardian Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7983B2B92CF787A4002CF52D /* PhoneGuardian Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PhoneGuardian Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		79AA88032D0B777F008AB91B /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		79B50DCF2CEE528E0095B386 /* Phone Guardian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Phone Guardian.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		79B50DE32CEE528F0095B386 /* Phone GuardianTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Phone GuardianTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		79B50DED2CEE528F0095B386 /* Phone GuardianUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Phone GuardianUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +132,7 @@
 				792EE7B22CF7CAA8001E0F9A /* Contacts.framework in Frameworks */,
 				792EE7B02CF7CA97001E0F9A /* Photos.framework in Frameworks */,
 				7936330B2CEE881A00870164 /* GoogleUserMessagingPlatform in Frameworks */,
+				79AA88042D0B777F008AB91B /* CloudKit.framework in Frameworks */,
 				79B50E6F2CEE55DC0095B386 /* GoogleMobileAds in Frameworks */,
 				7983B28A2CF78372002CF52D /* StoreKit.framework in Frameworks */,
 				79C9BABE2CF2D506009606BA /* SwiftyPing in Frameworks */,
@@ -182,6 +185,7 @@
 		79B50E6D2CEE55DC0095B386 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				79AA88032D0B777F008AB91B /* CloudKit.framework */,
 				792EE7B52CF7CAC2001E0F9A /* EventKitUI.framework */,
 				792EE7B32CF7CAB2001E0F9A /* EventKit.framework */,
 				792EE7B12CF7CAA8001E0F9A /* Contacts.framework */,
@@ -319,7 +323,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1610;
-				LastUpgradeCheck = 1610;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					7983B2932CF787A3002CF52D = {
 						CreatedOnToolsVersion = 16.1;
@@ -592,7 +596,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Phone Guardian/Phone_Guardian.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Phone Guardian/Preview Content\"";
 				DEVELOPMENT_TEAM = AD7SJSPX55;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -635,7 +640,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Phone Guardian/Phone_Guardian.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Phone Guardian/Preview Content\"";
 				DEVELOPMENT_TEAM = AD7SJSPX55;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -705,6 +711,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -767,6 +774,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -793,6 +801,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = AD7SJSPX55;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
@@ -816,6 +825,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = AD7SJSPX55;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
@@ -838,6 +848,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = AD7SJSPX55;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
@@ -860,6 +871,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = AD7SJSPX55;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.1;

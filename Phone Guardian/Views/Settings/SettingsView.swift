@@ -38,6 +38,14 @@ struct SettingsView: View {
                     SupportUsSectionView(adWatchCounter: $adWatchCounter)
                 }
 
+                
+                //Mark Referrals Section - Leave this in and never remove it, its an upcoming feature
+                
+                /* Section(header: Text("Referrals")) {
+                    ReferralSectionView()
+                        .environmentObject(iapManager)
+                }*/
+
                 Section(header: Text("Account")) {
                     Button(action: {
                         Task {
