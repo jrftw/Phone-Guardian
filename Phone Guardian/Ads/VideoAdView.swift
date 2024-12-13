@@ -1,31 +1,36 @@
 // VideoAdView.swift
 
 import SwiftUI
-import GoogleMobileAds
 import os
+
+#if os(iOS)
+import GoogleMobileAds
+import UIKit
+#endif
 
 struct VideoAdView: View {
     @Environment(\.dismiss) private var dismiss
     let onAdDismissed: (Bool) -> Void
+    #if os(iOS)
     @State private var isAdLoaded = false
     @State private var rewardedAd: GADRewardedAd?
     private let logger = Logger(subsystem: "com.phoneguardian.videoAd", category: "VideoAdView")
-
-    private var isTestFlightOrSimulator: Bool {
-        #if targetEnvironment(simulator)
-        return true
-        #else
-        if let appStoreReceiptURL = Bundle.main.appStoreReceiptURL {
-            return appStoreReceiptURL.lastPathComponent == "sandboxReceipt"
-        }
-        return false
-        #endif
-    }
+    #endif
 
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            if !isTestFlightOrSimulator {
+            #if os(iOS)
+            if isTestFlightOrSimulator {
+                Text("No Ads in test environment.")
+                    .foregroundColor(.white)
+                    .onAppear {
+                        DispatchQueue.main.async {
+                            onAdDismissed(true)
+                            dismiss()
+                        }
+                    }
+            } else {
                 if isAdLoaded {
                     Text("Presenting Ad...")
                         .foregroundColor(.white)
@@ -36,25 +41,38 @@ struct VideoAdView: View {
                     ProgressView("Loading Ad...")
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 }
-            } else {
-                Text("No Ads in test environment.")
-                    .foregroundColor(.white)
-                    .onAppear {
-                        DispatchQueue.main.async {
-                            onAdDismissed(true)
-                            dismiss()
-                        }
-                    }
             }
+            #else
+            Text("Ads not available on this platform.")
+                .foregroundColor(.white)
+                .onAppear {
+                    onAdDismissed(true)
+                    dismiss()
+                }
+            #endif
         }
         .onAppear {
+            #if os(iOS)
             if !isTestFlightOrSimulator {
                 loadRewardedAd()
+            } else {
+                DispatchQueue.main.async {
+                    onAdDismissed(true)
+                    dismiss()
+                }
             }
+            #else
+            #endif
         }
     }
 
-    // MARK: Load
+    #if os(iOS)
+    private var isTestFlightOrSimulator: Bool {
+        if PGEnvironment.isSimulator { return true }
+        if PGEnvironment.isTestFlight { return true }
+        return false
+    }
+
     private func loadRewardedAd() {
         let request = GADRequest()
         GADRewardedAd.load(withAdUnitID:"ca-app-pub-6815311336585204/5224354917", request: request) { ad, error in
@@ -70,7 +88,6 @@ struct VideoAdView: View {
         }
     }
 
-    // MARK: Show
     private func showRewardedAd() {
         guard let rewardedAd = rewardedAd,
               let rootViewController = UIApplication.shared.connectedScenes
@@ -86,4 +103,5 @@ struct VideoAdView: View {
             dismiss()
         }
     }
+    #endif
 }

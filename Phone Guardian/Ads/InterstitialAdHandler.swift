@@ -1,36 +1,28 @@
 // InterstitialAdHandler.swift
 
 import Foundation
-import UIKit
-import StoreKit
 import os
-import GoogleMobileAds
 
-class InterstitialAdHandler: NSObject, GADFullScreenContentDelegate {
+#if os(iOS)
+import UIKit
+import GoogleMobileAds
+#endif
+
+class InterstitialAdHandler: NSObject {
     static let shared = InterstitialAdHandler()
     private let logger = Logger(subsystem: "com.phoneguardian.ads", category: "InterstitialAdHandler")
-    private(set) var isAdReady: Bool = false
+    #if os(iOS)
     private var interstitial: GADInterstitialAd?
+    #endif
+    private(set) var isAdReady: Bool = false
 
     private override init() {
         super.init()
     }
 
-    // MARK: Environment Check
-    private var isTestFlightOrSimulator: Bool {
-        #if targetEnvironment(simulator)
-        return true
-        #else
-        if let appStoreReceiptURL = Bundle.main.appStoreReceiptURL {
-            return appStoreReceiptURL.lastPathComponent == "sandboxReceipt"
-        }
-        return false
-        #endif
-    }
-
-    // MARK: Preload
     func preloadAd() {
-        guard !isTestFlightOrSimulator else {
+        #if os(iOS)
+        guard !PGEnvironment.isSimulator && !PGEnvironment.isTestFlight else {
             isAdReady = false
             return
         }
@@ -45,27 +37,36 @@ class InterstitialAdHandler: NSObject, GADFullScreenContentDelegate {
             self.interstitial?.fullScreenContentDelegate = self
             self.isAdReady = true
         }
+        #else
+        isAdReady = false
+        #endif
     }
 
-    // MARK: Show
-    func show(from viewController: UIViewController, completion: @escaping (Bool) -> Void) {
-        guard !isTestFlightOrSimulator else {
+    func show(from viewController: AnyObject, completion: @escaping (Bool) -> Void) {
+        #if os(iOS)
+        guard !PGEnvironment.isSimulator && !PGEnvironment.isTestFlight else {
             completion(false)
             return
         }
-        guard isAdReady, let interstitial = interstitial else {
+        guard isAdReady, let interstitial = interstitial, let vc = viewController as? UIViewController else {
             completion(false)
             return
         }
-        interstitial.present(fromRootViewController: viewController)
+        interstitial.present(fromRootViewController: vc)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             completion(true)
         }
+        #else
+        completion(false)
+        #endif
     }
+}
 
-    // MARK: Delegate
+#if os(iOS)
+extension InterstitialAdHandler: GADFullScreenContentDelegate {
     func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
         isAdReady = false
         interstitial = nil
     }
 }
+#endif

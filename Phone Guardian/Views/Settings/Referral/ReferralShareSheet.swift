@@ -1,14 +1,15 @@
 // ReferralShareSheet.swift
 
-import UIKit
 import SwiftUI
+import UIKit
 
 struct ReferralShareSheet: UIViewControllerRepresentable {
-    var activityItems: [Any]
+    let activityItems: [Any]
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        return controller
     }
 
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) { }
 }

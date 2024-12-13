@@ -3,11 +3,6 @@
 import SwiftUI
 import os
 
-private struct ToolsFeatureToUnlock: Identifiable {
-    let id = UUID()
-    let name: String
-}
-
 struct ToolsView: View {
     @EnvironmentObject var iapManager: IAPManager
     let onAdRequest: (AdFeatureUnlock) -> Void
@@ -16,30 +11,37 @@ struct ToolsView: View {
     private let logger = Logger(subsystem: "com.phoneguardian.toolsview", category: "ToolsView")
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                if iapManager.hasToolsSubscription {
-                    featureCard(title: "Tools",
-                                description: "All Tools are unlocked.",
-                                features: toolsFeatures,
-                                unlocked: true)
-                } else {
-                    featureCard(title: "Tools",
-                                description: "Unlock the Tools Add-on for just $2.99 and enjoy access to these powerful utilities:",
-                                features: toolsFeatures,
-                                unlocked: false)
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 20) {
+                    if iapManager.hasToolsSubscription {
+                        featureCard(title: "Tools",
+                                    description: "All Tools are unlocked.",
+                                    features: toolsFeatures,
+                                    unlocked: true)
+                    } else {
+                        featureCard(title: "Tools",
+                                    description: "Unlock the Tools Add-on for just $2.99 and enjoy access to these powerful utilities:",
+                                    features: toolsFeatures,
+                                    unlocked: false)
+                    }
+                }
+                .padding()
+            }
+            .background(Color.black.ignoresSafeArea())
+            .colorScheme(.dark)
+            .fullScreenCover(item: $currentFeatureToUnlock) { feature in
+                VideoAdView { success in
+                    if success {
+                        unlockedFeatures.insert(feature.name)
+                    }
                 }
             }
-            .padding()
         }
-        .background(Color.black.ignoresSafeArea())
-        .colorScheme(.dark)
-        .fullScreenCover(item: $currentFeatureToUnlock) { feature in
-            VideoAdView { success in
-                if success {
-                    unlockedFeatures.insert(feature.name)
-                }
-            }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .onAppear {
+            logger.info("ToolsView appeared.")
+            InterstitialAdHandler.shared.preloadAd()
         }
     }
 
@@ -151,4 +153,9 @@ struct ToolsView: View {
             await iapManager.restorePurchases()
         }
     }
+}
+
+private struct ToolsFeatureToUnlock: Identifiable {
+    let id = UUID()
+    let name: String
 }

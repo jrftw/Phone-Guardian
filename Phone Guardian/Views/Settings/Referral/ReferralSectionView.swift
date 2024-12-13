@@ -6,15 +6,20 @@ import os
 struct ReferralSectionView: View {
     @EnvironmentObject var iapManager: IAPManager
     @StateObject private var referralManager = ReferralManager()
+
+    // State variables for each sheet or cover
     @State private var showShareSheet = false
-    @State private var referralLink: URL = URL(string: "https://example.com")!
-    @State private var showFeatureChoice = false
-    @State private var showNoAdsGranted = false
     @State private var showReferralEntry = false
+    @State private var showRedeemSheet = false
+    @State private var showFeatureChoice = false
+
+    // State variables for alerts and entered referral code
     @State private var enteredReferralCode: String = ""
     @State private var showInvalidCodeAlert = false
     @State private var showSelfReferralAlert = false
     @State private var showReferralSuccessAlert = false
+    @State private var showNoAdsGranted = false
+
     private let logger = Logger(subsystem: "com.phoneguardian.referral", category: "ReferralSectionView")
 
     var body: some View {
@@ -52,7 +57,7 @@ struct ReferralSectionView: View {
             }
 
             Button {
-                generateReferralLink()
+                // Show Share Sheet for "Share Your Code"
                 showShareSheet = true
             } label: {
                 Text("Share Your Code")
@@ -62,12 +67,9 @@ struct ReferralSectionView: View {
                     .background(Color.blue)
                     .cornerRadius(8)
             }
-            .fullScreenCover(isPresented: $showShareSheet) {
-                ReferralShareSheet(activityItems: [referralLink])
-                    .ignoresSafeArea()
-            }
 
             Button {
+                // Show sheet for entering referral code (Referred By)
                 showReferralEntry = true
             } label: {
                 Text("Referred By")
@@ -77,45 +79,10 @@ struct ReferralSectionView: View {
                     .background(Color.purple)
                     .cornerRadius(8)
             }
-            .sheet(isPresented: $showReferralEntry) {
-                VStack(spacing: 20) {
-                    Text("Enter Referral Code")
-                        .font(.title2)
-                        .bold()
-                        .foregroundColor(.white)
-
-                    TextField("Referral Code", text: $enteredReferralCode)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding()
-                        .foregroundColor(.black)
-
-                    Button {
-                        handleReferralCodeSubmission()
-                    } label: {
-                        Text("Submit")
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.green)
-                            .cornerRadius(8)
-                    }
-                }
-                .padding()
-                .background(Color.black.opacity(0.9))
-                .ignoresSafeArea()
-            }
-            .alert(isPresented: $showInvalidCodeAlert) {
-                Alert(title: Text("Invalid Code"), message: Text("Please enter a valid referral code."), dismissButton: .default(Text("OK")))
-            }
-            .alert(isPresented: $showSelfReferralAlert) {
-                Alert(title: Text("Error"), message: Text("You cannot enter your own referral code."), dismissButton: .default(Text("OK")))
-            }
-            .alert(isPresented: $showReferralSuccessAlert) {
-                Alert(title: Text("Success"), message: Text("You have successfully entered a referral code!"), dismissButton: .default(Text("OK")))
-            }
 
             Button {
-                redeemReferrals()
+                // Show sheet for redeeming rewards
+                showRedeemSheet = true
             } label: {
                 Text("Redeem Rewards")
                     .foregroundColor(.white)
@@ -128,6 +95,149 @@ struct ReferralSectionView: View {
         .padding()
         .background(Color.black.opacity(0.5))
         .cornerRadius(12)
+        .alert(isPresented: $showInvalidCodeAlert) {
+            Alert(title: Text("Invalid Code"), message: Text("Please enter a valid referral code."), dismissButton: .default(Text("OK")))
+        }
+        .alert(isPresented: $showSelfReferralAlert) {
+            Alert(title: Text("Error"), message: Text("You cannot enter your own referral code."), dismissButton: .default(Text("OK")))
+        }
+        .alert(isPresented: $showReferralSuccessAlert) {
+            Alert(title: Text("Success"), message: Text("You have successfully entered a referral code!"), dismissButton: .default(Text("OK")))
+        }
+        .alert(isPresented: $showNoAdsGranted) {
+            Alert(title: Text("No Ads Granted"), message: Text("You now have no ads for 7 days!"), dismissButton: .default(Text("OK")))
+        }
+
+        // Sheet for "Share Your Code"
+        .sheet(isPresented: $showShareSheet) {
+            let shareText = "Download the Phone Guardian - Protect App and use my Invite code: \(referralManager.userReferralData.referralCode)"
+            ReferralShareSheet(activityItems: [shareText])
+                .ignoresSafeArea()
+        }
+
+        // Sheet for "Referred By"
+        .sheet(isPresented: $showReferralEntry) {
+            VStack(spacing: 20) {
+                Text("Enter Referral Code")
+                    .font(.title2)
+                    .bold()
+                    .foregroundColor(.white)
+                TextField("Referral Code", text: $enteredReferralCode)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                    .foregroundColor(.black)
+                Button {
+                    handleReferralCodeSubmission()
+                } label: {
+                    Text("Submit")
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.green)
+                        .cornerRadius(8)
+                }
+            }
+            .padding()
+            .background(Color.black.opacity(0.9))
+            .ignoresSafeArea()
+        }
+
+        // Sheet for "Redeem Rewards"
+        .sheet(isPresented: $showRedeemSheet) {
+            VStack(spacing: 20) {
+                Text("Your Referrals")
+                    .font(.title2)
+                    .bold()
+                    .foregroundColor(.white)
+                if referralManager.userReferralData.referredUsers.isEmpty {
+                    Text("You have no referrals yet.")
+                        .foregroundColor(.white)
+                } else {
+                    List(referralManager.userReferralData.referredUsers, id: \.self) { user in
+                        Text(user)
+                            .foregroundColor(.white)
+                    }
+                    .listStyle(InsetGroupedListStyle())
+                }
+
+                let count = referralManager.userReferralData.referralCount
+                if count < 3 {
+                    Text("You need at least 3 referrals to start unlocking temporary rewards.")
+                        .foregroundColor(.white)
+                        .padding()
+                } else if count >= 7 {
+                    Button {
+                        referralManager.grantTemporaryFeature(.noAds)
+                        showRedeemSheet = false
+                        showNoAdsGranted = true
+                    } label: {
+                        Text("Temporarily Remove Ads (7 days)")
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.orange)
+                            .cornerRadius(8)
+                    }
+                } else if count >= 5 {
+                    if iapManager.hasGoldSubscription || referralManager.isFeatureActive(.gold, hasPermanent: iapManager.hasGoldSubscription) {
+                        Button {
+                            referralManager.grantTemporaryFeature(.tools)
+                            showRedeemSheet = false
+                        } label: {
+                            Text("Temporarily Unlock Tools (7 days)")
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.orange)
+                                .cornerRadius(8)
+                        }
+                    } else if iapManager.hasToolsSubscription || referralManager.isFeatureActive(.tools, hasPermanent: iapManager.hasToolsSubscription) {
+                        Button {
+                            referralManager.grantTemporaryFeature(.gold)
+                            showRedeemSheet = false
+                        } label: {
+                            Text("Temporarily Unlock Gold (7 days)")
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.orange)
+                                .cornerRadius(8)
+                        }
+                    } else {
+                        Button {
+                            showRedeemSheet = false
+                            showFeatureChoice = true
+                        } label: {
+                            Text("Temporarily Unlock Gold or Tools (7 days)")
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.orange)
+                                .cornerRadius(8)
+                        }
+                    }
+                } else if count >= 3 {
+                    Button {
+                        showRedeemSheet = false
+                        showFeatureChoice = true
+                    } label: {
+                        Text("Temporarily Unlock Gold or Tools (7 days)")
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.orange)
+                            .cornerRadius(8)
+                    }
+                }
+
+                Spacer()
+            }
+            .padding()
+            .background(Color.black.opacity(0.9))
+            .ignoresSafeArea()
+        }
+
+        // Full screen cover for choosing the feature if needed
         .fullScreenCover(isPresented: $showFeatureChoice) {
             FeatureChoiceView { chosenFeature in
                 if chosenFeature == .gold {
@@ -138,34 +248,6 @@ struct ReferralSectionView: View {
                 showFeatureChoice = false
             }
             .ignoresSafeArea()
-        }
-        .alert(isPresented: $showNoAdsGranted) {
-            Alert(title: Text("No Ads Granted"), message: Text("You now have no ads for 7 days!"), dismissButton: .default(Text("OK")))
-        }
-    }
-
-    private func generateReferralLink() {
-        let code = referralManager.userReferralData.referralCode
-        if let url = URL(string: "https://example.com/referral?code=\(code)") {
-            referralLink = url
-        }
-    }
-
-    private func redeemReferrals() {
-        let count = referralManager.userReferralData.referralCount
-        if count >= 7 {
-            referralManager.grantTemporaryFeature(.noAds)
-            showNoAdsGranted = true
-        } else if count >= 5 {
-            if iapManager.hasGoldSubscription || referralManager.isFeatureActive(.gold, hasPermanent: iapManager.hasGoldSubscription) {
-                referralManager.grantTemporaryFeature(.tools)
-            } else if iapManager.hasToolsSubscription || referralManager.isFeatureActive(.tools, hasPermanent: iapManager.hasToolsSubscription) {
-                referralManager.grantTemporaryFeature(.gold)
-            } else {
-                showFeatureChoice = true
-            }
-        } else if count >= 3 {
-            showFeatureChoice = true
         }
     }
 
@@ -179,8 +261,9 @@ struct ReferralSectionView: View {
                 self.showSelfReferralAlert = true
             } else if didSucceed {
                 self.showReferralSuccessAlert = true
+                // Simulate adding this code to referredUsers to show the logic
+                referralManager.addReferredUser(code)
             } else {
-                // Code is valid format but not found in CloudKit
                 self.showInvalidCodeAlert = true
             }
         }

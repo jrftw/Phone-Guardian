@@ -2,39 +2,44 @@
 
 import SwiftUI
 
+enum ChosenFeature {
+    case gold
+    case tools
+}
+
 struct FeatureChoiceView: View {
-    let onChoose: (TemporaryFeature) -> Void
+    let onFeatureChosen: (ChosenFeature) -> Void
+
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Choose a Feature to Unlock")
-                .font(.title2)
-                .bold()
-                .foregroundColor(.white)
-            Button {
-                onChoose(.gold)
-            } label: {
-                Text("Unlock Gold for 7 Days")
+        ZStack {
+            Color.black.ignoresSafeArea()
+            VStack(spacing: 20) {
+                Text("Choose a Feature to Unlock:")
                     .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.yellow)
-                    .cornerRadius(8)
+                    .font(.title2)
+                    .bold()
+                Button {
+                    onFeatureChosen(.gold)
+                } label: {
+                    Text("Unlock Gold (7 days)")
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.orange)
+                        .cornerRadius(8)
+                }
+                Button {
+                    onFeatureChosen(.tools)
+                } label: {
+                    Text("Unlock Tools (7 days)")
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.orange)
+                        .cornerRadius(8)
+                }
             }
-            Button {
-                onChoose(.tools)
-            } label: {
-                Text("Unlock Tools for 7 Days")
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.orange)
-                    .cornerRadius(8)
-            }
+            .padding()
         }
-        .padding()
-        .background(Color.black.opacity(0.8))
-        .cornerRadius(12)
-        .frame(maxWidth: 300)
-        .ignoresSafeArea()
     }
 }

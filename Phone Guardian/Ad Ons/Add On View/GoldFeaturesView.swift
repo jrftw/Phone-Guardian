@@ -3,6 +3,7 @@
 import SwiftUI
 import os
 
+// MARK: - Model for Unlockable Features via Ads
 private struct FeatureToUnlock: Identifiable {
     let id = UUID()
     let name: String
@@ -12,35 +13,41 @@ struct GoldFeaturesView: View {
     @EnvironmentObject var iapManager: IAPManager
     let onAdRequest: (AdFeatureUnlock) -> Void
     @State private var unlockedFeatures: Set<String> = []
-    @State private var showVideoAd = false
     @State private var currentFeatureToUnlock: FeatureToUnlock?
     private let logger = Logger(subsystem: "com.phoneguardian.goldfeatures", category: "GoldFeaturesView")
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                if iapManager.hasGoldSubscription {
-                    featureCard(title: "Gold",
-                                description: "All Gold features are unlocked!",
-                                features: goldFeatures,
-                                unlocked: true)
-                } else {
-                    featureCard(title: "Gold",
-                                description: "Unlock Gold for just $2.99 and enjoy premium features:",
-                                features: goldFeatures,
-                                unlocked: false)
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 20) {
+                    if iapManager.hasGoldSubscription {
+                        featureCard(title: "Gold",
+                                    description: "All Gold features are unlocked!",
+                                    features: goldFeatures,
+                                    unlocked: true)
+                    } else {
+                        featureCard(title: "Gold",
+                                    description: "Unlock Gold for just $2.99 and enjoy premium features:",
+                                    features: goldFeatures,
+                                    unlocked: false)
+                    }
+                }
+                .padding()
+            }
+            .background(Color.black.ignoresSafeArea())
+            .colorScheme(.dark)
+            .fullScreenCover(item: $currentFeatureToUnlock) { (feature: FeatureToUnlock) in
+                VideoAdView { success in
+                    if success {
+                        unlockedFeatures.insert(feature.name)
+                    }
                 }
             }
-            .padding()
         }
-        .background(Color.black.ignoresSafeArea())
-        .colorScheme(.dark)
-        .fullScreenCover(item: $currentFeatureToUnlock) { feature in
-            VideoAdView { success in
-                if success {
-                    unlockedFeatures.insert(feature.name)
-                }
-            }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .onAppear {
+            logger.info("GoldFeaturesView appeared.")
+            InterstitialAdHandler.shared.preloadAd()
         }
     }
 

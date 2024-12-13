@@ -14,76 +14,83 @@ struct StorageInfoView: View {
     @State private var showScanView = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("STORAGE")
-                .font(.title2)
-                .bold()
-
-            HStack {
-                VStack(alignment: .leading) {
-                    StorageInfoRow(label: "Total Storage", value: getTotalDiskSpace())
-                    StorageInfoRow(label: "Used Storage", value: getUsedDiskSpace())
-                    StorageInfoRow(label: "Free Storage", value: getFreeDiskSpace())
-                    StorageInfoRow(label: "Releasable Space", value: getReleasableSpace())
-                }
-                Spacer()
-                StorageBarChart(usedPercentage: getUsedPercentage())
-                    .frame(width: 100, height: 20)
-            }
-
-            Button(action: {
-                showClearCacheView = true
-                logEvent("Clear Cache button tapped.")
-            }) {
-                Text("Clear Cache & Temp Files")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
+        NavigationView {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("STORAGE")
+                    .font(.title2)
+                    .bold()
                     .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .fullScreenCover(isPresented: $showClearCacheView) {
-                ClearCacheView()
-            }
 
-            Button(action: {
-                if iapManager.hasGoldSubscription {
-                    startDuplicateScan()
-                } else {
-                    if canShowAd {
-                        showAdForAccess()
-                    } else {
-                        purchaseGold()
+                HStack {
+                    VStack(alignment: .leading) {
+                        StorageInfoRow(label: "Total Storage", value: getTotalDiskSpace())
+                        StorageInfoRow(label: "Used Storage", value: getUsedDiskSpace())
+                        StorageInfoRow(label: "Free Storage", value: getFreeDiskSpace())
+                        StorageInfoRow(label: "Releasable Space", value: getReleasableSpace())
                     }
+                    Spacer()
+                    StorageBarChart(usedPercentage: getUsedPercentage())
+                        .frame(width: 100, height: 20)
                 }
-            }) {
-                Text(duplicateButtonTitle)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(iapManager.hasGoldSubscription ? Color.green : Color.orange)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .disabled(isAdLoading)
 
-            Spacer()
+                Button(action: {
+                    showClearCacheView = true
+                    logEvent("Clear Cache button tapped.")
+                }) {
+                    Text("Clear Cache & Temp Files")
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                }
+                .fullScreenCover(isPresented: $showClearCacheView) {
+                    ClearCacheView()
+                }
+
+                Button(action: {
+                    if iapManager.hasGoldSubscription {
+                        startDuplicateScan()
+                    } else {
+                        if canShowAd {
+                            showAdForAccess()
+                        } else {
+                            purchaseGold()
+                        }
+                    }
+                }) {
+                    Text(duplicateButtonTitle)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(iapManager.hasGoldSubscription ? Color.green : Color.orange)
+                        .cornerRadius(10)
+                }
+                .disabled(isAdLoading)
+
+                Spacer()
+            }
+            .padding()
+            .background(Color.black.ignoresSafeArea())
+            .onAppear {
+                logEvent("StorageInfoView appeared.")
+                InterstitialAdHandler.shared.preloadAd()
+            }
+            .fullScreenCover(isPresented: $showScanView) {
+                DuplicateScanView()
+            }
+            .colorScheme(.dark)
         }
-        .padding()
-        .onAppear {
-            logEvent("StorageInfoView appeared.")
-        }
-        .fullScreenCover(isPresented: $showScanView) {
-            DuplicateScanView()
-        }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 
     private var canShowAd: Bool {
-        #if targetEnvironment(simulator)
-        return false
-        #else
-        if UIDevice.current.userInterfaceIdiom == .pad { return false }
-        if Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt" { return false }
+        #if os(iOS)
+        if PGEnvironment.isSimulator { return false }
+        if PGEnvironment.isTestFlight { return false }
         return InterstitialAdHandler.shared.isAdReady
+        #else
+        return false
         #endif
     }
 
@@ -144,6 +151,7 @@ struct StorageInfoView: View {
 
     private func showAdForAccess() {
         isAdLoading = true
+        #if os(iOS)
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }),
            let rootViewController = keyWindow.rootViewController {
@@ -161,6 +169,10 @@ struct StorageInfoView: View {
             isAdLoading = false
             self.duplicateScanError = "Unable to display ad at this time."
         }
+        #else
+        isAdLoading = false
+        self.duplicateScanError = "Ads not available on this platform."
+        #endif
     }
 
     private func purchaseGold() {
