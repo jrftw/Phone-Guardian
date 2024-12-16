@@ -7,13 +7,11 @@ struct ReferralSectionView: View {
     @EnvironmentObject var iapManager: IAPManager
     @StateObject private var referralManager = ReferralManager()
 
-    // State variables for each sheet or cover
     @State private var showShareSheet = false
     @State private var showReferralEntry = false
     @State private var showRedeemSheet = false
     @State private var showFeatureChoice = false
 
-    // State variables for alerts and entered referral code
     @State private var enteredReferralCode: String = ""
     @State private var showInvalidCodeAlert = false
     @State private var showSelfReferralAlert = false
@@ -57,7 +55,6 @@ struct ReferralSectionView: View {
             }
 
             Button {
-                // Show Share Sheet for "Share Your Code"
                 showShareSheet = true
             } label: {
                 Text("Share Your Code")
@@ -69,7 +66,6 @@ struct ReferralSectionView: View {
             }
 
             Button {
-                // Show sheet for entering referral code (Referred By)
                 showReferralEntry = true
             } label: {
                 Text("Referred By")
@@ -81,7 +77,6 @@ struct ReferralSectionView: View {
             }
 
             Button {
-                // Show sheet for redeeming rewards
                 showRedeemSheet = true
             } label: {
                 Text("Redeem Rewards")
@@ -107,15 +102,11 @@ struct ReferralSectionView: View {
         .alert(isPresented: $showNoAdsGranted) {
             Alert(title: Text("No Ads Granted"), message: Text("You now have no ads for 7 days!"), dismissButton: .default(Text("OK")))
         }
-
-        // Sheet for "Share Your Code"
         .sheet(isPresented: $showShareSheet) {
             let shareText = "Download the Phone Guardian - Protect App and use my Invite code: \(referralManager.userReferralData.referralCode)"
             ReferralShareSheet(activityItems: [shareText])
                 .ignoresSafeArea()
         }
-
-        // Sheet for "Referred By"
         .sheet(isPresented: $showReferralEntry) {
             VStack(spacing: 20) {
                 Text("Enter Referral Code")
@@ -141,8 +132,6 @@ struct ReferralSectionView: View {
             .background(Color.black.opacity(0.9))
             .ignoresSafeArea()
         }
-
-        // Sheet for "Redeem Rewards"
         .sheet(isPresented: $showRedeemSheet) {
             VStack(spacing: 20) {
                 Text("Your Referrals")
@@ -236,8 +225,6 @@ struct ReferralSectionView: View {
             .background(Color.black.opacity(0.9))
             .ignoresSafeArea()
         }
-
-        // Full screen cover for choosing the feature if needed
         .fullScreenCover(isPresented: $showFeatureChoice) {
             FeatureChoiceView { chosenFeature in
                 if chosenFeature == .gold {
@@ -261,7 +248,6 @@ struct ReferralSectionView: View {
                 self.showSelfReferralAlert = true
             } else if didSucceed {
                 self.showReferralSuccessAlert = true
-                // Simulate adding this code to referredUsers to show the logic
                 referralManager.addReferredUser(code)
             } else {
                 self.showInvalidCodeAlert = true

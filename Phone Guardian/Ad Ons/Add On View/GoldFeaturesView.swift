@@ -3,7 +3,6 @@
 import SwiftUI
 import os
 
-// MARK: - Model for Unlockable Features via Ads
 private struct FeatureToUnlock: Identifiable {
     let id = UUID()
     let name: String
@@ -36,7 +35,7 @@ struct GoldFeaturesView: View {
             }
             .background(Color.black.ignoresSafeArea())
             .colorScheme(.dark)
-            .fullScreenCover(item: $currentFeatureToUnlock) { (feature: FeatureToUnlock) in
+            .fullScreenCover(item: $currentFeatureToUnlock) { feature in
                 VideoAdView { success in
                     if success {
                         unlockedFeatures.insert(feature.name)

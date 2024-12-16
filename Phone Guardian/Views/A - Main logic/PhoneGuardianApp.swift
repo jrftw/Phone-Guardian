@@ -1,9 +1,12 @@
+// PhoneGuardianApp.swift (Main Entry Point)
+
 import SwiftUI
 import os.log
 import UserNotifications
 
 @main
 struct PhoneGuardianApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var iapManager = IAPManager()
     @StateObject private var moduleManager = ModuleManager()
     @State private var showTrackingExplanation: Bool

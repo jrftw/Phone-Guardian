@@ -12,7 +12,6 @@ class InterstitialAdViewController: UIViewController {
         loadInterstitialAd()
     }
 
-    // MARK: Load
     func loadInterstitialAd() {
         let request = GADRequest()
         GADInterstitialAd.load(withAdUnitID: "ca-app-pub-6815311336585204/7741700785", request: request) { [weak self] ad, error in
@@ -26,7 +25,6 @@ class InterstitialAdViewController: UIViewController {
         }
     }
 
-    // MARK: Show
     func showAd() {
         if let interstitial = interstitial {
             interstitial.present(fromRootViewController: self)

@@ -16,7 +16,7 @@
     Description: Incremented with each release for internal differentiation.
     -->
     <key>CFBundleVersion</key>
-    <string>5</string>
+    <string>6</string>
 
     <!--
     Title: Background Modes

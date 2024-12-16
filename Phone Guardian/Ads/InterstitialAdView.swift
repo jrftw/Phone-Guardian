@@ -1,6 +1,7 @@
 // InterstitialAdView.swift
 
 import SwiftUI
+import UIKit
 
 struct InterstitialAdView: UIViewControllerRepresentable {
     var onAdDismissed: () -> Void

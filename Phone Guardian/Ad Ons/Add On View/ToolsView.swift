@@ -3,6 +3,11 @@
 import SwiftUI
 import os
 
+private struct ToolsFeatureToUnlock: Identifiable {
+    let id = UUID()
+    let name: String
+}
+
 struct ToolsView: View {
     @EnvironmentObject var iapManager: IAPManager
     let onAdRequest: (AdFeatureUnlock) -> Void
@@ -153,9 +158,4 @@ struct ToolsView: View {
             await iapManager.restorePurchases()
         }
     }
-}
-
-private struct ToolsFeatureToUnlock: Identifiable {
-    let id = UUID()
-    let name: String
 }

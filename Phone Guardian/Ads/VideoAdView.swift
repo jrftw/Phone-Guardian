@@ -2,7 +2,6 @@
 
 import SwiftUI
 import os
-
 #if os(iOS)
 import GoogleMobileAds
 import UIKit
@@ -61,7 +60,6 @@ struct VideoAdView: View {
                     dismiss()
                 }
             }
-            #else
             #endif
         }
     }
@@ -76,7 +74,8 @@ struct VideoAdView: View {
     private func loadRewardedAd() {
         let request = GADRequest()
         GADRewardedAd.load(withAdUnitID:"ca-app-pub-6815311336585204/5224354917", request: request) { ad, error in
-            if error != nil {
+            if let error = error {
+                logger.error("Failed to load rewarded ad: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     onAdDismissed(false)
                     dismiss()

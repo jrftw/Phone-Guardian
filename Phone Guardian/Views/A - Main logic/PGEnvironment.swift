@@ -12,9 +12,8 @@ struct PGEnvironment {
     }
 
     static var isTestFlight: Bool {
-        if let appStoreReceiptURL = Bundle.main.appStoreReceiptURL {
-            return appStoreReceiptURL.lastPathComponent == "sandboxReceipt"
-        }
-        return false
+        guard let appStoreReceiptURL = Bundle.main.appStoreReceiptURL else { return false }
+        let receiptString = appStoreReceiptURL.lastPathComponent
+        return receiptString == "sandboxReceipt"
     }
 }
