@@ -1,87 +1,82 @@
-// StorageInfoView.swift
-
 import SwiftUI
-import os
 
 struct StorageInfoView: View {
     @State private var showClearCacheView = false
     @AppStorage("enableLogging") private var enableLogging = false
     @EnvironmentObject var iapManager: IAPManager
-    private let logger = Logger(subsystem: "com.phoneguardian.storage", category: "StorageInfoView")
     @ObservedObject var duplicateScanner = DuplicateScanner.shared
     @State private var duplicateScanError: String?
     @State private var isAdLoading = false
     @State private var showScanView = false
 
     var body: some View {
-        NavigationView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("STORAGE")
-                    .font(.title2)
-                    .bold()
-                    .foregroundColor(.white)
+        VStack(alignment: .leading, spacing: 20) {
+            Text("STORAGE")
+                .font(.title2)
+                .bold()
+                .foregroundColor(.white)
 
-                HStack {
-                    VStack(alignment: .leading) {
-                        StorageInfoRow(label: "Total Storage", value: getTotalDiskSpace())
-                        StorageInfoRow(label: "Used Storage", value: getUsedDiskSpace())
-                        StorageInfoRow(label: "Free Storage", value: getFreeDiskSpace())
-                        StorageInfoRow(label: "Releasable Space", value: getReleasableSpace())
-                    }
-                    Spacer()
-                    StorageBarChart(usedPercentage: getUsedPercentage())
-                        .frame(width: 100, height: 20)
+            HStack {
+                VStack(alignment: .leading) {
+                    StorageInfoRow(label: "Total Storage", value: getTotalDiskSpace())
+                    StorageInfoRow(label: "Used Storage", value: getUsedDiskSpace())
+                    StorageInfoRow(label: "Free Storage", value: getFreeDiskSpace())
+                    StorageInfoRow(label: "Releasable Space", value: getReleasableSpace())
                 }
-
-                Button(action: {
-                    showClearCacheView = true
-                    logEvent("Clear Cache button tapped.")
-                }) {
-                    Text("Clear Cache & Temp Files")
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
-                .fullScreenCover(isPresented: $showClearCacheView) {
-                    ClearCacheView()
-                }
-
-                Button(action: {
-                    if iapManager.hasGoldSubscription {
-                        startDuplicateScan()
-                    } else {
-                        if canShowAd {
-                            showAdForAccess()
-                        } else {
-                            purchaseGold()
-                        }
-                    }
-                }) {
-                    Text(duplicateButtonTitle)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(iapManager.hasGoldSubscription ? Color.green : Color.orange)
-                        .cornerRadius(10)
-                }
-                .disabled(isAdLoading)
-
                 Spacer()
+                StorageBarChart(usedPercentage: getUsedPercentage())
+                    .frame(width: 100, height: 20)
             }
-            .padding()
-            .background(Color.black.ignoresSafeArea())
-            .onAppear {
-                logEvent("StorageInfoView appeared.")
-                InterstitialAdHandler.shared.preloadAd()
+
+            Button(action: {
+                showClearCacheView = true
+                logEvent("Clear Cache button tapped.")
+            }) {
+                Text("Clear Cache & Temp Files")
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .cornerRadius(10)
             }
-            .fullScreenCover(isPresented: $showScanView) {
-                DuplicateScanView()
+            .sheet(isPresented: $showClearCacheView) {
+                ClearCacheView()
+                    .interactiveDismissDisabled(false)
             }
-            .colorScheme(.dark)
+
+            Button(action: {
+                if iapManager.hasGoldSubscription {
+                    startDuplicateScan()
+                } else {
+                    if canShowAd {
+                        showAdForAccess()
+                    } else {
+                        purchaseGold()
+                    }
+                }
+            }) {
+                Text(duplicateButtonTitle)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(iapManager.hasGoldSubscription ? Color.green : Color.orange)
+                    .cornerRadius(10)
+            }
+            .disabled(isAdLoading)
+
+            Spacer()
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        .padding()
+        .background(Color.black.ignoresSafeArea())
+        .onAppear {
+            logEvent("StorageInfoView appeared.")
+            InterstitialAdHandler.shared.preloadAd()
+        }
+        .sheet(isPresented: $showScanView) {
+            DuplicateScanView()
+                .interactiveDismissDisabled(false)
+        }
+        .colorScheme(.dark)
     }
 
     private var canShowAd: Bool {
@@ -140,7 +135,7 @@ struct StorageInfoView: View {
 
     private func logEvent(_ message: String) {
         if enableLogging {
-            logger.info("\(message)")
+            print(message)
         }
     }
 

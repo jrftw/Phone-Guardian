@@ -1,5 +1,3 @@
-// DashboardView.swift
-
 import SwiftUI
 import GoogleMobileAds
 import os.log
@@ -43,6 +41,7 @@ struct DashboardView: View {
                 }
                 .navigationTitle("Phone Guardian - Dashboard")
                 .navigationBarTitleDisplayMode(.inline)
+                .navigationViewStyle(StackNavigationViewStyle())
             }
         }
     }
@@ -95,3 +94,4 @@ struct LoadingView: View {
         .background(Color(UIColor.systemBackground))
     }
 }
+

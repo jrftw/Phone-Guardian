@@ -1,73 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!--
-    Title: App Version
-    Detail: User-facing version number.
-    Description: Displayed in the App Store to indicate the app's current version.
-    -->
     <key>CFBundleShortVersionString</key>
-    <string>1.09</string>
-
-    <!--
-    Title: Build Version
-    Detail: Internal version for tracking builds.
-    Description: Incremented with each release for internal differentiation.
-    -->
+    <string>1.10</string>
     <key>CFBundleVersion</key>
-    <string>7</string>
-
-    <!--
-    Title: Background Modes
-    Detail: Allows certain tasks to continue running in the background.
-    Description: Includes support for remote notifications so that push messages can be received even when the app is not in the foreground.
-    -->
+    <string>1</string>
     <key>UIBackgroundModes</key>
     <array>
         <string>remote-notification</string>
     </array>
-
-    <!--
-    Title: Google Ads App ID
-    Detail: Identifies the app for Google Ads services.
-    Description: Required to initialize and serve ads from Google AdMob.
-    -->
     <key>GADApplicationIdentifier</key>
     <string>ca-app-pub-6815311336585204~1234567890</string>
-
-    <!--
-    Title: Banner Ad Unit ID
-    Detail: Specifies the ad unit for banner ads.
-    Description: Used by AdMob SDK to fetch and display banner ads.
-    -->
     <key>GADBannerAdUnitID</key>
     <string>ca-app-pub-6815311336585204/7321160278</string>
-
-    <!--
-    Title: Interstitial Ad Unit ID
-    Detail: Specifies the ad unit for interstitial ads.
-    Description: Used by AdMob SDK to load and show full-screen ads.
-    -->
     <key>GADInterstitialAdUnitID</key>
     <string>ca-app-pub-6815311336585204/7741700785</string>
-
-    <!--
-    Title: App Transport Security
-    Detail: Allows non-HTTPS loads.
-    Description: Temporarily included for compatibility with certain APIs or ad networks. In production, prefer secure connections.
-    -->
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>
         <true/>
     </dict>
-
-    <!--
-    Title: App Icon
-    Detail: Specifies the app’s primary app icon.
-    Description: Ensures consistent branding and appearance across all devices.
-    -->
     <key>CFBundleIcons</key>
     <dict>
         <key>CFBundlePrimaryIcon</key>
@@ -80,138 +33,42 @@
     </dict>
     <key>CFBundleIconName</key>
     <string>AppIcon</string>
-
-    <!--
-    Title: Tracking Permission
-    Detail: Describes why the app needs tracking authorization.
-    Description: Required by iOS 14+ for tracking user activity and delivering personalized ads.
-    -->
     <key>NSUserTrackingUsageDescription</key>
     <string>We use tracking data to personalize experiences and display relevant ads. Some tracking may be simulated or constrained by system limitations.</string>
-
-    <!--
-    Title: Location Permission
-    Detail: Access to user location when the app is active.
-    Description: Enables features like geotagging, localized content, or location-based recommendations.
-    -->
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>We need your location to enable location-based features and improve services. Some location features may be simulated or limited by Apple's guidelines.</string>
-
-    <!--
-    Title: Camera Permission
-    Detail: Allows the app to capture photos and scan documents.
-    Description: Needed for camera-based features like scanning and capturing new media.
-    -->
     <key>NSCameraUsageDescription</key>
     <string>We need camera access to scan documents and capture media.</string>
-
-    <!--
-    Title: Photo Library Permission
-    Detail: Grants the app read access to the photo library.
-    Description: Required to let users select and manage images and videos from their library.
-    -->
     <key>NSPhotoLibraryUsageDescription</key>
     <string>We need access to your photo library to view, save, and manage images or videos.</string>
-
-    <!--
-    Title: Photo Library Add Permission
-    Detail: Allows adding or modifying content in the user's photo library.
-    Description: Needed for saving edited images, managing duplicates, or exporting files.
-    -->
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>We need permission to add and manage duplicates found in your photo library.</string>
-
-    <!--
-    Title: Microphone Permission
-    Detail: Allows recording audio.
-    Description: Needed for any feature that records sound, such as voice memos or audio notes.
-    -->
     <key>NSMicrophoneUsageDescription</key>
     <string>We need access to your microphone to enable audio recording features.</string>
-
-    <!--
-    Title: Face ID Permission
-    Detail: Allows the app to use Face ID for authentication.
-    Description: Enables secure biometric login for sensitive sections of the app.
-    -->
     <key>NSFaceIDUsageDescription</key>
     <string>We need Face ID access for secure authentication of sensitive actions.</string>
-
-    <!--
-    Title: Biometric Authentication
-    Detail: Supports either Touch ID or Face ID.
-    Description: Enhances app security with quick and secure biometric unlock methods.
-    -->
     <key>NSBiometricUsageDescription</key>
     <string>We need biometric authentication (Touch ID or Face ID) for secure data access.</string>
-
-    <!--
-    Title: Calendar Permission
-    Detail: Access to user’s calendar data.
-    Description: Needed for identifying and managing duplicate events and improving organization.
-    -->
     <key>NSCalendarsUsageDescription</key>
-    <string>We need access to your calendar to find duplicate events and improve organization. Some calendar data may be estimated based on available resources.</string>
-
-    <!--
-    Title: Contacts Permission
-    Detail: Allows reading the user’s contacts.
-    Description: Required to identify and manage duplicate contacts, enhancing contact organization.
-    -->
+    <string>We need access to your calendar to find duplicate events and improve organization. Some calendar data may be estimated or limited by Apple's guidelines.</string>
     <key>NSContactsUsageDescription</key>
-    <string>We need access to your contacts to identify and manage duplicate entries. Some analyses may be simulated to comply with Apple's guidelines.</string>
-
-    <!--
-    Title: Bluetooth Permission
-    Detail: Allows the app to use Bluetooth.
-    Description: Needed for connecting to Bluetooth devices or accessories that enhance the app’s functionality.
-    -->
+    <string>We need access to your contacts to identify and manage duplicate entries. Some analyses may be simulated.</string>
     <key>NSBluetoothAlwaysUsageDescription</key>
     <string>We need access to Bluetooth to connect to nearby devices and improve functionality.</string>
-
-    <!--
-    Title: iCloud Container Environment
-    Detail: Sets the environment to production.
-    Description: Required for apps using iCloud services in a production environment.
-    -->
     <key>com.apple.developer.icloud-container-environment</key>
     <string>Production</string>
-
-    <!--
-    Title: iCloud Container Identifiers
-    Detail: Specifies the iCloud container used by the app.
-    Description: Identifies the container in which the app stores iCloud data.
-    -->
     <key>com.apple.developer.ubiquity-container-identifiers</key>
     <array>
         <string>iCloud.com.Infinitum-Imagery-LLC.phoneguardian</string>
     </array>
-
-    <!--
-    Title: Supported Device Orientations
-    Detail: Specifies which orientations the app supports.
-    Description: Ensures the UI adapts properly when the device is rotated.
-    -->
     <key>UISupportedInterfaceOrientations</key>
     <array>
         <string>UIInterfaceOrientationPortrait</string>
         <string>UIInterfaceOrientationLandscapeLeft</string>
         <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
-
-    <!--
-    Title: Status Bar Style
-    Detail: Configures the appearance of the status bar.
-    Description: Light content ensures white text on darker backgrounds.
-    -->
     <key>UIStatusBarStyle</key>
     <string>UIStatusBarStyleLightContent</string>
-
-    <!--
-    Title: SKAdNetwork Integration
-    Detail: Lists SKAdNetwork identifiers to attribute app installations to ad campaigns.
-    Description: Helps maintain user privacy while enabling effective ad campaign measurement.
-    -->
     <key>SKAdNetworkItems</key>
     <array>
         <dict>
@@ -227,5 +84,28 @@
             <string>v9wttpbfk9.skadnetwork</string>
         </dict>
     </array>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.example.PhoneGuardian</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>Phone Guardian</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    <key>UIApplicationSceneManifest</key>
+    <dict>
+        <key>UIApplicationSupportsMultipleScenes</key>
+        <false/>
+    </dict>
+    <key>UILaunchImages</key>
+    <array/>
 </dict>
 </plist>
