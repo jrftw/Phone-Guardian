@@ -15,7 +15,7 @@ struct FooterView: View {
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
 
-            Text("Version 1.10 Build (1) © 2024 Infinitum Imagery LLC")
+            Text("Version 1.11 Build (1) © 2024 Infinitum Imagery LLC")
                 .font(.footnote)
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
