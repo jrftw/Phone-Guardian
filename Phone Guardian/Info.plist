@@ -2,25 +2,34 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <!-- MARK: Version Information -->
     <key>CFBundleShortVersionString</key>
-    <string>1.11</string>
+    <string>1.12</string>
     <key>CFBundleVersion</key>
     <string>1</string>
+    
+    <!-- MARK: Background Modes -->
     <key>UIBackgroundModes</key>
     <array>
         <string>remote-notification</string>
     </array>
+    
+    <!-- MARK: Google AdMob -->
     <key>GADApplicationIdentifier</key>
     <string>ca-app-pub-6815311336585204~1234567890</string>
     <key>GADBannerAdUnitID</key>
     <string>ca-app-pub-6815311336585204/7321160278</string>
     <key>GADInterstitialAdUnitID</key>
     <string>ca-app-pub-6815311336585204/7741700785</string>
+    
+    <!-- MARK: App Transport Security -->
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>
         <true/>
     </dict>
+    
+    <!-- MARK: App Icons -->
     <key>CFBundleIcons</key>
     <dict>
         <key>CFBundlePrimaryIcon</key>
@@ -33,6 +42,8 @@
     </dict>
     <key>CFBundleIconName</key>
     <string>AppIcon</string>
+    
+    <!-- MARK: Usage Descriptions -->
     <key>NSUserTrackingUsageDescription</key>
     <string>We use tracking data to personalize experiences and display relevant ads. Some tracking may be simulated or constrained by system limitations.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
@@ -55,12 +66,16 @@
     <string>We need access to your contacts to identify and manage duplicate entries. Some analyses may be simulated.</string>
     <key>NSBluetoothAlwaysUsageDescription</key>
     <string>We need access to Bluetooth to connect to nearby devices and improve functionality.</string>
+    
+    <!-- MARK: iCloud & Ubiquity -->
     <key>com.apple.developer.icloud-container-environment</key>
     <string>Production</string>
     <key>com.apple.developer.ubiquity-container-identifiers</key>
     <array>
         <string>iCloud.com.Infinitum-Imagery-LLC.phoneguardian</string>
     </array>
+    
+    <!-- MARK: Interface Orientation & Status Bar -->
     <key>UISupportedInterfaceOrientations</key>
     <array>
         <string>UIInterfaceOrientationPortrait</string>
@@ -69,6 +84,8 @@
     </array>
     <key>UIStatusBarStyle</key>
     <string>UIStatusBarStyleLightContent</string>
+    
+    <!-- MARK: SKAdNetwork -->
     <key>SKAdNetworkItems</key>
     <array>
         <dict>
@@ -84,6 +101,8 @@
             <string>v9wttpbfk9.skadnetwork</string>
         </dict>
     </array>
+    
+    <!-- MARK: Bundle Info -->
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleExecutable</key>
@@ -98,14 +117,18 @@
     <string>APPL</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
+    
+    <!-- MARK: Launch Storyboard (replaces UILaunchImages) -->
     <key>UILaunchStoryboardName</key>
     <string>LaunchScreen</string>
+    
+    <!-- MARK: Scene Manifest -->
     <key>UIApplicationSceneManifest</key>
     <dict>
         <key>UIApplicationSupportsMultipleScenes</key>
         <false/>
     </dict>
-    <key>UILaunchImages</key>
-    <array/>
+    
+    <!-- Removed deprecated UILaunchImages array to avoid warning -->
 </dict>
 </plist>

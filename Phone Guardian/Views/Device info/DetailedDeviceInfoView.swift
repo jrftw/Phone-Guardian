@@ -1,6 +1,7 @@
 import SwiftUI
 import os
 import AdSupport
+import AppTrackingTransparency
 import UIKit
 import SystemConfiguration
 import Darwin
@@ -78,11 +79,19 @@ extension DetailedDeviceInfoView {
     
     // MARK: IDFA
     private func fetchIDFA() -> String {
-        let manager = ASIdentifierManager.shared()
-        if manager.isAdvertisingTrackingEnabled {
-            return manager.advertisingIdentifier.uuidString
+        if #available(iOS 14, *) {
+            if ATTrackingManager.trackingAuthorizationStatus == .authorized {
+                return ASIdentifierManager.shared().advertisingIdentifier.uuidString
+            } else {
+                return "N/A"
+            }
+        } else {
+            let manager = ASIdentifierManager.shared()
+            if manager.isAdvertisingTrackingEnabled {
+                return manager.advertisingIdentifier.uuidString
+            }
+            return "N/A"
         }
-        return "N/A"
     }
     
     // MARK: IDFV
@@ -109,13 +118,15 @@ extension DetailedDeviceInfoView {
                 let name = String(cString: ptr.pointee.ifa_name)
                 if name == "en0" || name == "pdp_ip0" {
                     var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-                    getnameinfo(ptr.pointee.ifa_addr,
-                                socklen_t(addr.sa_len),
-                                &hostname,
-                                socklen_t(hostname.count),
-                                nil,
-                                socklen_t(0),
-                                NI_NUMERICHOST)
+                    getnameinfo(
+                        ptr.pointee.ifa_addr,
+                        socklen_t(addr.sa_len),
+                        &hostname,
+                        socklen_t(hostname.count),
+                        nil,
+                        socklen_t(0),
+                        NI_NUMERICHOST
+                    )
                     addresses.append(String(cString: hostname))
                 }
             }
