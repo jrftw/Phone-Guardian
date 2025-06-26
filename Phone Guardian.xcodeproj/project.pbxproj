@@ -1,0 +1,1002 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		792EE7B02CF7CA97001E0F9A /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 792EE7AF2CF7CA97001E0F9A /* Photos.framework */; };
+		792EE7B22CF7CAA8001E0F9A /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 792EE7B12CF7CAA8001E0F9A /* Contacts.framework */; };
+		792EE7B42CF7CAB2001E0F9A /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 792EE7B32CF7CAB2001E0F9A /* EventKit.framework */; };
+		792EE7B62CF7CAC2001E0F9A /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 792EE7B52CF7CAC2001E0F9A /* EventKitUI.framework */; platformFilters = (ios, xros, ); };
+		7936330B2CEE881A00870164 /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = 7936330A2CEE881A00870164 /* GoogleUserMessagingPlatform */; };
+		79575D2E2CF7672D00CF85F9 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 79575D2D2CF7672D00CF85F9 /* ZIPFoundation */; };
+		7983B28A2CF78372002CF52D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7983B2892CF78372002CF52D /* StoreKit.framework */; };
+		7983B2BA2CF787A4002CF52D /* PhoneGuardian Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 7983B2B92CF787A4002CF52D /* PhoneGuardian Watch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		79AA88042D0B777F008AB91B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79AA88032D0B777F008AB91B /* CloudKit.framework */; };
+		79B50E6F2CEE55DC0095B386 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 79B50E6E2CEE55DC0095B386 /* GoogleMobileAds */; };
+		79C9BABE2CF2D506009606BA /* SwiftyPing in Frameworks */ = {isa = PBXBuildFile; productRef = 79C9BABD2CF2D506009606BA /* SwiftyPing */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		79B50DE42CEE528F0095B386 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79B50DC72CEE528E0095B386 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79B50DCE2CEE528E0095B386;
+			remoteInfo = "Phone Guardian";
+		};
+		79B50DEE2CEE528F0095B386 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79B50DC72CEE528E0095B386 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79B50DCE2CEE528E0095B386;
+			remoteInfo = "Phone Guardian";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7983B2E02CF787A5002CF52D /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				7983B2BA2CF787A4002CF52D /* PhoneGuardian Watch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		792EE7AF2CF7CA97001E0F9A /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.1.sdk/System/Library/Frameworks/Photos.framework; sourceTree = DEVELOPER_DIR; };
+		792EE7B12CF7CAA8001E0F9A /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.1.sdk/System/Library/Frameworks/Contacts.framework; sourceTree = DEVELOPER_DIR; };
+		792EE7B32CF7CAB2001E0F9A /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.1.sdk/System/Library/Frameworks/EventKit.framework; sourceTree = DEVELOPER_DIR; };
+		792EE7B52CF7CAC2001E0F9A /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.1.sdk/System/Library/Frameworks/EventKitUI.framework; sourceTree = DEVELOPER_DIR; };
+		7983B2892CF78372002CF52D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		7983B2942CF787A3002CF52D /* PhoneGuardian Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PhoneGuardian Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7983B2B92CF787A4002CF52D /* PhoneGuardian Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PhoneGuardian Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		79AA88032D0B777F008AB91B /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
+		79B50DCF2CEE528E0095B386 /* Phone Guardian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Phone Guardian.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		79B50DE32CEE528F0095B386 /* Phone GuardianTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Phone GuardianTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		79B50DED2CEE528F0095B386 /* Phone GuardianUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Phone GuardianUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7971DAB52E0CCB1300BA950C /* Exceptions for "Phone Guardian" folder in "Phone Guardian" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				App/Info.plist,
+			);
+			target = 79B50DCE2CEE528E0095B386 /* Phone Guardian */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		7983B2952CF787A3002CF52D /* PhoneGuardian Watch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "PhoneGuardian Watch";
+			sourceTree = "<group>";
+		};
+		7983B2BD2CF787A4002CF52D /* PhoneGuardian Watch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "PhoneGuardian Watch Watch App";
+			sourceTree = "<group>";
+		};
+		79B50DD12CEE528E0095B386 /* Phone Guardian */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7971DAB52E0CCB1300BA950C /* Exceptions for "Phone Guardian" folder in "Phone Guardian" target */,
+			);
+			path = "Phone Guardian";
+			sourceTree = "<group>";
+		};
+		79B50DE62CEE528F0095B386 /* Phone GuardianTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Phone GuardianTests";
+			sourceTree = "<group>";
+		};
+		79B50DF02CEE528F0095B386 /* Phone GuardianUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Phone GuardianUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7983B2912CF787A3002CF52D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7983B2B62CF787A4002CF52D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B50DCC2CEE528E0095B386 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				792EE7B62CF7CAC2001E0F9A /* EventKitUI.framework in Frameworks */,
+				792EE7B42CF7CAB2001E0F9A /* EventKit.framework in Frameworks */,
+				792EE7B22CF7CAA8001E0F9A /* Contacts.framework in Frameworks */,
+				792EE7B02CF7CA97001E0F9A /* Photos.framework in Frameworks */,
+				7936330B2CEE881A00870164 /* GoogleUserMessagingPlatform in Frameworks */,
+				79AA88042D0B777F008AB91B /* CloudKit.framework in Frameworks */,
+				79B50E6F2CEE55DC0095B386 /* GoogleMobileAds in Frameworks */,
+				7983B28A2CF78372002CF52D /* StoreKit.framework in Frameworks */,
+				79C9BABE2CF2D506009606BA /* SwiftyPing in Frameworks */,
+				79575D2E2CF7672D00CF85F9 /* ZIPFoundation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B50DE02CEE528F0095B386 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B50DEA2CEE528F0095B386 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		79B50DC62CEE528E0095B386 = {
+			isa = PBXGroup;
+			children = (
+				79B50DD12CEE528E0095B386 /* Phone Guardian */,
+				79B50DE62CEE528F0095B386 /* Phone GuardianTests */,
+				79B50DF02CEE528F0095B386 /* Phone GuardianUITests */,
+				7983B2952CF787A3002CF52D /* PhoneGuardian Watch */,
+				7983B2BD2CF787A4002CF52D /* PhoneGuardian Watch Watch App */,
+				79B50E6D2CEE55DC0095B386 /* Frameworks */,
+				79B50DD02CEE528E0095B386 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		79B50DD02CEE528E0095B386 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				79B50DCF2CEE528E0095B386 /* Phone Guardian.app */,
+				79B50DE32CEE528F0095B386 /* Phone GuardianTests.xctest */,
+				79B50DED2CEE528F0095B386 /* Phone GuardianUITests.xctest */,
+				7983B2942CF787A3002CF52D /* PhoneGuardian Watch.app */,
+				7983B2B92CF787A4002CF52D /* PhoneGuardian Watch Watch App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		79B50E6D2CEE55DC0095B386 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				79AA88032D0B777F008AB91B /* CloudKit.framework */,
+				792EE7B52CF7CAC2001E0F9A /* EventKitUI.framework */,
+				792EE7B32CF7CAB2001E0F9A /* EventKit.framework */,
+				792EE7B12CF7CAA8001E0F9A /* Contacts.framework */,
+				792EE7AF2CF7CA97001E0F9A /* Photos.framework */,
+				7983B2892CF78372002CF52D /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7983B2932CF787A3002CF52D /* PhoneGuardian Watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7983B2E12CF787A5002CF52D /* Build configuration list for PBXNativeTarget "PhoneGuardian Watch" */;
+			buildPhases = (
+				7983B2902CF787A3002CF52D /* Sources */,
+				7983B2912CF787A3002CF52D /* Frameworks */,
+				7983B2922CF787A3002CF52D /* Resources */,
+				7983B2E02CF787A5002CF52D /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7983B2952CF787A3002CF52D /* PhoneGuardian Watch */,
+			);
+			name = "PhoneGuardian Watch";
+			packageProductDependencies = (
+			);
+			productName = "PhoneGuardian Watch";
+			productReference = 7983B2942CF787A3002CF52D /* PhoneGuardian Watch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7983B2B82CF787A4002CF52D /* PhoneGuardian Watch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7983B2DD2CF787A5002CF52D /* Build configuration list for PBXNativeTarget "PhoneGuardian Watch Watch App" */;
+			buildPhases = (
+				7983B2B52CF787A4002CF52D /* Sources */,
+				7983B2B62CF787A4002CF52D /* Frameworks */,
+				7983B2B72CF787A4002CF52D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7983B2BD2CF787A4002CF52D /* PhoneGuardian Watch Watch App */,
+			);
+			name = "PhoneGuardian Watch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "PhoneGuardian Watch Watch App";
+			productReference = 7983B2B92CF787A4002CF52D /* PhoneGuardian Watch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		79B50DCE2CEE528E0095B386 /* Phone Guardian */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79B50DF62CEE528F0095B386 /* Build configuration list for PBXNativeTarget "Phone Guardian" */;
+			buildPhases = (
+				79B50DCB2CEE528E0095B386 /* Sources */,
+				79B50DCC2CEE528E0095B386 /* Frameworks */,
+				79B50DCD2CEE528E0095B386 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				79B50DD12CEE528E0095B386 /* Phone Guardian */,
+			);
+			name = "Phone Guardian";
+			packageProductDependencies = (
+				79B50E6E2CEE55DC0095B386 /* GoogleMobileAds */,
+				7936330A2CEE881A00870164 /* GoogleUserMessagingPlatform */,
+				79C9BABD2CF2D506009606BA /* SwiftyPing */,
+				79575D2D2CF7672D00CF85F9 /* ZIPFoundation */,
+			);
+			productName = "Phone Guardian";
+			productReference = 79B50DCF2CEE528E0095B386 /* Phone Guardian.app */;
+			productType = "com.apple.product-type.application";
+		};
+		79B50DE22CEE528F0095B386 /* Phone GuardianTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79B50DFB2CEE528F0095B386 /* Build configuration list for PBXNativeTarget "Phone GuardianTests" */;
+			buildPhases = (
+				79B50DDF2CEE528F0095B386 /* Sources */,
+				79B50DE02CEE528F0095B386 /* Frameworks */,
+				79B50DE12CEE528F0095B386 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				79B50DE52CEE528F0095B386 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				79B50DE62CEE528F0095B386 /* Phone GuardianTests */,
+			);
+			name = "Phone GuardianTests";
+			packageProductDependencies = (
+			);
+			productName = "Phone GuardianTests";
+			productReference = 79B50DE32CEE528F0095B386 /* Phone GuardianTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		79B50DEC2CEE528F0095B386 /* Phone GuardianUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79B50DFE2CEE528F0095B386 /* Build configuration list for PBXNativeTarget "Phone GuardianUITests" */;
+			buildPhases = (
+				79B50DE92CEE528F0095B386 /* Sources */,
+				79B50DEA2CEE528F0095B386 /* Frameworks */,
+				79B50DEB2CEE528F0095B386 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				79B50DEF2CEE528F0095B386 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				79B50DF02CEE528F0095B386 /* Phone GuardianUITests */,
+			);
+			name = "Phone GuardianUITests";
+			packageProductDependencies = (
+			);
+			productName = "Phone GuardianUITests";
+			productReference = 79B50DED2CEE528F0095B386 /* Phone GuardianUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		79B50DC72CEE528E0095B386 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1610;
+				LastUpgradeCheck = 1630;
+				TargetAttributes = {
+					7983B2932CF787A3002CF52D = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					7983B2B82CF787A4002CF52D = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					79B50DCE2CEE528E0095B386 = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					79B50DE22CEE528F0095B386 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 79B50DCE2CEE528E0095B386;
+					};
+					79B50DEC2CEE528F0095B386 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 79B50DCE2CEE528E0095B386;
+					};
+				};
+			};
+			buildConfigurationList = 79B50DCA2CEE528E0095B386 /* Build configuration list for PBXProject "Phone Guardian" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 79B50DC62CEE528E0095B386;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				79B50E6C2CEE55C70095B386 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				793633092CEE87A900870164 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */,
+				79C9BABC2CF2D506009606BA /* XCRemoteSwiftPackageReference "SwiftyPing" */,
+				79575D2C2CF7672D00CF85F9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 79B50DD02CEE528E0095B386 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				79B50DCE2CEE528E0095B386 /* Phone Guardian */,
+				79B50DE22CEE528F0095B386 /* Phone GuardianTests */,
+				79B50DEC2CEE528F0095B386 /* Phone GuardianUITests */,
+				7983B2932CF787A3002CF52D /* PhoneGuardian Watch */,
+				7983B2B82CF787A4002CF52D /* PhoneGuardian Watch Watch App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7983B2922CF787A3002CF52D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7983B2B72CF787A4002CF52D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B50DCD2CEE528E0095B386 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B50DE12CEE528F0095B386 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B50DEB2CEE528F0095B386 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7983B2902CF787A3002CF52D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7983B2B52CF787A4002CF52D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B50DCB2CEE528E0095B386 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B50DDF2CEE528F0095B386 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B50DE92CEE528F0095B386 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		79B50DE52CEE528F0095B386 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79B50DCE2CEE528E0095B386 /* Phone Guardian */;
+			targetProxy = 79B50DE42CEE528F0095B386 /* PBXContainerItemProxy */;
+		};
+		79B50DEF2CEE528F0095B386 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79B50DCE2CEE528E0095B386 /* Phone Guardian */;
+			targetProxy = 79B50DEE2CEE528F0095B386 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7983B2DE2CF787A5002CF52D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PhoneGuardian/Resources/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "PhoneGuardian Watch";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "Infinitum-Imagery-LLC.PhoneGuardian-Watch";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.PhoneGuardian-Watch.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.6;
+			};
+			name = Debug;
+		};
+		7983B2DF2CF787A5002CF52D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PhoneGuardian/Resources/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "PhoneGuardian Watch";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "Infinitum-Imagery-LLC.PhoneGuardian-Watch";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.PhoneGuardian-Watch.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 9.6;
+			};
+			name = Release;
+		};
+		7983B2E22CF787A5002CF52D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PhoneGuardian/Resources/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "PhoneGuardian Watch";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.PhoneGuardian-Watch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7983B2E32CF787A5002CF52D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PhoneGuardian/Resources/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "PhoneGuardian Watch";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.PhoneGuardian-Watch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		79B50DF72CEE528F0095B386 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Phone Guardian/App/Phone_Guardian.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Phone Guardian/Resources/Preview Content\"";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Phone Guardian/App/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Phone Guardian";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MARKETING_VERSION = 1.12;
+				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.Phone-Guardian";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 1.3;
+			};
+			name = Debug;
+		};
+		79B50DF82CEE528F0095B386 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Phone Guardian/App/Phone_Guardian.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"PhoneGuardian/Resources/Preview Content\"";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Phone Guardian/App/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Phone Guardian";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MARKETING_VERSION = 1.12;
+				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.Phone-Guardian";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 1.3;
+			};
+			name = Release;
+		};
+		79B50DF92CEE528F0095B386 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = AD7SJSPX55;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		79B50DFA2CEE528F0095B386 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = AD7SJSPX55;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		79B50DFC2CEE528F0095B386 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.Phone-GuardianTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Phone Guardian.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Phone Guardian";
+				XROS_DEPLOYMENT_TARGET = 2.1;
+			};
+			name = Debug;
+		};
+		79B50DFD2CEE528F0095B386 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.Phone-GuardianTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Phone Guardian.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Phone Guardian";
+				XROS_DEPLOYMENT_TARGET = 2.1;
+			};
+			name = Release;
+		};
+		79B50DFF2CEE528F0095B386 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.Phone-GuardianUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = "Phone Guardian";
+				XROS_DEPLOYMENT_TARGET = 2.1;
+			};
+			name = Debug;
+		};
+		79B50E002CEE528F0095B386 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.Phone-GuardianUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = "Phone Guardian";
+				XROS_DEPLOYMENT_TARGET = 2.1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7983B2DD2CF787A5002CF52D /* Build configuration list for PBXNativeTarget "PhoneGuardian Watch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7983B2DE2CF787A5002CF52D /* Debug */,
+				7983B2DF2CF787A5002CF52D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7983B2E12CF787A5002CF52D /* Build configuration list for PBXNativeTarget "PhoneGuardian Watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7983B2E22CF787A5002CF52D /* Debug */,
+				7983B2E32CF787A5002CF52D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79B50DCA2CEE528E0095B386 /* Build configuration list for PBXProject "Phone Guardian" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79B50DF92CEE528F0095B386 /* Debug */,
+				79B50DFA2CEE528F0095B386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79B50DF62CEE528F0095B386 /* Build configuration list for PBXNativeTarget "Phone Guardian" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79B50DF72CEE528F0095B386 /* Debug */,
+				79B50DF82CEE528F0095B386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79B50DFB2CEE528F0095B386 /* Build configuration list for PBXNativeTarget "Phone GuardianTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79B50DFC2CEE528F0095B386 /* Debug */,
+				79B50DFD2CEE528F0095B386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79B50DFE2CEE528F0095B386 /* Build configuration list for PBXNativeTarget "Phone GuardianUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79B50DFF2CEE528F0095B386 /* Debug */,
+				79B50E002CEE528F0095B386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		793633092CEE87A900870164 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.0;
+			};
+		};
+		79575D2C2CF7672D00CF85F9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.19;
+			};
+		};
+		79B50E6C2CEE55C70095B386 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.12.0;
+			};
+		};
+		79C9BABC2CF2D506009606BA /* XCRemoteSwiftPackageReference "SwiftyPing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/samiyr/SwiftyPing.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7936330A2CEE881A00870164 /* GoogleUserMessagingPlatform */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 793633092CEE87A900870164 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */;
+			productName = GoogleUserMessagingPlatform;
+		};
+		79575D2D2CF7672D00CF85F9 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79575D2C2CF7672D00CF85F9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+		79B50E6E2CEE55DC0095B386 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79B50E6C2CEE55C70095B386 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+		79C9BABD2CF2D506009606BA /* SwiftyPing */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79C9BABC2CF2D506009606BA /* XCRemoteSwiftPackageReference "SwiftyPing" */;
+			productName = SwiftyPing;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 79B50DC72CEE528E0095B386 /* Project object */;
+}
