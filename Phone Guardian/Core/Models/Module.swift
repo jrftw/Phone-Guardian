@@ -15,37 +15,28 @@ struct Module: Identifiable, Codable {
         switch viewName {
         case "DeviceInfoView":
             DeviceInfoView()
-                .previewCardStyle()
         case "BatteryInfoView":
             BatteryInfoView()
-                .previewCardStyle()
         case "CPUInfoView":
             CPUInfoView()
-                .previewCardStyle()
         case "RAMInfoView":
             RAMInfoView()
-                .previewCardStyle()
         case "StorageInfoView":
             StorageInfoView()
-                .previewCardStyle()
         case "NetworkInfoView":
             NetworkInfoView()
-                .previewCardStyle()
         case "SensorInfoView":
             SensorInfoView()
-                .previewCardStyle()
         case "DisplayInfoView":
             DisplayInfoView()
-                .previewCardStyle()
         case "CameraInfoView":
             CameraInfoView()
-                .previewCardStyle()
         case "HealthCheckView":
             HealthCheckView()
-                .previewCardStyle()
         default:
             Text("Unknown Module")
-                .previewCardStyle()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(UIColor.systemBackground))
         }
     }
 }

@@ -10,64 +10,74 @@ struct StorageInfoView: View {
     @State private var showScanView = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("STORAGE")
-                .font(.title2)
-                .bold()
-                .foregroundColor(.white)
-
-            HStack {
-                VStack(alignment: .leading) {
-                    StorageInfoRow(label: "Total Storage", value: getTotalDiskSpace())
-                    StorageInfoRow(label: "Used Storage", value: getUsedDiskSpace())
-                    StorageInfoRow(label: "Free Storage", value: getFreeDiskSpace())
-                    StorageInfoRow(label: "Releasable Space", value: getReleasableSpace())
-                }
-                Spacer()
-                StorageBarChart(usedPercentage: getUsedPercentage())
-                    .frame(width: 100, height: 20)
-            }
-
-            Button(action: {
-                showClearCacheView = true
-                logEvent("Clear Cache button tapped.")
-            }) {
-                Text("Clear Cache & Temp Files")
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-            }
-            .sheet(isPresented: $showClearCacheView) {
-                ClearCacheView()
-                    .interactiveDismissDisabled(false)
-            }
-
-            Button(action: {
-                if iapManager.hasGoldSubscription {
-                    startDuplicateScan()
-                } else {
-                    if canShowAd {
-                        showAdForAccess()
-                    } else {
-                        purchaseGold()
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 24) {
+                // Storage Overview Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Storage Overview", icon: "externaldrive")
+                    
+                    HStack(alignment: .top, spacing: 20) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            ModernInfoRow(icon: "externaldrive.fill", label: "Total Storage", value: getTotalDiskSpace(), iconColor: .blue)
+                            ModernInfoRow(icon: "externaldrive.badge.checkmark", label: "Used Storage", value: getUsedDiskSpace(), iconColor: .orange)
+                            ModernInfoRow(icon: "externaldrive.badge.plus", label: "Free Storage", value: getFreeDiskSpace(), iconColor: .green)
+                            ModernInfoRow(icon: "arrow.up.circle", label: "Releasable Space", value: getReleasableSpace(), iconColor: .purple)
+                        }
+                        
+                        Spacer()
+                        
+                        StorageBarChart(usedPercentage: getUsedPercentage())
+                            .frame(width: 120, height: 120)
+                            .modernCard(padding: 12)
                     }
                 }
-            }) {
-                Text(duplicateButtonTitle)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(iapManager.hasGoldSubscription ? Color.green : Color.orange)
-                    .cornerRadius(10)
-            }
-            .disabled(isAdLoading)
+                .modernCard()
+                
+                // Action Buttons Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Storage Actions", icon: "wrench.and.screwdriver")
+                    
+                    LazyVStack(spacing: 12) {
+                        Button(action: {
+                            showClearCacheView = true
+                            logEvent("Clear Cache button tapped.")
+                        }) {
+                            HStack {
+                                Image(systemName: "trash")
+                                Text("Clear Cache & Temp Files")
+                            }
+                        }
+                        .modernButton(backgroundColor: .blue)
+                        .sheet(isPresented: $showClearCacheView) {
+                            ClearCacheView()
+                                .interactiveDismissDisabled(false)
+                        }
 
-            Spacer()
+                        Button(action: {
+                            if iapManager.hasGoldSubscription {
+                                startDuplicateScan()
+                            } else {
+                                if canShowAd {
+                                    showAdForAccess()
+                                } else {
+                                    purchaseGold()
+                                }
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "doc.on.doc")
+                                Text(duplicateButtonTitle)
+                            }
+                        }
+                        .modernButton(backgroundColor: iapManager.hasGoldSubscription ? .green : .orange)
+                        .disabled(isAdLoading)
+                    }
+                }
+                .modernCard()
+            }
+            .padding()
         }
-        .padding()
-        .background(Color.black.ignoresSafeArea())
+        .background(Color(UIColor.systemBackground).ignoresSafeArea())
         .onAppear {
             logEvent("StorageInfoView appeared.")
             InterstitialAdHandler.shared.preloadAd()
@@ -76,7 +86,6 @@ struct StorageInfoView: View {
             DuplicateScanView()
                 .interactiveDismissDisabled(false)
         }
-        .colorScheme(.dark)
     }
 
     private var canShowAd: Bool {

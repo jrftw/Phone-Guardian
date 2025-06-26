@@ -27,53 +27,55 @@ struct DetailedDeviceInfoView: View {
     // MARK: Body
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            LazyVStack(alignment: .leading, spacing: 24) {
                 // MARK: Device Categories
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Device Categories")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .padding(.horizontal)
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Device Categories", icon: "iphone")
                     
-                    VStack(spacing: 8) {
+                    LazyVStack(spacing: 12) {
                         NavigationLink(destination: DetailediPhoneView()) {
                             DeviceCategoryRow(title: "iPhones", icon: "iphone")
                         }
+                        .buttonStyle(PlainButtonStyle())
+                        
                         NavigationLink(destination: DetailediPadView()) {
                             DeviceCategoryRow(title: "iPads", icon: "ipad")
                         }
+                        .buttonStyle(PlainButtonStyle())
+                        
                         NavigationLink(destination: DetailedMacView()) {
                             DeviceCategoryRow(title: "Macs", icon: "laptopcomputer")
                         }
+                        .buttonStyle(PlainButtonStyle())
+                        
                         NavigationLink(destination: DetailedVisionProView()) {
                             DeviceCategoryRow(title: "Vision Pro", icon: "visionpro")
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
-                    .padding(.horizontal)
                 }
+                .modernCard()
+                
                 // MARK: Extra Info
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Device Information")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .padding(.horizontal)
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Device Information", icon: "info.circle")
                     
-                    VStack(spacing: 12) {
-                        InfoRow(label: "Advertising ID (IDFA)", value: advertisingID)
-                        InfoRow(label: "Vendor ID (IDFV)", value: vendorID)
-                        InfoRow(label: "IP Address", value: ipAddress)
-                        InfoRow(label: "UDID", value: udid)
-                        InfoRow(label: "Model Number", value: modelNumber)
-                        InfoRow(label: "Serial Number", value: serialNumber)
-                        InfoRow(label: "EID", value: eid)
-                        InfoRow(label: "IMEI", value: imei)
-                        InfoRow(label: "ICCID", value: iccid)
-                        InfoRow(label: "IMEI2", value: imei2)
-                        InfoRow(label: "SEID", value: seid)
-                        InfoRow(label: "Modem Firmware", value: modemFirmware)
+                    LazyVStack(spacing: 8) {
+                        ModernInfoRow(icon: "person.crop.circle", label: "Advertising ID (IDFA)", value: advertisingID, iconColor: .blue)
+                        ModernInfoRow(icon: "building.2", label: "Vendor ID (IDFV)", value: vendorID, iconColor: .green)
+                        ModernInfoRow(icon: "network", label: "IP Address", value: ipAddress, iconColor: .orange)
+                        ModernInfoRow(icon: "number", label: "UDID", value: udid, iconColor: .red)
+                        ModernInfoRow(icon: "iphone", label: "Model Number", value: modelNumber, iconColor: .purple)
+                        ModernInfoRow(icon: "barcode", label: "Serial Number", value: serialNumber, iconColor: .cyan)
+                        ModernInfoRow(icon: "simcard", label: "EID", value: eid, iconColor: .indigo)
+                        ModernInfoRow(icon: "antenna.radiowaves.left.and.right", label: "IMEI", value: imei, iconColor: .pink)
+                        ModernInfoRow(icon: "simcard.2", label: "ICCID", value: iccid, iconColor: .gray)
+                        ModernInfoRow(icon: "antenna.radiowaves.left.and.right", label: "IMEI2", value: imei2, iconColor: .blue)
+                        ModernInfoRow(icon: "shield", label: "SEID", value: seid, iconColor: .green)
+                        ModernInfoRow(icon: "gear", label: "Modem Firmware", value: modemFirmware, iconColor: .orange)
                     }
-                    .padding(.horizontal)
                 }
+                .modernCard()
             }
             .padding()
         }
@@ -103,19 +105,32 @@ struct DeviceCategoryRow: View {
     let icon: String
     
     var body: some View {
-        HStack {
+        HStack(spacing: 16) {
             Image(systemName: icon)
                 .font(.title2)
+                .foregroundColor(.accentColor)
                 .frame(width: 30)
+            
             Text(title)
                 .font(.headline)
+                .foregroundColor(.primary)
+            
             Spacer()
+            
             Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
+                .foregroundColor(.secondary)
+                .font(.subheadline)
         }
-        .padding()
-        .background(Color(UIColor.systemBackground))
-        .cornerRadius(8)
+        .padding(.vertical, 16)
+        .padding(.horizontal, 20)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(.quaternary, lineWidth: 0.5)
+                )
+        )
     }
 }
 

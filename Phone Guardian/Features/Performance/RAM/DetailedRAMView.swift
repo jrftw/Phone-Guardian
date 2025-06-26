@@ -17,66 +17,40 @@ struct DetailedRAMView: View {
     @State private var showDeepCleanRamView = false
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("RAM Detailed View")
-                    .font(.title2)
-                    .bold()
-                
-                RamPieChart(
-                    activeRAM: activeRAM,
-                    inactiveRAM: inactiveRAM,
-                    wiredRAM: wiredRAM,
-                    freeRAM: freeRAM,
-                    compressedRAM: compressedRAM,
-                    totalRAM: totalRAM
-                )
-                .frame(height: 250)
-                
-                /* Uncomment this section if RAM cleaning features are needed in the future
-                
-                HStack(spacing: 10) {
-                    Button(action: {
-                        showCleanRamView = true
-                    }) {
-                        Text("Clean RAM Memory")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5) // Prevents text from cutting off
-                    }
-                    .sheet(isPresented: $showCleanRamView) {
-                        CleanRamMemoryView()
+        NavigationView {
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 24) {
+                    // RAM Pie Chart Section
+                    VStack(alignment: .leading, spacing: 16) {
+                        ModernSectionHeader(title: "RAM Distribution", icon: "chart.pie")
+                        
+                        RamPieChart(
+                            activeRAM: activeRAM,
+                            inactiveRAM: inactiveRAM,
+                            wiredRAM: wiredRAM,
+                            freeRAM: freeRAM,
+                            compressedRAM: compressedRAM,
+                            totalRAM: totalRAM
+                        )
+                        .frame(height: 250)
+                        .modernCard(padding: 16)
                     }
                     
-                    Button(action: {
-                        showDeepCleanRamView = true
-                    }) {
-                        Text("Deep Clean RAM Memory")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.red)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5) // Prevents text from cutting off
+                    // RAM Definitions Section
+                    VStack(alignment: .leading, spacing: 16) {
+                        ModernSectionHeader(title: "RAM Definitions", icon: "book")
+                        
+                        RamDefinitionsView()
                     }
-                    .sheet(isPresented: $showDeepCleanRamView) {
-                        // DeepCleanRamMemoryView()
-                    }
+                    .modernCard()
                 }
-                .frame(maxHeight: 60) // Ensure consistent height for buttons
-                 
-                */
-                
-                RamDefinitionsView()
+                .padding()
             }
-            .padding()
+            .background(Color(UIColor.systemBackground).ignoresSafeArea())
+            .navigationTitle("RAM Details")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .background(Color(UIColor.systemBackground).ignoresSafeArea())
+        .navigationViewStyle(StackNavigationViewStyle())
         .onAppear {
             if enableLogging { logger.info("DetailedRAMView appeared.") }
         }

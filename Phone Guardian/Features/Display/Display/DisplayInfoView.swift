@@ -11,30 +11,47 @@ struct DisplayInfoView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("Display Information")
-                    .font(.title2)
-                    .bold()
-
-                InfoRow(label: "Zoom", value: "Enabled")
-                InfoRow(label: "Screen Captured", value: isScreenCaptured() ? "Yes" : "No")
-                InfoRow(label: "Frame Rate", value: "\(Int(frameRate)) FPS")
-
-                BrightnessChart(brightness: brightness)
-                    .frame(height: 200)
-
+            LazyVStack(alignment: .leading, spacing: 24) {
+                // Display Information Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Display Information", icon: "display")
+                    
+                    LazyVStack(spacing: 8) {
+                        ModernInfoRow(icon: "magnifyingglass", label: "Zoom", value: "Enabled", iconColor: .blue)
+                        ModernInfoRow(icon: "rectangle.on.rectangle", label: "Screen Captured", value: isScreenCaptured() ? "Yes" : "No", iconColor: .orange)
+                        ModernInfoRow(icon: "speedometer", label: "Frame Rate", value: "\(Int(frameRate)) FPS", iconColor: .green)
+                    }
+                }
+                .modernCard()
+                
+                // Brightness Chart Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Brightness Level", icon: "sun.max")
+                    
+                    BrightnessChart(brightness: brightness)
+                        .frame(height: 200)
+                        .modernCard(padding: 16)
+                }
+                
+                // More Info Button
                 Button(action: {
                     isMoreInfoPresented = true
                     logger.info("More Info button tapped.")
                 }) {
-                    Text("More Info")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    HStack {
+                        Image(systemName: "info.circle.fill")
+                        Text("More Display Information")
+                    }
                 }
+                .modernButton(backgroundColor: .blue)
                 .sheet(isPresented: $isMoreInfoPresented) {
-                    DisplayMoreInfoView()
+                    if #available(iOS 16.0, *) {
+                        DisplayMoreInfoView()
+                            .presentationDetents([.large])
+                            .presentationDragIndicator(.visible)
+                    } else {
+                        DisplayMoreInfoView()
+                    }
                 }
             }
             .padding()
@@ -84,33 +101,58 @@ struct BrightnessChart: View {
     let brightness: Double
 
     var body: some View {
-        ProgressView("Brightness", value: brightness, total: 100)
-            .progressViewStyle(LinearProgressViewStyle(tint: brightness > 70 ? .red : .green))
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Brightness Level")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                
+                Spacer()
+                
+                Text("\(Int(brightness))%")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+            }
+            
+            ProgressView(value: brightness, total: 100)
+                .progressViewStyle(LinearProgressViewStyle(tint: brightness > 70 ? .red : brightness > 40 ? .orange : .green))
+                .scaleEffect(y: 2)
+        }
     }
 }
 
 struct DisplayMoreInfoView: View {
     @EnvironmentObject var iapManager: IAPManager
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                if !(iapManager.hasGoldSubscription || iapManager.hasToolsSubscription || iapManager.hasRemoveAds) {
-                    AdBannerView()
-                        .frame(height: 50)
-                        .padding(.vertical)
+        NavigationView {
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 24) {
+                    // Display Specifications Section
+                    VStack(alignment: .leading, spacing: 16) {
+                        ModernSectionHeader(title: "Display Specifications", icon: "display")
+                        
+                        LazyVStack(spacing: 8) {
+                            ModernInfoRow(icon: "circle.lefthalf.filled", label: "OLED", value: "Yes", iconColor: .blue)
+                            ModernInfoRow(icon: "eye", label: "Retina HD", value: "Yes", iconColor: .green)
+                            ModernInfoRow(icon: "roundedrectangle", label: "Rounded Corners", value: "Yes", iconColor: .purple)
+                            ModernInfoRow(icon: "scale.3d", label: "Render Scale", value: "2.0", iconColor: .orange)
+                            ModernInfoRow(icon: "ruler", label: "Diagonal", value: "6.1 inches", iconColor: .red)
+                            ModernInfoRow(icon: "aspectratio", label: "Screen Ratio", value: "19.5:9", iconColor: .cyan)
+                            ModernInfoRow(icon: "rectangle", label: "Logical Resolution", value: "828 x 1792", iconColor: .indigo)
+                            ModernInfoRow(icon: "rectangle.fill", label: "Physical Resolution", value: "1170 x 2532", iconColor: .pink)
+                            ModernInfoRow(icon: "dot.radiowaves.left.and.right", label: "Pixel Density", value: "460 PPI", iconColor: .gray)
+                            ModernInfoRow(icon: "speedometer", label: "Refresh Rate", value: "120 Hz", iconColor: .blue)
+                        }
+                    }
+                    .modernCard()
                 }
-                InfoRow(label: "OLED", value: "Yes")
-                InfoRow(label: "Retina HD", value: "Yes")
-                InfoRow(label: "Rounded Corners", value: "Yes")
-                InfoRow(label: "Render Scale", value: "2.0")
-                InfoRow(label: "Diagonal", value: "6.1 inches")
-                InfoRow(label: "Screen Ratio", value: "19.5:9")
-                InfoRow(label: "Logical Resolution", value: "828 x 1792")
-                InfoRow(label: "Physical Resolution", value: "1170 x 2532")
-                InfoRow(label: "Pixel Density", value: "460 PPI")
-                InfoRow(label: "Refresh Rate", value: "120 Hz")
+                .padding()
             }
-            .padding()
+            .background(Color(UIColor.systemBackground).ignoresSafeArea())
+            .navigationTitle("Display Details")
+            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

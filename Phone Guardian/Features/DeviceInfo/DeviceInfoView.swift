@@ -15,79 +15,67 @@ struct DeviceInfoView: View {
     private let logger = Logger(subsystem: "com.phoneguardian.deviceinfo", category: "DeviceInfoView")
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    // Device Capabilities Section
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label("Device Capabilities", systemImage: "info.circle")
-                            .font(.headline)
-                            .padding(.bottom, 4)
-                        InfoRow(label: "Apple Intelligence Supported", value: DeviceCapabilities.isAppleIntelligenceSupported() ? "✔︎" : "✘")
-                        InfoRow(label: "Multitasking", value: isMultitaskingSupported() ? "✔︎" : "✘")
-                        InfoRow(label: "Apple Pencil Supported", value: isApplePencilSupported() ? "✔︎" : "✘")
-                        InfoRow(label: "Physical SIM Supported", value: isSIMSupported() ? "✔︎" : "✘")
-                        InfoRow(label: "eSIM Supported", value: isESIMSupported() ? "✔︎" : "✘")
-                        InfoRow(label: "Dual SIM Supported", value: isDualSIMSupported() ? "✔︎" : "✘")
-                        InfoRow(label: "SIM Active", value: isSIMActive() ? "✔︎" : "✘")
-                        InfoRow(label: "eSIM Active", value: isESIMActive() ? "✔︎" : "✘")
-                        InfoRow(label: "Dual SIM Active", value: isDualSIMActive() ? "✔︎" : "✘")
-                        InfoRow(label: "Headphones Attached", value: isHeadphonesAttached() ? "✔︎" : "✘")
-                        InfoRow(label: "Satellite Supported", value: DeviceCapabilities.isSatelliteSupported() ? "✔︎" : "✘")
-                        InfoRow(label: "5G Network Supported", value: DeviceCapabilities.is5GSupported() ? "✔︎" : "✘")
-                        InfoRow(label: "4G Network Supported", value: DeviceCapabilities.is4GSupported() ? "✔︎" : "✘")
-                        InfoRow(label: "3G Network Supported", value: DeviceCapabilities.is3GSupported() ? "✔︎" : "✘")
-                        InfoRow(label: "Port Type", value: DeviceCapabilities.getPortType())
-                    }
-                    .padding()
-                    .background(Color(UIColor.secondarySystemBackground))
-                    .cornerRadius(10)
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 24) {
+                // Device Capabilities Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Device Capabilities", icon: "info.circle")
                     
-                    // Device Model & OS Section
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label("Device Model & OS", systemImage: "iphone")
-                            .font(.headline)
-                            .padding(.bottom, 4)
-                        InfoRow(label: "Model Name", value: getDeviceModelName())
-                        InfoRow(label: "Model Code", value: DeviceCapabilities.getDeviceModelCode())
-                        InfoRow(label: "O.S", value: UIDevice.current.systemVersion)
-                        InfoRow(label: "Temperature", value: "\(thermalTemperature)°\(temperatureMetric == "Fahrenheit" ? "F" : "C")")
-                        InfoRow(label: "Carrier Lock", value: carrierLocked ? "Locked" : "Unlocked")
+                    LazyVStack(spacing: 8) {
+                        ModernInfoRow(icon: "brain.head.profile", label: "Apple Intelligence", value: DeviceCapabilities.isAppleIntelligenceSupported() ? "Supported" : "Not Supported", iconColor: .blue)
+                        ModernInfoRow(icon: "rectangle.stack", label: "Multitasking", value: isMultitaskingSupported() ? "Supported" : "Not Supported", iconColor: .green)
+                        ModernInfoRow(icon: "pencil.tip", label: "Apple Pencil", value: isApplePencilSupported() ? "Supported" : "Not Supported", iconColor: .purple)
+                        ModernInfoRow(icon: "simcard", label: "Physical SIM", value: isSIMSupported() ? "Supported" : "Not Supported", iconColor: .orange)
+                        ModernInfoRow(icon: "simcard.2", label: "eSIM", value: isESIMSupported() ? "Supported" : "Not Supported", iconColor: .cyan)
+                        ModernInfoRow(icon: "simcard.2.fill", label: "Dual SIM", value: isDualSIMSupported() ? "Supported" : "Not Supported", iconColor: .indigo)
+                        ModernInfoRow(icon: "headphones", label: "Headphones", value: isHeadphonesAttached() ? "Connected" : "Not Connected", iconColor: .pink)
+                        ModernInfoRow(icon: "satellite", label: "Satellite", value: DeviceCapabilities.isSatelliteSupported() ? "Supported" : "Not Supported", iconColor: .red)
+                        ModernInfoRow(icon: "network", label: "5G Network", value: DeviceCapabilities.is5GSupported() ? "Supported" : "Not Supported", iconColor: .blue)
+                        ModernInfoRow(icon: "network", label: "4G Network", value: DeviceCapabilities.is4GSupported() ? "Supported" : "Not Supported", iconColor: .green)
+                        ModernInfoRow(icon: "network", label: "3G Network", value: DeviceCapabilities.is3GSupported() ? "Supported" : "Not Supported", iconColor: .orange)
+                        ModernInfoRow(icon: "cable.connector", label: "Port Type", value: DeviceCapabilities.getPortType(), iconColor: .gray)
                     }
-                    .padding()
-                    .background(Color(UIColor.secondarySystemBackground))
-                    .cornerRadius(10)
-                    
-                    // Uptime & Carrier Section
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label("Uptime & Carrier", systemImage: "clock")
-                            .font(.headline)
-                            .padding(.bottom, 4)
-                        InfoRow(label: "Phone Uptime", value: getUptime())
-                        InfoRow(label: "Last Reboot", value: getLastReboot())
-                        InfoRow(label: "Carrier Information", value: getCarrierInfo())
-                    }
-                    .padding()
-                    .background(Color(UIColor.secondarySystemBackground))
-                    .cornerRadius(10)
-                    
-                    Button(action: { showingDetailedInfo = true }) {
-                        Text("View Detailed Device Information")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                    .padding(.top)
                 }
-                .padding()
+                .modernCard()
+                
+                // Device Model & OS Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Device Model & OS", icon: "iphone")
+                    
+                    LazyVStack(spacing: 8) {
+                        ModernInfoRow(icon: "iphone", label: "Model Name", value: getDeviceModelName(), iconColor: .blue)
+                        ModernInfoRow(icon: "number", label: "Model Code", value: DeviceCapabilities.getDeviceModelCode(), iconColor: .gray)
+                        ModernInfoRow(icon: "gear", label: "iOS Version", value: UIDevice.current.systemVersion, iconColor: .green)
+                        ModernInfoRow(icon: "thermometer", label: "Temperature", value: "\(thermalTemperature)°\(temperatureMetric == "Fahrenheit" ? "F" : "C")", iconColor: .red)
+                        ModernInfoRow(icon: "lock", label: "Carrier Lock", value: carrierLocked ? "Locked" : "Unlocked", iconColor: carrierLocked ? .red : .green)
+                    }
+                }
+                .modernCard()
+                
+                // Uptime & Carrier Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Uptime & Carrier", icon: "clock")
+                    
+                    LazyVStack(spacing: 8) {
+                        ModernInfoRow(icon: "timer", label: "Phone Uptime", value: getUptime(), iconColor: .blue)
+                        ModernInfoRow(icon: "arrow.clockwise", label: "Last Reboot", value: getLastReboot(), iconColor: .orange)
+                        ModernInfoRow(icon: "antenna.radiowaves.left.and.right", label: "Carrier", value: getCarrierInfo(), iconColor: .green)
+                    }
+                }
+                .modernCard()
+                
+                // Detailed Info Button
+                Button(action: { showingDetailedInfo = true }) {
+                    HStack {
+                        Image(systemName: "info.circle.fill")
+                        Text("View Detailed Device Information")
+                    }
+                }
+                .modernButton(backgroundColor: .blue)
+                .padding(.top, 8)
             }
-            .navigationTitle("Device Info")
-            .navigationBarTitleDisplayMode(.large)
+            .padding()
         }
-        .navigationViewStyle(StackNavigationViewStyle())
         .background(Color(UIColor.systemBackground).ignoresSafeArea())
         .onAppear {
             logger.info("DeviceInfoView appeared.")

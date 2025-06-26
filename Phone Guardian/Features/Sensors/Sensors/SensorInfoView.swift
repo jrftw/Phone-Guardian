@@ -11,45 +11,72 @@ struct SensorInfoView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 10) {
-                if !(iapManager.hasGoldSubscription || iapManager.hasToolsSubscription || iapManager.hasRemoveAds) {
-                    AdBannerView()
-                        .frame(height: 50)
-                        .padding(.vertical)
+            LazyVStack(alignment: .leading, spacing: 24) {
+                // Sensor Capabilities Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Sensor Capabilities", icon: "gyroscope")
+                    
+                    LazyVStack(spacing: 8) {
+                        let sensors: [(String, Bool, String, Color)] = [
+                            ("Touch ID", Self.supportsTouchID(), "touchid", .blue),
+                            ("Face ID", Self.supportsFaceID(), "faceid", .green),
+                            ("3D Touch", Self.supports3DTouch(), "hand.tap", .purple),
+                            ("Haptic Touch", Self.supportsHapticTouch(), "hand.tap.fill", .orange),
+                            ("Distance Sensor", Self.supportsDistanceSensor(), "ruler", .red),
+                            ("Proximity Sensor", Self.supportsProximitySensor(), "sensor.tag.radiowaves.forward", .cyan),
+                            ("Magnetometer", CMMotionManager().isMagnetometerAvailable, "location.north", .indigo),
+                            ("Gyroscope", CMMotionManager().isGyroAvailable, "gyroscope", .pink),
+                            ("Device Motion", CMMotionManager().isDeviceMotionAvailable, "iphone", .gray),
+                            ("NFC", Self.supportsNFC(), "wave.3.right", .blue),
+                            ("Accelerometer", CMMotionManager().isAccelerometerAvailable, "speedometer", .green),
+                            ("Pedometer", CMPedometer.isStepCountingAvailable(), "figure.walk", .orange),
+                            ("Count Floors", CMPedometer.isFloorCountingAvailable(), "building.2", .purple),
+                            ("Count Steps", CMPedometer.isStepCountingAvailable(), "figure.walk.motion", .red),
+                            ("Pace Steps", CMPedometer.isPaceAvailable(), "timer", .cyan),
+                            ("Cadence Steps", CMPedometer.isCadenceAvailable(), "metronome", .indigo),
+                            ("GPS", Self.supportsGPS(), "location", .pink),
+                            ("Altimeter", CMAltimeter.isRelativeAltitudeAvailable(), "mountain.2", .gray),
+                            ("Barometer", CMAltimeter.isRelativeAltitudeAvailable(), "gauge", .blue),
+                            ("In-Door Mapping", Self.supportsIndoorMapping(), "map", .green),
+                            ("Bluetooth LE", Self.supportsBluetoothLE(), "bluetooth", .orange),
+                            ("Motion Coprocessor", Self.supportsMotionCoprocessor(), "cpu", .purple)
+                        ]
+                        
+                        ForEach(sensors, id: \.0) { sensor in
+                            ModernInfoRow(
+                                icon: sensor.2,
+                                label: sensor.0,
+                                value: sensor.1 ? "Available" : "Not Available",
+                                iconColor: sensor.1 ? sensor.3 : .gray
+                            )
+                        }
+                    }
                 }
-                let sensors: [(String, Bool)] = [
-                    ("Touch ID", Self.supportsTouchID()),
-                    ("Face ID", Self.supportsFaceID()),
-                    ("3D Touch", Self.supports3DTouch()),
-                    ("Haptic Touch", Self.supportsHapticTouch()),
-                    ("Distance Sensor", Self.supportsDistanceSensor()),
-                    ("Proximity Sensor", Self.supportsProximitySensor()),
-                    ("Magnetometer", CMMotionManager().isMagnetometerAvailable),
-                    ("Gyroscope", CMMotionManager().isGyroAvailable),
-                    ("Device Motion", CMMotionManager().isDeviceMotionAvailable),
-                    ("NFC", Self.supportsNFC()),
-                    ("Accelerometer", CMMotionManager().isAccelerometerAvailable),
-                    ("Pedometer", CMPedometer.isStepCountingAvailable()),
-                    ("Count Floors", CMPedometer.isFloorCountingAvailable()),
-                    ("Count Steps", CMPedometer.isStepCountingAvailable()),
-                    ("Pace Steps", CMPedometer.isPaceAvailable()),
-                    ("Cadence Steps", CMPedometer.isCadenceAvailable()),
-                    ("GPS", Self.supportsGPS()),
-                    ("Altimeter", CMAltimeter.isRelativeAltitudeAvailable()),
-                    ("Barometer", CMAltimeter.isRelativeAltitudeAvailable()),
-                    ("In-Door Mapping", Self.supportsIndoorMapping()),
-                    ("Bluetooth LE", Self.supportsBluetoothLE()),
-                    ("Motion Coprocessor", Self.supportsMotionCoprocessor())
-                ]
-                ForEach(sensors, id: \.0) { sensor in
-                    InfoRow(label: sensor.0, value: sensor.1 ? "Available" : "Not Available")
+                .modernCard()
+                
+                // More Info Button
+                Button(action: { isMoreInfoPresented.toggle() }) {
+                    HStack {
+                        Image(systemName: "info.circle.fill")
+                        Text("More Sensor Information")
+                    }
                 }
+                .modernButton(backgroundColor: .blue)
             }
             .padding()
         }
         .background(Color(UIColor.systemBackground).ignoresSafeArea())
         .onAppear {
             logger.info("SensorInfoView appeared.")
+        }
+        .sheet(isPresented: $isMoreInfoPresented) {
+            if #available(iOS 16.0, *) {
+                SensorMoreInfoView()
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
+            } else {
+                SensorMoreInfoView()
+            }
         }
     }
 
@@ -206,4 +233,30 @@ struct SensorInfoView: View {
         UIDevice.current.userInterfaceIdiom == .phone
     }
     static func supportsIndoorMapping() -> Bool { true }
+}
+
+// MARK: - Sensor More Info View
+struct SensorMoreInfoView: View {
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        ModernSectionHeader(title: "Sensor Information", icon: "info.circle")
+                        
+                        Text("This section provides detailed information about the sensors available on your device and their capabilities.")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal, 4)
+                    }
+                    .modernCard()
+                }
+                .padding()
+            }
+            .background(Color(UIColor.systemBackground).ignoresSafeArea())
+            .navigationTitle("Sensor Details")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+    }
 }

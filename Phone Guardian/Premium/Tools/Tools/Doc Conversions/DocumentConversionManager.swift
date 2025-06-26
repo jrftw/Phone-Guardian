@@ -134,12 +134,14 @@ class DocumentConversionManager {
         exportSession.outputFileType = outputFileType
 
         try await withCheckedThrowingContinuation { continuation in
-            exportSession.exportAsynchronously {
-                switch exportSession.status {
+            // Capture the export session in a way that's compatible with Sendable
+            let session = exportSession
+            session.exportAsynchronously {
+                switch session.status {
                 case .completed:
                     continuation.resume()
                 case .failed, .cancelled:
-                    continuation.resume(throwing: exportSession.error ?? NSError(domain: "com.phoneguardian.export", code: 2, userInfo: [NSLocalizedDescriptionKey: "Unknown error"]))
+                    continuation.resume(throwing: session.error ?? NSError(domain: "com.phoneguardian.export", code: 2, userInfo: [NSLocalizedDescriptionKey: "Unknown error"]))
                 default:
                     break
                 }

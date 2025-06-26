@@ -14,33 +14,41 @@ struct CPUInfoView: View {
     private let logger = Logger(subsystem: "com.phoneguardian.cpu", category: "CPUInfoView")
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("CPU Usage")
-                .font(.title2)
-                .bold()
-
-            CPUUsageLineChart(userData: userData, systemData: systemData, idleData: idleData)
-                .frame(height: 150)
-
-            HStack {
-                InfoRow(label: "User Usage", value: "\(Int(userUsage))%")
-                InfoRow(label: "System Usage", value: "\(Int(systemUsage))%")
-                InfoRow(label: "Idle Usage", value: "\(Int(idleUsage))%")
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 24) {
+                // CPU Usage Chart Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "CPU Usage", icon: "cpu")
+                    
+                    CPUUsageLineChart(userData: userData, systemData: systemData, idleData: idleData)
+                        .frame(height: 200)
+                        .modernCard(padding: 16)
+                }
+                
+                // CPU Usage Stats Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Usage Statistics", icon: "chart.bar")
+                    
+                    LazyVStack(spacing: 8) {
+                        ModernInfoRow(icon: "person", label: "User Usage", value: "\(Int(userUsage))%", iconColor: .blue)
+                        ModernInfoRow(icon: "gear", label: "System Usage", value: "\(Int(systemUsage))%", iconColor: .orange)
+                        ModernInfoRow(icon: "sleep", label: "Idle Usage", value: "\(Int(idleUsage))%", iconColor: .green)
+                    }
+                }
+                .modernCard()
+                
+                // Detailed View Button
+                Button(action: { isDetailedViewPresented.toggle() }) {
+                    HStack {
+                        Image(systemName: "chart.pie.fill")
+                        Text("View Detailed CPU Information")
+                    }
+                }
+                .modernButton(backgroundColor: .blue)
             }
-
-            Button(action: { isDetailedViewPresented.toggle() }) {
-                Text("Open Detailed View")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
-            .sheet(isPresented: $isDetailedViewPresented) {
-                DetailedCPUView(userUsage: userUsage, systemUsage: systemUsage, idleUsage: idleUsage)
-            }
+            .padding()
         }
-        .padding()
+        .background(Color(UIColor.systemBackground).ignoresSafeArea())
         .onAppear {
             startMonitoringCPU()
         }
@@ -48,12 +56,22 @@ struct CPUInfoView: View {
             timer?.invalidate()
             timer = nil
         }
+        .sheet(isPresented: $isDetailedViewPresented) {
+            if #available(iOS 16.0, *) {
+                DetailedCPUView(userUsage: userUsage, systemUsage: systemUsage, idleUsage: idleUsage)
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
+            } else {
+                DetailedCPUView(userUsage: userUsage, systemUsage: systemUsage, idleUsage: idleUsage)
+            }
+        }
     }
 
     private func startMonitoringCPU() {
         timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
             updateCPUUsage()
         }
+        updateCPUUsage() // Initial update
     }
 
     private func updateCPUUsage() {

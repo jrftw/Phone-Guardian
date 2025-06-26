@@ -25,43 +25,65 @@ struct BatteryInfoView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("BATTERY")
-                .font(.title2)
-                .bold()
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 24) {
+                // Battery Status Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Battery Status", icon: "battery.100")
+                    
+                    LazyVStack(spacing: 8) {
+                        ModernInfoRow(icon: "battery.100", label: "Battery Level", value: "\(batteryLevel)%", iconColor: batteryLevelColor())
+                        ModernInfoRow(icon: "bolt", label: "Battery State", value: getBatteryState(), iconColor: .orange)
+                        ModernInfoRow(icon: "heart", label: "Battery Health", value: batteryHealth, iconColor: .green)
+                        ModernInfoRow(icon: "bolt.fill", label: "Fast Charging", value: supportsFastCharging() ? "Supported" : "Not Supported", iconColor: .blue)
+                        ModernInfoRow(icon: "wave.3.right", label: "Wireless Charging", value: supportsWirelessCharging() ? "Supported" : "Not Supported", iconColor: .purple)
+                        ModernInfoRow(icon: "stop.circle", label: "Charge Limit", value: "85%", iconColor: .red)
+                        ModernInfoRow(icon: "leaf", label: "Low Power Mode", value: ProcessInfo.processInfo.isLowPowerModeEnabled ? "Enabled" : "Disabled", iconColor: .green)
+                        ModernInfoRow(icon: "clock", label: "Optimized Charging", value: isOptimizedChargingEnabled() ? "Enabled" : "Disabled", iconColor: .blue)
+                        ModernInfoRow(icon: "leaf.fill", label: "Clean Energy Charging", value: isCleanEnergyChargingEnabled() ? "Enabled" : "Disabled", iconColor: .green)
+                        ModernInfoRow(icon: "calendar", label: "Last Full Charge", value: lastChargeToFullDate(), iconColor: .orange)
+                    }
+                }
+                .modernCard()
+                
+                // Battery Usage Chart Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Battery Usage", icon: "chart.bar")
+                    
+                    BatteryUsageChart(batteryLevel: $batteryLevel)
+                        .frame(height: 200)
+                        .modernCard(padding: 16)
+                }
+                
+                // Logging Controls Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Logging Controls", icon: "doc.text")
+                    
+                    LazyVStack(spacing: 12) {
+                        Button(action: toggleLogging) {
+                            HStack {
+                                Image(systemName: enableLogging ? "stop.circle" : "play.circle")
+                                Text(enableLogging ? "Disable Logging" : "Enable Logging")
+                            }
+                        }
+                        .modernButton(backgroundColor: enableLogging ? .red : .green)
 
-            Group {
-                InfoRow(label: "Battery Level", value: "\(batteryLevel)%")
-                    .foregroundColor(batteryLevelColor())
-                InfoRow(label: "Battery State", value: getBatteryState())
-                InfoRow(label: "Battery Health", value: batteryHealth)
-                InfoRow(label: "Fast Charging Support", value: supportsFastCharging() ? "✔︎" : "✘")
-                InfoRow(label: "Wireless Charging Support", value: supportsWirelessCharging() ? "✔︎" : "✘")
-                InfoRow(label: "Charge Limit", value: "85%") // Placeholder
-                InfoRow(label: "Low Power Mode", value: ProcessInfo.processInfo.isLowPowerModeEnabled ? "Enabled" : "Disabled")
-                InfoRow(label: "Optimized Battery Charging", value: isOptimizedChargingEnabled() ? "Enabled" : "Disabled")
-                InfoRow(label: "Clean Energy Charging", value: isCleanEnergyChargingEnabled() ? "Enabled" : "Disabled")
-                InfoRow(label: "Last Charge to 100%", value: lastChargeToFullDate())
+                        if enableLogging {
+                            HStack {
+                                Image(systemName: "info.circle")
+                                Text("Logs Enabled: Monitoring...")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.horizontal, 4)
+                        }
+                    }
+                }
+                .modernCard()
             }
-
-            Divider()
-
-            Button(action: toggleLogging) {
-                Text(enableLogging ? "Disable Logging" : "Enable Logging")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(enableLogging ? Color.red : Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
-
-            if enableLogging {
-                Text("Logs Enabled: Monitoring...")
-                    .font(.footnote)
-                    .foregroundColor(.gray)
-            }
+            .padding()
         }
-        .padding()
+        .background(Color(UIColor.systemBackground).ignoresSafeArea())
         .onAppear {
             logBatteryStatus()
             loadLogs()

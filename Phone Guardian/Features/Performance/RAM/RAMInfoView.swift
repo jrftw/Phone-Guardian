@@ -16,32 +16,61 @@ struct RAMInfoView: View {
     @AppStorage("enableLogging") private var enableLogging: Bool = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("RAM")
-                .font(.title2)
-                .bold()
-
-            HStack {
-                VStack(alignment: .leading, spacing: 10) {
-                    InfoRow(label: "Total RAM", value: "\(String(format: "%.1f", totalRAM)) GB")
-                    InfoRow(label: "Active RAM", value: "\(String(format: "%.1f", activeRAM)) GB")
-                    InfoRow(label: "Inactive RAM", value: "\(String(format: "%.1f", inactiveRAM)) GB")
-                    InfoRow(label: "Wired RAM", value: "\(String(format: "%.1f", wiredRAM)) GB")
-                    InfoRow(label: "Compressed RAM", value: "\(String(format: "%.1f", compressedRAM)) GB")
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 24) {
+                // RAM Usage Chart Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "RAM Usage", icon: "memorychip")
+                    
+                    RAMUsageChart(data: ramUsageData)
+                        .frame(height: 200)
+                        .modernCard(padding: 16)
                 }
-
-                RAMUsageChart(data: ramUsageData)
-                    .frame(height: 200)
+                
+                // RAM Statistics Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Memory Statistics", icon: "chart.bar")
+                    
+                    LazyVStack(spacing: 8) {
+                        ModernInfoRow(icon: "memorychip", label: "Total RAM", value: "\(String(format: "%.1f", totalRAM)) GB", iconColor: .blue)
+                        ModernInfoRow(icon: "play.fill", label: "Active RAM", value: "\(String(format: "%.1f", activeRAM)) GB", iconColor: .green)
+                        ModernInfoRow(icon: "pause.fill", label: "Inactive RAM", value: "\(String(format: "%.1f", inactiveRAM)) GB", iconColor: .orange)
+                        ModernInfoRow(icon: "lock.fill", label: "Wired RAM", value: "\(String(format: "%.1f", wiredRAM)) GB", iconColor: .red)
+                        ModernInfoRow(icon: "arrow.down.circle", label: "Compressed RAM", value: "\(String(format: "%.1f", compressedRAM)) GB", iconColor: .purple)
+                        ModernInfoRow(icon: "checkmark.circle", label: "Free RAM", value: "\(String(format: "%.1f", freeRAM)) GB", iconColor: .cyan)
+                    }
+                }
+                .modernCard()
+                
+                // Detailed Chart Button
+                Button(action: { isDetailedViewPresented.toggle() }) {
+                    HStack {
+                        Image(systemName: "chart.pie.fill")
+                        Text("View Detailed RAM Information")
+                    }
+                }
+                .modernButton(backgroundColor: .blue)
             }
-
-            Button(action: { isDetailedViewPresented.toggle() }) {
-                Text("Detailed Chart")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
-            .sheet(isPresented: $isDetailedViewPresented) {
+            .padding()
+        }
+        .background(Color(UIColor.systemBackground).ignoresSafeArea())
+        .onAppear {
+            logger.info("RAMInfoView appeared.")
+            startMonitoringRAM()
+        }
+        .sheet(isPresented: $isDetailedViewPresented) {
+            if #available(iOS 16.0, *) {
+                DetailedRAMView(
+                    activeRAM: activeRAM,
+                    inactiveRAM: inactiveRAM,
+                    wiredRAM: wiredRAM,
+                    freeRAM: freeRAM,
+                    compressedRAM: compressedRAM,
+                    totalRAM: totalRAM
+                )
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+            } else {
                 DetailedRAMView(
                     activeRAM: activeRAM,
                     inactiveRAM: inactiveRAM,
@@ -51,13 +80,6 @@ struct RAMInfoView: View {
                     totalRAM: totalRAM
                 )
             }
-
-            Divider()
-        }
-        .padding()
-        .onAppear {
-            logger.info("RAMInfoView appeared.")
-            startMonitoringRAM()
         }
     }
 

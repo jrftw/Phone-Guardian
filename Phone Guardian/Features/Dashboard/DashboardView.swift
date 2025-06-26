@@ -10,7 +10,7 @@ struct DashboardView: View {
     
     var body: some View {
         if isLoading {
-            LoadingView()
+            ModernLoadingView()
                 .onAppear {
                     Task {
                         await preloadAppData()
@@ -18,7 +18,7 @@ struct DashboardView: View {
                 }
         } else {
             ScrollView {
-                VStack(spacing: 20) {
+                LazyVStack(spacing: 20) {
                     if !(iapManager.hasGoldSubscription || iapManager.hasToolsSubscription) && !iapManager.hasRemoveAds {
                         AdBannerView()
                             .frame(height: 50)
@@ -31,7 +31,7 @@ struct DashboardView: View {
                         GridItem(.flexible(), spacing: 16)
                     ], spacing: 16) {
                         ForEach(moduleManager.modules.filter { $0.isEnabled }) { module in
-                            ModuleSummaryCard(module: module)
+                            ModernModuleSummaryCard(module: module)
                                 .onTapGesture {
                                     selectedModule = module
                                 }
@@ -71,56 +71,59 @@ struct DashboardView: View {
     }
 }
 
-struct ModuleSummaryCard: View {
+struct ModernModuleSummaryCard: View {
     let module: Module
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
                 Image(systemName: module.iconName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 28, height: 28)
+                    .frame(width: 32, height: 32)
                     .foregroundColor(.accentColor)
-                Text(module.name)
-                    .font(.headline)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .lineLimit(1)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(module.name)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+                    
+                    Text(module.description)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                }
+                
                 Spacer()
             }
-            Text(module.description)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-                .lineLimit(1)
-            // Placeholder for a key stat (can be replaced with real data per module)
-            Text("Tap for details")
-                .font(.caption)
-                .foregroundColor(.blue)
+            
+            HStack {
+                Text("Tap for details")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.accentColor)
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
         }
-        .padding()
-        .frame(minHeight: 80)
+        .padding(20)
+        .frame(minHeight: 100)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(UIColor.secondarySystemBackground))
-                .shadow(color: Color.black.opacity(0.07), radius: 4, x: 0, y: 2)
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(.quaternary, lineWidth: 0.5)
+                )
         )
-    }
-}
-
-struct LoadingView: View {
-    var body: some View {
-        VStack(spacing: 20) {
-            ProgressView()
-                .scaleEffect(1.5)
-                .padding()
-            
-            Text("Initializing modules...")
-                .font(.headline)
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(UIColor.systemBackground))
+        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
     }
 }
 

@@ -24,63 +24,80 @@ struct NetworkInfoView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                if !(iapManager.hasGoldSubscription || iapManager.hasToolsSubscription || iapManager.hasRemoveAds) {
-                    AdBannerView()
-                        .frame(height: 50)
-                        .padding(.vertical)
-                }
-                Text("NETWORK")
-                    .font(.title2)
-                    .bold()
-
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 10) {
-                        InfoRow(label: "Upload Speed", value: String(format: "%.2f KB/s", uploadSpeed))
-                        InfoRow(label: "Download Speed", value: String(format: "%.2f KB/s", downloadSpeed))
-                        InfoRow(label: "Wi-Fi Data Sent", value: "\(wifiDataSent / 1_024) KB")
-                        InfoRow(label: "Wi-Fi Data Received", value: "\(wifiDataReceived / 1_024) KB")
-                        InfoRow(label: "Mobile Data Sent", value: "\(mobileDataSent / 1_024) KB")
-                        InfoRow(label: "Mobile Data Received", value: "\(mobileDataReceived / 1_024) KB")
-
-                        Text("Active Connections")
-                            .font(.headline)
-                        ForEach(activeConnections, id: \.self) { connection in
-                            Text("- \(connection)")
-                                .foregroundColor(.gray)
+            LazyVStack(alignment: .leading, spacing: 24) {
+                // Network Usage Chart Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Network Usage", icon: "network")
+                    
+                    HStack(alignment: .top, spacing: 20) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            ModernInfoRow(icon: "arrow.up.circle", label: "Upload Speed", value: String(format: "%.2f KB/s", uploadSpeed), iconColor: .blue)
+                            ModernInfoRow(icon: "arrow.down.circle", label: "Download Speed", value: String(format: "%.2f KB/s", downloadSpeed), iconColor: .green)
+                            ModernInfoRow(icon: "wifi", label: "Wi-Fi Data Sent", value: "\(wifiDataSent / 1_024) KB", iconColor: .orange)
+                            ModernInfoRow(icon: "wifi", label: "Wi-Fi Data Received", value: "\(wifiDataReceived / 1_024) KB", iconColor: .purple)
+                            ModernInfoRow(icon: "antenna.radiowaves.left.and.right", label: "Mobile Data Sent", value: "\(mobileDataSent / 1_024) KB", iconColor: .red)
+                            ModernInfoRow(icon: "antenna.radiowaves.left.and.right", label: "Mobile Data Received", value: "\(mobileDataReceived / 1_024) KB", iconColor: .cyan)
                         }
-
-                        Text("Wi-Fi IP Details")
-                            .font(.headline)
-                        ForEach(ipDetails.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
-                            InfoRow(label: key, value: value)
+                        
+                        Spacer()
+                        
+                        NetworkUsageChart(uploadHistory: uploadHistory, downloadHistory: downloadHistory)
+                            .frame(width: 120, height: 120)
+                            .modernCard(padding: 12)
+                    }
+                }
+                .modernCard()
+                
+                // Active Connections Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Active Connections", icon: "antenna.radiowaves.left.and.right")
+                    
+                    LazyVStack(spacing: 8) {
+                        ForEach(activeConnections, id: \.self) { connection in
+                            ModernInfoRow(icon: "checkmark.circle.fill", label: connection, value: "Connected", iconColor: .green)
                         }
                     }
-
-                    Spacer()
-
-                    NetworkUsageChart(uploadHistory: uploadHistory, downloadHistory: downloadHistory)
-                        .frame(width: 120, height: 120)
                 }
+                .modernCard()
+                
+                // Wi-Fi IP Details Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Wi-Fi IP Details", icon: "network")
+                    
+                    LazyVStack(spacing: 8) {
+                        ForEach(ipDetails.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
+                            ModernInfoRow(icon: "info.circle", label: key, value: value, iconColor: .blue)
+                        }
+                    }
+                }
+                .modernCard()
+                
+                // Action Buttons Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Network Actions", icon: "wrench.and.screwdriver")
+                    
+                    LazyVStack(spacing: 12) {
+                        Button(action: performSpeedTest) {
+                            HStack {
+                                Image(systemName: "speedometer")
+                                Text("Perform Network Speed Test")
+                            }
+                        }
+                        .modernButton(backgroundColor: .green)
 
-                Button(action: performSpeedTest) {
-                    Text("Perform Network Speed Test")
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+                        Button(action: { isMoreInfoPresented.toggle() }) {
+                            HStack {
+                                Image(systemName: "info.circle")
+                                Text("More Network Information")
+                            }
+                        }
+                        .modernButton(backgroundColor: .blue)
+                        .sheet(isPresented: $isMoreInfoPresented) {
+                            NetworkMoreInfoView(activeConnections: activeConnections, ipDetails: ipDetails)
+                        }
+                    }
                 }
-
-                Button(action: { isMoreInfoPresented.toggle() }) {
-                    Text("More Info")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
-                .sheet(isPresented: $isMoreInfoPresented) {
-                    NetworkMoreInfoView(activeConnections: activeConnections, ipDetails: ipDetails)
-                }
+                .modernCard()
             }
             .padding()
         }
