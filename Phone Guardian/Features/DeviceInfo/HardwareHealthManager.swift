@@ -122,7 +122,7 @@ class HardwareHealthManager: ObservableObject {
         let totalMemory = processInfo.physicalMemory
         let availableMemory = UInt64(os_proc_available_memory())
         let usedMemory = totalMemory - availableMemory
-        let memoryUsagePercentage = Double(usedMemory) / Double(totalMemory) * 100.0
+        let memoryUsagePercentage = (totalMemory > 0) ? Double(usedMemory) / Double(totalMemory) * 100.0 : 0.0
         
         // Calculate memory pressure
         let memoryPressure: MemoryHealth.MemoryPressure
@@ -159,7 +159,7 @@ class HardwareHealthManager: ObservableObject {
         let totalSpace = attributes[.systemSize] as? UInt64 ?? 0
         let freeSpace = attributes[.systemFreeSize] as? UInt64 ?? 0
         let usedSpace = totalSpace - freeSpace
-        let usagePercentage = Double(usedSpace) / Double(totalSpace) * 100.0
+        let usagePercentage = (totalSpace > 0) ? Double(usedSpace) / Double(totalSpace) * 100.0 : 0.0
         
         // Simulate storage wear level (in real implementation, you'd need device-specific APIs)
         let wearLevel = Double.random(in: 0.0...20.0)

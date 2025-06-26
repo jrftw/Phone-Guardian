@@ -33,6 +33,10 @@ struct Module: Identifiable, Codable {
             CameraInfoView()
         case "HealthCheckView":
             HealthCheckView()
+        case "GPUInfoView":
+            GPUInfoView()
+        case "ThermalInfoView":
+            ThermalInfoView()
         default:
             Text("Unknown Module")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

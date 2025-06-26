@@ -7,6 +7,33 @@ import UIKit
 import Network
 import CoreMotion
 
+// MARK: - Health Issue Model
+struct HealthIssue: Identifiable {
+    let id = UUID()
+    let title: String
+    let description: String
+    let severity: HealthIssueSeverity
+    let category: HealthIssueCategory
+}
+
+enum HealthIssueSeverity {
+    case critical
+    case warning
+    case info
+}
+
+enum HealthIssueCategory {
+    case storage
+    case battery
+    case memory
+    case network
+    case sensors
+    case camera
+    case microphone
+    case speakers
+    case thermal
+}
+
 struct HealthCheckView: View {
     @State private var healthIssues: [HealthIssue] = []
     @State private var isChecking = false
@@ -300,41 +327,5 @@ struct ModernHealthIssueRow: View {
         case .info:
             return .blue
         }
-    }
-}
-
-// MARK: - Health Issue Model
-struct HealthIssue: Identifiable {
-    let id = UUID()
-    let title: String
-    let description: String
-    let severity: HealthIssueSeverity
-    let category: HealthIssueCategory
-}
-
-enum HealthIssueSeverity {
-    case critical
-    case warning
-    case info
-}
-
-enum HealthIssueCategory {
-    case storage
-    case battery
-    case memory
-    case network
-    case sensors
-    case camera
-    case microphone
-    case speakers
-    case thermal
-}
-
-// MARK: - Legacy Health Issue Row (for backward compatibility)
-struct HealthIssueRow: View {
-    let issue: HealthIssue
-    
-    var body: some View {
-        ModernHealthIssueRow(issue: issue)
     }
 } 

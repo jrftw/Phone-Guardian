@@ -4,6 +4,7 @@ import UIKit
 import SwiftUI
 import os
 
+@MainActor
 class GPUMonitoringManager: ObservableObject {
     static let shared = GPUMonitoringManager()
     private let logger = Logger(subsystem: "com.phoneguardian.gpumonitoring", category: "GPUMonitoringManager")
@@ -40,7 +41,6 @@ class GPUMonitoringManager: ObservableObject {
         var currentFrequency: Double = 0.0
     }
     
-    @MainActor
     func startMonitoring() async {
         logger.info("Starting GPU monitoring")
         monitoringStatus = .running
@@ -56,7 +56,6 @@ class GPUMonitoringManager: ObservableObject {
         logger.info("GPU monitoring started")
     }
     
-    @MainActor
     func stopMonitoring() {
         logger.info("Stopping GPU monitoring")
         monitoringTimer?.invalidate()
@@ -64,7 +63,6 @@ class GPUMonitoringManager: ObservableObject {
         monitoringStatus = .stopped
     }
     
-    @MainActor
     private func updateGPUInfo() async {
         logger.debug("Updating GPU information")
         
@@ -75,7 +73,6 @@ class GPUMonitoringManager: ObservableObject {
         self.gpuInfo = gpuInfo
     }
     
-    @MainActor
     private func updateGPUStats() async {
         logger.debug("Updating GPU statistics")
         

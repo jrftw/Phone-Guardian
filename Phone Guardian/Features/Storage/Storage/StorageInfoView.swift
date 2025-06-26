@@ -75,6 +75,80 @@ struct StorageInfoView: View {
                     }
                 }
                 .modernCard()
+                
+                // App Size Analyzer Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "App Size Analyzer", icon: "apps.iphone")
+                    NavigationLink(destination: AppSizeAnalyzerView()) {
+                        HStack(spacing: 16) {
+                            Image(systemName: "apps.iphone")
+                                .font(.title2)
+                                .foregroundColor(.accentColor)
+                                .frame(width: 30)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Analyze Installed Apps")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                Text("See which apps use the most space")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
+                                .font(.subheadline)
+                        }
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 20)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(.ultraThinMaterial)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(.quaternary, lineWidth: 0.5)
+                                )
+                        )
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+                .modernCard()
+                
+                // Media Library Analyzer Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Media Library Analyzer", icon: "photo.on.rectangle")
+                    NavigationLink(destination: MediaLibraryAnalyzerView()) {
+                        HStack(spacing: 16) {
+                            Image(systemName: "photo.on.rectangle")
+                                .font(.title2)
+                                .foregroundColor(.accentColor)
+                                .frame(width: 30)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Analyze Media Library")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                Text("Find large photos, videos, and more")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
+                                .font(.subheadline)
+                        }
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 20)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(.ultraThinMaterial)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(.quaternary, lineWidth: 0.5)
+                                )
+                        )
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+                .modernCard()
             }
             .padding()
         }

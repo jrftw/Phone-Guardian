@@ -56,6 +56,59 @@ struct DetailedDeviceInfoView: View {
                 }
                 .modernCard()
                 
+                // MARK: Advanced Information Section
+                VStack(alignment: .leading, spacing: 16) {
+                    ModernSectionHeader(title: "Advanced Information", icon: "gearshape.2")
+                    
+                    LazyVStack(spacing: 12) {
+                        NavigationLink(destination: DeviceLocationInfoView()) {
+                            AdvancedInfoRow(title: "Device Location", subtitle: "Track device location and movement", icon: "location")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        NavigationLink(destination: DeviceSecurityInfoView()) {
+                            AdvancedInfoRow(title: "Device Security", subtitle: "Security status and encryption", icon: "lock.shield")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        NavigationLink(destination: DeviceWarrantyInfoView()) {
+                            AdvancedInfoRow(title: "Device Warranty", subtitle: "Warranty status and coverage", icon: "checkmark.shield")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        NavigationLink(destination: HardwareHealthInfoView()) {
+                            AdvancedInfoRow(title: "Hardware Health", subtitle: "Component health and diagnostics", icon: "heart.text.square")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        NavigationLink(destination: SystemUpdateInfoView()) {
+                            AdvancedInfoRow(title: "System Updates", subtitle: "iOS updates and availability", icon: "arrow.clockwise.circle")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        NavigationLink(destination: SystemLogsInfoView()) {
+                            AdvancedInfoRow(title: "System Logs", subtitle: "Device logs and diagnostics", icon: "doc.text")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        NavigationLink(destination: SignalStrengthInfoView()) {
+                            AdvancedInfoRow(title: "Signal Strength", subtitle: "Network signal monitoring", icon: "antenna.radiowaves.left.and.right")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        NavigationLink(destination: SystemServicesInfoView()) {
+                            AdvancedInfoRow(title: "System Services", subtitle: "Background services status", icon: "gearshape")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        NavigationLink(destination: BackgroundAppRefreshInfoView()) {
+                            AdvancedInfoRow(title: "Background App Refresh", subtitle: "Background refresh settings", icon: "arrow.clockwise")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                }
+                .modernCard()
+                
                 // MARK: Extra Info
                 VStack(alignment: .leading, spacing: 16) {
                     ModernSectionHeader(title: "Device Information", icon: "info.circle")
@@ -114,6 +167,48 @@ struct DeviceCategoryRow: View {
             Text(title)
                 .font(.headline)
                 .foregroundColor(.primary)
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .foregroundColor(.secondary)
+                .font(.subheadline)
+        }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 20)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(.quaternary, lineWidth: 0.5)
+                )
+        )
+    }
+}
+
+// MARK: - Advanced Info Row
+struct AdvancedInfoRow: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(.accentColor)
+                .frame(width: 30)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
             
             Spacer()
             

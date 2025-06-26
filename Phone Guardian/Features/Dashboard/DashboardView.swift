@@ -62,7 +62,7 @@ struct DashboardView: View {
     
     private func preloadAppData() async {
         os_log("Starting to preload app data.")
-        moduleManager.loadModules()
+        moduleManager.forceRefreshModules()
         await iapManager.checkSubscriptionStatus()
         await MainActor.run {
             isLoading = false
@@ -88,12 +88,15 @@ struct ModernModuleSummaryCard: View {
                         .font(.headline)
                         .fontWeight(.semibold)
                         .foregroundColor(.primary)
-                        .lineLimit(1)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.8)
+                        .multilineTextAlignment(.leading)
                     
                     Text(module.description)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                        .lineLimit(2)
+                        .lineLimit(3)
+                        .minimumScaleFactor(0.7)
                         .multilineTextAlignment(.leading)
                 }
                 
@@ -114,7 +117,7 @@ struct ModernModuleSummaryCard: View {
             }
         }
         .padding(20)
-        .frame(minHeight: 100)
+        .frame(minHeight: 120)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(.ultraThinMaterial)

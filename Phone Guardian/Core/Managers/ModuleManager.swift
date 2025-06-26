@@ -18,6 +18,12 @@ class ModuleManager: ObservableObject {
             preloadModules()
         }
     }
+    
+    // MARK: - Force Refresh Modules
+    func forceRefreshModules() {
+        UserDefaults.standard.removeObject(forKey: modulesKey)
+        preloadModules()
+    }
 
     // MARK: - Preload Default Modules
     func preloadModules() {
@@ -31,7 +37,9 @@ class ModuleManager: ObservableObject {
             Module(name: "Sensors Info", viewName: "SensorInfoView", isEnabled: true, description: "Monitor device sensors and motion", iconName: "gyroscope"),
             Module(name: "Display Info", viewName: "DisplayInfoView", isEnabled: true, description: "Check display specifications and status", iconName: "display"),
             Module(name: "Camera Info", viewName: "CameraInfoView", isEnabled: true, description: "View camera specifications and status", iconName: "camera"),
-            Module(name: "Health Check", viewName: "HealthCheckView", isEnabled: true, description: "Run a full device health check for issues and errors", iconName: "heart.text.square")
+            Module(name: "Health Check", viewName: "HealthCheckView", isEnabled: true, description: "Run a full device health check for issues and errors", iconName: "heart.text.square"),
+            Module(name: "GPU Info", viewName: "GPUInfoView", isEnabled: true, description: "Monitor GPU load and rendering", iconName: "gpu"),
+            Module(name: "Thermal Info", viewName: "ThermalInfoView", isEnabled: true, description: "Track device thermal state", iconName: "thermometer")
         ]
         saveModules()
     }
