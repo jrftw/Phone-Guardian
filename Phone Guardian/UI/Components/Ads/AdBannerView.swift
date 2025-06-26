@@ -1,6 +1,7 @@
 // AdBannerView.swift
 
 import SwiftUI
+import UIKit
 import GoogleMobileAds
 
 struct AdBannerView: UIViewRepresentable {

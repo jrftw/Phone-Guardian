@@ -1,6 +1,7 @@
 // SettingsView.swift
 
 import SwiftUI
+import UIKit
 import StoreKit
 import os.log
 
@@ -106,6 +107,7 @@ struct SettingsView: View {
                 applyTheme(appTheme)
             }
 
+            Spacer(minLength: 0)
             FooterView()
                 .padding(.top, 10)
         }

@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct StorageInfoView: View {
     @State private var showClearCacheView = false

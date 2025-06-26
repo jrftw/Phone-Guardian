@@ -17,8 +17,9 @@ struct OtherSectionView: View {
             Link("Get the beta", destination: URL(string:"https://testflight.apple.com/join/hRa1wNvr")!)
         }
         
-        Section(header: Text("Download our other App")) {
+        Section(header: Text("Download our Other Apps")) {
             Link("Blitz Rose 31 Card Game", destination: URL(string: "https://apps.apple.com/us/app/blitz-rose-31-card-game/id6736508556")!)
+            Link("Infinitum Block Smash", destination: URL(string: "https://apps.apple.com/us/app/infinitum-block-smash/id6746708231")!)
         }
     }
 }
