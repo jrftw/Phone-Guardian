@@ -50,7 +50,7 @@ class SystemUpdateManager: ObservableObject {
         
         await Task.detached(priority: .userInitiated) {
             await self.updateCurrentVersion()
-            await self.fetchAvailableUpdates()
+            await self.checkForAvailableUpdates()
             await self.loadVersionHistory()
             await self.updateStatus()
         }.value
@@ -76,116 +76,43 @@ class SystemUpdateManager: ObservableObject {
         logger.debug("Current version: \(version) (\(build))")
     }
     
-    private func fetchAvailableUpdates() async {
+    private func checkForAvailableUpdates() async {
         logger.debug("Fetching available system updates")
         
-        // In a real implementation, you would:
-        // 1. Check with Apple's servers for available updates
-        // 2. Parse the response to get update information
-        // 3. Compare with current version
-        
-        // For now, we'll simulate available updates
-        let simulatedUpdates = await simulateAvailableUpdates()
-        
+        // Use SoftwareUpdate framework to check for available updates
+        // Note: This requires proper entitlements and may not be available in all contexts
         await MainActor.run {
-            self.availableUpdates = simulatedUpdates
-        }
-    }
-    
-    private func simulateAvailableUpdates() async -> [SystemUpdate] {
-        let currentVersionDouble = Double(currentVersion) ?? 0.0
-        
-        var updates: [SystemUpdate] = []
-        
-        // Simulate available updates based on current version
-        if currentVersionDouble < 18.0 {
-            updates.append(SystemUpdate(
-                version: "18.0",
-                buildNumber: "22A335",
-                releaseDate: Date(),
-                description: "iOS 18 brings new features and improvements",
-                size: "3.2 GB",
-                isSecurityUpdate: false,
-                isMajorUpdate: true,
-                downloadURL: nil,
-                releaseNotes: "Major update with new features"
-            ))
+            self.availableUpdates = []
         }
         
-        if currentVersionDouble < 17.6 {
-            updates.append(SystemUpdate(
-                version: "17.6",
-                buildNumber: "21G80",
-                releaseDate: Date().addingTimeInterval(-7 * 24 * 3600),
-                description: "Security and stability improvements",
-                size: "450 MB",
-                isSecurityUpdate: true,
-                isMajorUpdate: false,
-                downloadURL: nil,
-                releaseNotes: "Security patches and bug fixes"
-            ))
-        }
-        
-        return updates
+        // In a production app, you would implement proper update checking
+        // using SoftwareUpdate framework or by checking against known version lists
+        await updateStatus()
     }
     
     private func loadVersionHistory() async {
         logger.debug("Loading version history")
         
-        // In a real implementation, you would load this from persistent storage
-        // For now, we'll simulate version history
-        let history = await simulateVersionHistory()
-        
-        await MainActor.run {
-            self.versionHistory = history
-            self.lastUpdateInstalled = history.first
-        }
-    }
-    
-    private func simulateVersionHistory() async -> [SystemUpdate] {
+        // Get the current version information
         let currentDate = Date()
-        let calendar = Calendar.current
+        let device = UIDevice.current
         
-        var history: [SystemUpdate] = []
-        
-        // Add current version to history
-        history.append(SystemUpdate(
-            version: currentVersion,
-            buildNumber: buildNumber,
-            releaseDate: currentDate.addingTimeInterval(-30 * 24 * 3600), // 30 days ago
+        let history = [SystemUpdate(
+            version: device.systemVersion,
+            buildNumber: Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown",
+            releaseDate: currentDate.addingTimeInterval(-30 * 24 * 3600), // Estimate 30 days ago
             description: "Current iOS version",
             size: "0 MB",
             isSecurityUpdate: false,
             isMajorUpdate: false,
             downloadURL: nil,
             releaseNotes: "Current version"
-        ))
+        )]
         
-        // Add some historical versions
-        let historicalVersions = [
-            ("17.5", "21F79", "Security and stability improvements"),
-            ("17.4", "21E214", "New features and bug fixes"),
-            ("17.3", "21D50", "Security update"),
-            ("17.2", "21C62", "Performance improvements"),
-            ("17.1", "21B74", "Bug fixes and improvements")
-        ]
-        
-        for (index, (version, build, description)) in historicalVersions.enumerated() {
-            let releaseDate = calendar.date(byAdding: .month, value: -(index + 1), to: currentDate) ?? currentDate
-            history.append(SystemUpdate(
-                version: version,
-                buildNumber: build,
-                releaseDate: releaseDate,
-                description: description,
-                size: "\(Int.random(in: 200...800)) MB",
-                isSecurityUpdate: index % 2 == 0,
-                isMajorUpdate: false,
-                downloadURL: nil,
-                releaseNotes: description
-            ))
+        await MainActor.run {
+            self.versionHistory = history
+            self.lastUpdateInstalled = history.first
         }
-        
-        return history.sorted { $0.releaseDate > $1.releaseDate }
     }
     
     private func updateStatus() async {

@@ -76,19 +76,35 @@ struct DisplayInfoView: View {
                 logger.info("Brightness updated to \(Int(brightness))%")
             }
 
-        // Simulating frame rate monitoring (Replace with actual frame rate logic if available)
-        Task {
-            while true {
-                try? await Task.sleep(nanoseconds: 1_000_000_000) // Wait for 1 second
-                frameRate = Double.random(in: 30...120) // Simulate frame rate changes
-                logger.info("Frame rate updated to \(Int(frameRate)) FPS")
-            }
-        }
+        // Get actual display refresh rate
+        frameRate = getDisplayRefreshRate()
+        logger.info("Display refresh rate: \(Int(frameRate)) FPS")
     }
 
     func stopMonitoringDisplay() {
         cancellable?.cancel()
         logger.info("Stopped monitoring display.")
+    }
+
+    // MARK: - Get Display Refresh Rate
+    func getDisplayRefreshRate() -> Double {
+        // Get the actual display refresh rate
+        if #available(iOS 15.0, *) {
+            return Double(UIScreen.main.maximumFramesPerSecond)
+        } else {
+            // Fallback for older iOS versions - use device capabilities
+            let modelCode = DeviceCapabilities.getDeviceModelCode()
+            
+            // Check for ProMotion displays (120Hz)
+            if modelCode.contains("iPhone13") && (modelCode.contains("Pro") || modelCode.contains("Max")) ||
+               modelCode.contains("iPhone14") && (modelCode.contains("Pro") || modelCode.contains("Max")) ||
+               modelCode.contains("iPhone15") && (modelCode.contains("Pro") || modelCode.contains("Max")) ||
+               modelCode.contains("iPhone16") && (modelCode.contains("Pro") || modelCode.contains("Max")) {
+                return 120.0
+            } else {
+                return 60.0
+            }
+        }
     }
 
     // MARK: - Check if Screen is Captured

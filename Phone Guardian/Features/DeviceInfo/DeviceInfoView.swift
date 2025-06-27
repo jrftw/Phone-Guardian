@@ -207,12 +207,47 @@ struct DeviceInfoView: View {
         updateTemperature()
     }
     private func updateTemperature() {
-        // Simulate temperature reading (replace with actual temperature monitoring)
-        thermalTemperature = Int.random(in: 70...85)
+        // Get thermal state which is the closest we can get to actual temperature
+        let thermalState = ProcessInfo.processInfo.thermalState
+        switch thermalState {
+        case .nominal:
+            thermalTemperature = 25 // Normal operating temperature
+        case .fair:
+            thermalTemperature = 35 // Slightly elevated
+        case .serious:
+            thermalTemperature = 45 // Elevated temperature
+        case .critical:
+            thermalTemperature = 55 // High temperature
+        @unknown default:
+            thermalTemperature = 30 // Default fallback
+        }
     }
     private func checkCarrierLock() {
-        // Simulate carrier lock check (replace with actual carrier lock detection)
-        carrierLocked = Bool.random()
+        // Check if device is carrier locked by examining network restrictions
+        let networkInfo = CTTelephonyNetworkInfo()
+        if #available(iOS 12.0, *) {
+            guard let carriers = networkInfo.serviceSubscriberCellularProviders?.values else {
+                carrierLocked = false
+                return
+            }
+            
+            // Check if any carrier has restrictions that might indicate a lock
+            var hasRestrictions = false
+            for carrier in carriers {
+                let allowsVOIP = carrier.allowsVOIP ?? true
+                // Note: supportsDataWhenRoaming is not available on CTCarrier
+                // We'll use a simpler check based on available properties
+                if !allowsVOIP {
+                    hasRestrictions = true
+                    break
+                }
+            }
+            
+            carrierLocked = hasRestrictions
+        } else {
+            // For older iOS versions, assume unlocked
+            carrierLocked = false
+        }
     }
 }
 

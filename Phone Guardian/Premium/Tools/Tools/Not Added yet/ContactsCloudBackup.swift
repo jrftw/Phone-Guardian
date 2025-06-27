@@ -61,9 +61,73 @@ struct ContactsCloudBackupView: View {
     }
     
     func backupContacts() {
-        // Implement cloud backup functionality here
-        // For the purpose of this example, we'll just display a success message
-        let alert = UIAlertController(title: "Success", message: "Contacts have been backed up to the cloud.", preferredStyle: .alert)
+        // Implement actual iCloud backup functionality
+        guard !contacts.isEmpty else {
+            let alert = UIAlertController(title: "No Contacts", message: "No contacts found to backup.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootVC = windowScene.windows.first?.rootViewController {
+                rootVC.present(alert, animated: true, completion: nil)
+            }
+            return
+        }
+        
+        // Check iCloud availability
+        if FileManager.default.ubiquityIdentityToken != nil {
+            // iCloud is available, proceed with backup
+            backupToICloud()
+        } else {
+            // iCloud not available
+            let alert = UIAlertController(title: "iCloud Not Available", message: "Please sign in to iCloud to backup contacts.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { _ in
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            })
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootVC = windowScene.windows.first?.rootViewController {
+                rootVC.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    private func backupToICloud() {
+        // Create backup file in iCloud Documents directory
+        guard let iCloudURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") else {
+            showError("Failed to access iCloud Documents")
+            return
+        }
+        
+        let backupURL = iCloudURL.appendingPathComponent("ContactsBackup_\(Date().timeIntervalSince1970).json")
+        
+        // Convert contacts to JSON
+        let contactData = contacts.map { contact in
+            [
+                "givenName": contact.givenName,
+                "familyName": contact.familyName,
+                "identifier": contact.identifier
+            ]
+        }
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: contactData, options: .prettyPrinted)
+            try jsonData.write(to: backupURL)
+            
+            let alert = UIAlertController(title: "Backup Successful", message: "\(contacts.count) contacts have been backed up to iCloud.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootVC = windowScene.windows.first?.rootViewController {
+                rootVC.present(alert, animated: true, completion: nil)
+            }
+        } catch {
+            showError("Failed to backup contacts: \(error.localizedDescription)")
+        }
+    }
+    
+    private func showError(_ message: String) {
+        let alert = UIAlertController(title: "Backup Failed", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootVC = windowScene.windows.first?.rootViewController {

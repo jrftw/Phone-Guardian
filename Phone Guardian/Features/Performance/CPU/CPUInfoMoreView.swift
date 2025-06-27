@@ -45,7 +45,24 @@ struct CPUInfoMoreView: View {
     }
     func getActiveCores() -> Int { ProcessInfo.processInfo.activeProcessorCount }
     func getTotalCores() -> Int { ProcessInfo.processInfo.processorCount }
-    func getEfficiencyCores() -> Int { 2 } // Placeholder
+    func getEfficiencyCores() -> Int {
+        // Determine efficiency cores based on device model
+        let modelCode = DeviceCapabilities.getDeviceModelCode()
+        
+        // iPhone models with different core configurations
+        if modelCode.contains("iPhone14") || modelCode.contains("iPhone15") || modelCode.contains("iPhone16") {
+            return 4 // iPhone 14/15/16 have 4 efficiency cores
+        } else if modelCode.contains("iPhone13") || modelCode.contains("iPhone12") {
+            return 4 // iPhone 12/13 have 4 efficiency cores
+        } else if modelCode.contains("iPhone11") {
+            return 4 // iPhone 11 has 4 efficiency cores
+        } else if modelCode.contains("iPhone8") || modelCode.contains("iPhone9") || modelCode.contains("iPhone10") {
+            return 4 // iPhone 8/X/XR/XS have 4 efficiency cores
+        } else {
+            // Default to 2 for older devices or unknown models
+            return 2
+        }
+    }
     func getPerformanceCores() -> Int { getTotalCores() - getEfficiencyCores() }
     func getCacheInfo(level: String) -> String {
         switch level {

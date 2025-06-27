@@ -221,20 +221,29 @@ class SystemLogsManager: ObservableObject {
     }
     
     private func generateLogMessage(subsystem: String, category: String, severity: SystemLogEntry.LogSeverity) -> String {
-        let messages = [
-            "System operation completed successfully",
-            "Network connection established",
-            "Storage operation in progress",
-            "Power management event occurred",
-            "Memory allocation completed",
-            "Background task started",
-            "User interaction detected",
-            "System resource accessed",
-            "Configuration updated",
-            "Performance metric recorded"
-        ]
-        
-        return messages.randomElement() ?? "System log entry"
+        // Generate more realistic log messages based on subsystem and category
+        switch subsystem {
+        case "com.apple.network":
+            return "Network connection \(severity == .error ? "failed" : "established")"
+        case "com.apple.storage":
+            return "Storage operation \(severity == .error ? "failed" : "completed")"
+        case "com.apple.power":
+            return "Power management event \(severity == .error ? "error" : "processed")"
+        case "com.apple.memory":
+            return "Memory allocation \(severity == .error ? "failed" : "completed")"
+        case "com.apple.background":
+            return "Background task \(severity == .error ? "failed" : "started")"
+        case "com.apple.user":
+            return "User interaction \(severity == .error ? "error" : "detected")"
+        case "com.apple.system":
+            return "System resource \(severity == .error ? "access denied" : "accessed")"
+        case "com.apple.config":
+            return "Configuration \(severity == .error ? "update failed" : "updated")"
+        case "com.apple.performance":
+            return "Performance metric \(severity == .error ? "collection failed" : "recorded")"
+        default:
+            return "System operation \(severity == .error ? "failed" : "completed")"
+        }
     }
     
     @MainActor

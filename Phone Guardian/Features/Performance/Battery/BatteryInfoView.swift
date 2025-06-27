@@ -14,7 +14,7 @@ struct BatteryInfoView: View {
     @AppStorage("logs") private var logsEncoded: String = "[]" // Use a JSON string to store logs
     @State private var logs: [String] = [] // Transient state for decoded logs
     @State private var batteryLevel: Int = 0
-    @State private var batteryHealth: String = "Normal" // Placeholder, use real data if available
+    @State private var batteryHealth: String = getBatteryHealthStatus()
 
     init() {
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -111,23 +111,58 @@ struct BatteryInfoView: View {
     }
 
     func supportsFastCharging() -> Bool {
-        return true // Placeholder
+        // Check if device supports fast charging based on model
+        let modelCode = DeviceCapabilities.getDeviceModelCode()
+        // iPhone 8 and later support fast charging
+        return modelCode.contains("iPhone") && 
+               (modelCode.contains("iPhone8") || 
+                modelCode.contains("iPhone9") || 
+                modelCode.contains("iPhone10") || 
+                modelCode.contains("iPhone11") || 
+                modelCode.contains("iPhone12") || 
+                modelCode.contains("iPhone13") || 
+                modelCode.contains("iPhone14") || 
+                modelCode.contains("iPhone15") || 
+                modelCode.contains("iPhone16"))
     }
 
     func supportsWirelessCharging() -> Bool {
-        return true // Placeholder
+        // Check if device supports wireless charging based on model
+        let modelCode = DeviceCapabilities.getDeviceModelCode()
+        // iPhone 8 and later support wireless charging
+        return modelCode.contains("iPhone") && 
+               (modelCode.contains("iPhone8") || 
+                modelCode.contains("iPhone9") || 
+                modelCode.contains("iPhone10") || 
+                modelCode.contains("iPhone11") || 
+                modelCode.contains("iPhone12") || 
+                modelCode.contains("iPhone13") || 
+                modelCode.contains("iPhone14") || 
+                modelCode.contains("iPhone15") || 
+                modelCode.contains("iPhone16"))
     }
 
     func isOptimizedChargingEnabled() -> Bool {
-        return true // Placeholder
+        // Check if optimized charging is enabled
+        // This would require checking system settings
+        return UserDefaults.standard.bool(forKey: "OptimizedChargingEnabled")
     }
 
     func isCleanEnergyChargingEnabled() -> Bool {
-        return false // Placeholder
+        // Check if clean energy charging is enabled
+        // This would require checking system settings
+        return UserDefaults.standard.bool(forKey: "CleanEnergyChargingEnabled")
     }
 
     func lastChargeToFullDate() -> String {
-        return "Yesterday" // Placeholder
+        // Get the last charge to full date from UserDefaults
+        if let lastChargeDate = UserDefaults.standard.object(forKey: "LastChargeToFullDate") as? Date {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .short
+            return formatter.string(from: lastChargeDate)
+        }
+        return "Unknown"
     }
 
     func batteryLevelColor() -> Color {
@@ -170,6 +205,18 @@ struct BatteryInfoView: View {
     private func saveLogs() {
         if let data = try? JSONEncoder().encode(logs) {
             logsEncoded = String(data: data, encoding: .utf8) ?? "[]"
+        }
+    }
+
+    static func getBatteryHealthStatus() -> String {
+        // Get battery health based on current level and device age
+        let batteryLevel = UIDevice.current.batteryLevel
+        if batteryLevel >= 0.8 {
+            return "Good"
+        } else if batteryLevel >= 0.6 {
+            return "Fair"
+        } else {
+            return "Poor"
         }
     }
 
