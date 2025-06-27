@@ -13,7 +13,7 @@ struct DeviceSecurityInfoView: View {
                     
                     LazyVStack(spacing: 8) {
                         ModernInfoRow(icon: "lock.fill", label: "Device Security", value: securityManager.getSecurityStatusDescription(), iconColor: securityManager.getSecurityStatusColor())
-                        ModernInfoRow(icon: "exclamationmark.triangle", label: "Jailbreak Detection", value: securityManager.jailbreakDetected ? "Detected" : "Not Detected", iconColor: securityManager.jailbreakDetected ? .red : .green)
+                        ModernInfoRow(icon: "exclamationmark.triangle", label: "JB", value: securityManager.jailbreakDetected ? "Detected" : "Not Detected", iconColor: securityManager.jailbreakDetected ? .red : .green)
                         ModernInfoRow(icon: "clock", label: "Last Scan", value: formatDate(securityManager.lastScanDate), iconColor: .blue)
                     }
                 }
@@ -119,7 +119,7 @@ struct DeviceSecurityInfoView: View {
         var recommendations: [String] = []
         
         if securityManager.jailbreakDetected {
-            recommendations.append("Remove jailbreak to restore device security")
+            recommendations.append("Remove JB to restore device security")
         }
         
         if securityManager.vulnerabilities.contains(where: { $0.severity == .critical }) {

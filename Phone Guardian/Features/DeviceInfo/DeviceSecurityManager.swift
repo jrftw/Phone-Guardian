@@ -47,7 +47,7 @@ class DeviceSecurityManager: ObservableObject {
     
     @MainActor
     private func scanForJailbreak() {
-        logger.debug("Scanning for jailbreak indicators")
+        logger.debug("Scanning for jb indicators")
         
         let jailbreakIndicators = [
             "/Applications/Cydia.app",
