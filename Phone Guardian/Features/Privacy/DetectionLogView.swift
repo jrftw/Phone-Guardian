@@ -194,6 +194,17 @@ struct DetectionLogView: View {
     // MARK: - Helper Methods
     private func loadDetections() {
         detections = vpnManager.loadDetections()
+        // Also load detections from tunnel extension
+        let tunnelDetections = vpnManager.loadTunnelDetections()
+        detections.append(contentsOf: tunnelDetections)
+        
+        // Remove duplicates and sort by timestamp
+        let uniqueDetections = Array(Set(detections.map { "\($0.timestamp.timeIntervalSince1970)-\($0.domain)" }))
+            .compactMap { key in
+                detections.first { "\($0.timestamp.timeIntervalSince1970)-\($0.domain)" == key }
+            }
+        
+        detections = uniqueDetections.sorted { $0.timestamp > $1.timestamp }
     }
     
     private func clearAllDetections() {

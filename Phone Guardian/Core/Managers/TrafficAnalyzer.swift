@@ -58,18 +58,36 @@ class TrafficAnalyzer: ObservableObject {
     // MARK: - Traffic Analysis
     func startAnalysis() {
         isAnalyzing = true
-        currentStatus = "Monitoring network traffic..."
+        currentStatus = "Starting VPN tunnel..."
         logger.info("Starting INFILOC traffic analysis")
         
-        // In a real implementation, this would be handled by the NEPacketTunnelProvider
-        // For now, we'll simulate detection for demonstration purposes
-        simulateTrafficMonitoring()
+        // Start the VPN tunnel which will handle real traffic analysis
+        Task {
+            await vpnManager.startVPN()
+            
+            await MainActor.run {
+                if self.vpnManager.isVPNEnabled {
+                    self.currentStatus = "Monitoring network traffic..."
+                } else {
+                    self.currentStatus = "Failed to start monitoring"
+                    self.isAnalyzing = false
+                }
+            }
+        }
     }
     
     func stopAnalysis() {
         isAnalyzing = false
-        currentStatus = "Analysis stopped"
-        logger.info("Stopped INFILOC traffic analysis")
+        currentStatus = "Stopping analysis..."
+        logger.info("Stopping INFILOC traffic analysis")
+        
+        Task {
+            await vpnManager.stopVPN()
+            
+            await MainActor.run {
+                self.currentStatus = "Analysis stopped"
+            }
+        }
     }
     
     // MARK: - Domain Detection
@@ -87,43 +105,12 @@ class TrafficAnalyzer: ObservableObject {
         return false
     }
     
-    // MARK: - Simulated Monitoring (for demonstration)
-    private func simulateTrafficMonitoring() {
-        // This is a simulation for demonstration purposes
-        // In a real implementation, this would be handled by the NEPacketTunnelProvider
-        
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let self = self else { return }
-            
-            // Simulate some detections after a delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                self.simulateDetection(domain: "gsp-ssl.ls.apple.com", service: "Find My iPhone")
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
-                self.simulateDetection(domain: "api.life360.com", service: "Life360")
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 25) {
-                self.simulateDetection(domain: "maps.googleapis.com", service: "Google Maps")
-            }
-        }
-    }
-    
-    private func simulateDetection(domain: String, service: String) {
-        guard isAnalyzing else { return }
-        
-        DispatchQueue.main.async {
-            self.currentStatus = "🔍 Detected: \(service)"
-        }
-        
-        vpnManager.recordDetection(domain: domain, service: service)
-        
-        // Reset status after 3 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            if self.isAnalyzing {
-                self.currentStatus = "Monitoring network traffic..."
-            }
+    // MARK: - Real-time Status Updates
+    func updateStatus() {
+        if vpnManager.isVPNEnabled {
+            currentStatus = "Monitoring network traffic..."
+        } else {
+            currentStatus = "VPN tunnel not active"
         }
     }
     
@@ -156,5 +143,22 @@ class TrafficAnalyzer: ObservableObject {
         let thisWeek = detections.filter { $0.timestamp >= weekAgo }.count
         
         return (total, today, thisWeek)
+    }
+    
+    // MARK: - Load Combined Detections
+    func loadAllDetections() -> [LocationDetection] {
+        var allDetections = vpnManager.loadDetections()
+        let tunnelDetections = vpnManager.loadTunnelDetections()
+        
+        // Combine and deduplicate detections
+        allDetections.append(contentsOf: tunnelDetections)
+        
+        // Remove duplicates based on timestamp and domain
+        let uniqueDetections = Array(Set(allDetections.map { "\($0.timestamp.timeIntervalSince1970)-\($0.domain)" }))
+            .compactMap { key in
+                allDetections.first { "\($0.timestamp.timeIntervalSince1970)-\($0.domain)" == key }
+            }
+        
+        return uniqueDetections.sorted { $0.timestamp > $1.timestamp }
     }
 } 

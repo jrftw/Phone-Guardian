@@ -1,5 +1,6 @@
 import Foundation
 import NetworkExtension
+import UserNotifications
 import os.log
 
 class VPNManager: ObservableObject {
@@ -10,9 +11,12 @@ class VPNManager: ObservableObject {
     
     private let logger = Logger(subsystem: "com.phoneguardian.infiloc", category: "VPNManager")
     private var manager: NETunnelProviderManager?
+    private let appGroupUserDefaults = UserDefaults(suiteName: "group.com.phoneguardian.infiloc")
     
     init() {
         loadVPNStatus()
+        setupNotificationListener()
+        requestNotificationPermissions()
     }
     
     // MARK: - VPN Configuration
@@ -43,7 +47,7 @@ class VPNManager: ObservableObject {
     // MARK: - Start/Stop VPN
     func startVPN() async {
         guard let manager = manager else {
-            await MainActor.run { self.isVPNEnabled = false; self.isMonitoring = false }
+            await setupVPN()
             return
         }
         
@@ -87,6 +91,70 @@ class VPNManager: ObservableObject {
                     self.isVPNEnabled = manager.connection.status == .connected
                     self.isMonitoring = manager.isEnabled
                 }
+            }
+        }
+    }
+    
+    // MARK: - Notification Setup
+    private func requestNotificationPermissions() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if granted {
+                self.logger.info("Notification permissions granted")
+            } else {
+                self.logger.error("Notification permissions denied: \(error?.localizedDescription ?? "Unknown error")")
+            }
+        }
+    }
+    
+    private func setupNotificationListener() {
+        NotificationCenter.default.addObserver(
+            forName: Notification.Name("InfiLocDetection"),
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            guard let self = self,
+                  let userInfo = notification.userInfo,
+                  let domain = userInfo["domain"] as? String,
+                  let service = userInfo["service"] as? String else {
+                return
+            }
+            
+            self.handleDetection(domain: domain, service: service)
+        }
+    }
+    
+    private func handleDetection(domain: String, service: String) {
+        DispatchQueue.main.async {
+            self.lastDetectionTime = Date()
+            self.detectionCount += 1
+            
+            // Save detection to UserDefaults for persistence
+            self.saveDetection(domain: domain, service: service)
+            
+            // Show notification if enabled
+            if UserDefaults.standard.bool(forKey: "infiloc_notifications") {
+                self.showDetectionNotification(domain: domain, service: service)
+            }
+        }
+        
+        logger.info("Location access detected: \(domain) (\(service))")
+    }
+    
+    private func showDetectionNotification(domain: String, service: String) {
+        let content = UNMutableNotificationContent()
+        content.title = "🔍 Location Access Detected"
+        content.body = "\(service) attempted to access your location"
+        content.sound = .default
+        
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: nil
+        )
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                self.logger.error("Failed to show notification: \(error.localizedDescription)")
             }
         }
     }
@@ -136,6 +204,27 @@ class VPNManager: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "infiloc_detections")
         detectionCount = 0
         lastDetectionTime = nil
+    }
+    
+    // MARK: - Load Detections from Tunnel Extension
+    func loadTunnelDetections() -> [LocationDetection] {
+        guard let tunnelDetections = appGroupUserDefaults?.array(forKey: "tunnel_detections") as? [[String: Any]] else {
+            return []
+        }
+        
+        return tunnelDetections.compactMap { detectionDict in
+            guard let timestamp = detectionDict["timestamp"] as? TimeInterval,
+                  let domain = detectionDict["domain"] as? String,
+                  let service = detectionDict["service"] as? String else {
+                return nil
+            }
+            
+            return LocationDetection(
+                timestamp: Date(timeIntervalSince1970: timestamp),
+                domain: domain,
+                service: service
+            )
+        }
     }
 }
 

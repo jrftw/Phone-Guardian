@@ -17,6 +17,8 @@
 		7983B2BA2CF787A4002CF52D /* PhoneGuardian Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 7983B2B92CF787A4002CF52D /* PhoneGuardian Watch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		79AA88042D0B777F008AB91B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79AA88032D0B777F008AB91B /* CloudKit.framework */; };
 		79B50E6F2CEE55DC0095B386 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 79B50E6E2CEE55DC0095B386 /* GoogleMobileAds */; };
+		79B9EBC62E1C91C000F57B62 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79B9EBC52E1C91C000F57B62 /* NetworkExtension.framework */; };
+		79B9EBCE2E1C91C000F57B62 /* InfiLocTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 79B9EBC42E1C91C000F57B62 /* InfiLocTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		79C9BABE2CF2D506009606BA /* SwiftyPing in Frameworks */ = {isa = PBXBuildFile; productRef = 79C9BABD2CF2D506009606BA /* SwiftyPing */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +37,13 @@
 			remoteGlobalIDString = 79B50DCE2CEE528E0095B386;
 			remoteInfo = "Phone Guardian";
 		};
+		79B9EBCC2E1C91C000F57B62 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79B50DC72CEE528E0095B386 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79B9EBC32E1C91C000F57B62;
+			remoteInfo = InfiLocTunnel;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +56,17 @@
 				7983B2BA2CF787A4002CF52D /* PhoneGuardian Watch Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B9EBD32E1C91C000F57B62 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				79B9EBCE2E1C91C000F57B62 /* InfiLocTunnel.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -63,6 +83,8 @@
 		79B50DCF2CEE528E0095B386 /* Phone Guardian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Phone Guardian.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		79B50DE32CEE528F0095B386 /* Phone GuardianTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Phone GuardianTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		79B50DED2CEE528F0095B386 /* Phone GuardianUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Phone GuardianUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		79B9EBC42E1C91C000F57B62 /* InfiLocTunnel.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = InfiLocTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		79B9EBC52E1C91C000F57B62 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -72,6 +94,13 @@
 				App/Info.plist,
 			);
 			target = 79B50DCE2CEE528E0095B386 /* Phone Guardian */;
+		};
+		79B9EBD22E1C91C000F57B62 /* Exceptions for "InfiLocTunnel" folder in "InfiLocTunnel" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 79B9EBC32E1C91C000F57B62 /* InfiLocTunnel */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -102,6 +131,14 @@
 		79B50DF02CEE528F0095B386 /* Phone GuardianUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Phone GuardianUITests";
+			sourceTree = "<group>";
+		};
+		79B9EBC72E1C91C000F57B62 /* InfiLocTunnel */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				79B9EBD22E1C91C000F57B62 /* Exceptions for "InfiLocTunnel" folder in "InfiLocTunnel" target */,
+			);
+			path = InfiLocTunnel;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -152,6 +189,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		79B9EBC12E1C91C000F57B62 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79B9EBC62E1C91C000F57B62 /* NetworkExtension.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -163,6 +208,7 @@
 				79B50DF02CEE528F0095B386 /* Phone GuardianUITests */,
 				7983B2952CF787A3002CF52D /* PhoneGuardian Watch */,
 				7983B2BD2CF787A4002CF52D /* PhoneGuardian Watch Watch App */,
+				79B9EBC72E1C91C000F57B62 /* InfiLocTunnel */,
 				79B50E6D2CEE55DC0095B386 /* Frameworks */,
 				79B50DD02CEE528E0095B386 /* Products */,
 			);
@@ -176,6 +222,7 @@
 				79B50DED2CEE528F0095B386 /* Phone GuardianUITests.xctest */,
 				7983B2942CF787A3002CF52D /* PhoneGuardian Watch.app */,
 				7983B2B92CF787A4002CF52D /* PhoneGuardian Watch Watch App.app */,
+				79B9EBC42E1C91C000F57B62 /* InfiLocTunnel.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -189,6 +236,7 @@
 				792EE7B12CF7CAA8001E0F9A /* Contacts.framework */,
 				792EE7AF2CF7CA97001E0F9A /* Photos.framework */,
 				7983B2892CF78372002CF52D /* StoreKit.framework */,
+				79B9EBC52E1C91C000F57B62 /* NetworkExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -248,10 +296,12 @@
 				79B50DCB2CEE528E0095B386 /* Sources */,
 				79B50DCC2CEE528E0095B386 /* Frameworks */,
 				79B50DCD2CEE528E0095B386 /* Resources */,
+				79B9EBD32E1C91C000F57B62 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				79B9EBCD2E1C91C000F57B62 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				79B50DD12CEE528E0095B386 /* Phone Guardian */,
@@ -313,6 +363,28 @@
 			productReference = 79B50DED2CEE528F0095B386 /* Phone GuardianUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		79B9EBC32E1C91C000F57B62 /* InfiLocTunnel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79B9EBCF2E1C91C000F57B62 /* Build configuration list for PBXNativeTarget "InfiLocTunnel" */;
+			buildPhases = (
+				79B9EBC02E1C91C000F57B62 /* Sources */,
+				79B9EBC12E1C91C000F57B62 /* Frameworks */,
+				79B9EBC22E1C91C000F57B62 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				79B9EBC72E1C91C000F57B62 /* InfiLocTunnel */,
+			);
+			name = InfiLocTunnel;
+			packageProductDependencies = (
+			);
+			productName = InfiLocTunnel;
+			productReference = 79B9EBC42E1C91C000F57B62 /* InfiLocTunnel.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -320,7 +392,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1610;
+				LastSwiftUpdateCheck = 1630;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					7983B2932CF787A3002CF52D = {
@@ -339,6 +411,9 @@
 					79B50DEC2CEE528F0095B386 = {
 						CreatedOnToolsVersion = 16.1;
 						TestTargetID = 79B50DCE2CEE528E0095B386;
+					};
+					79B9EBC32E1C91C000F57B62 = {
+						CreatedOnToolsVersion = 16.3;
 					};
 				};
 			};
@@ -375,6 +450,7 @@
 				79B50DEC2CEE528F0095B386 /* Phone GuardianUITests */,
 				7983B2932CF787A3002CF52D /* PhoneGuardian Watch */,
 				7983B2B82CF787A4002CF52D /* PhoneGuardian Watch Watch App */,
+				79B9EBC32E1C91C000F57B62 /* InfiLocTunnel */,
 			);
 		};
 /* End PBXProject section */
@@ -409,6 +485,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		79B50DEB2CEE528F0095B386 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B9EBC22E1C91C000F57B62 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -453,6 +536,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		79B9EBC02E1C91C000F57B62 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -465,6 +555,11 @@
 			isa = PBXTargetDependency;
 			target = 79B50DCE2CEE528E0095B386 /* Phone Guardian */;
 			targetProxy = 79B50DEE2CEE528F0095B386 /* PBXContainerItemProxy */;
+		};
+		79B9EBCD2E1C91C000F57B62 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79B9EBC32E1C91C000F57B62 /* InfiLocTunnel */;
+			targetProxy = 79B9EBCC2E1C91C000F57B62 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -889,6 +984,61 @@
 			};
 			name = Release;
 		};
+		79B9EBD02E1C91C000F57B62 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = InfiLocTunnel/InfiLocTunnel.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InfiLocTunnel/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = InfiLocTunnel;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.PhoneGuardian.InfiLocTunnel;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		79B9EBD12E1C91C000F57B62 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = InfiLocTunnel/InfiLocTunnel.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InfiLocTunnel/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = InfiLocTunnel;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.PhoneGuardian.InfiLocTunnel;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -942,6 +1092,15 @@
 			buildConfigurations = (
 				79B50DFF2CEE528F0095B386 /* Debug */,
 				79B50E002CEE528F0095B386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79B9EBCF2E1C91C000F57B62 /* Build configuration list for PBXNativeTarget "InfiLocTunnel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79B9EBD02E1C91C000F57B62 /* Debug */,
+				79B9EBD12E1C91C000F57B62 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
