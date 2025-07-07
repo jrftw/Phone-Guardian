@@ -37,6 +37,8 @@ struct Module: Identifiable, Codable {
             GPUInfoView()
         case "ThermalInfoView":
             ThermalInfoView()
+        case "PrivacyControlView":
+            PrivacyControlView()
         default:
             Text("Unknown Module")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

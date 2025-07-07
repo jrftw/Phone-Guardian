@@ -15,15 +15,20 @@ struct DeviceCapabilities {
             "iPhone17,1", "iPhone17,2", "iPhone17,3", "iPhone17,4",
             // iPads
             "iPad13,4", "iPad13,5", "iPad13,6", "iPad13,7",
+            "iPad13,8", "iPad13,9", "iPad13,10", "iPad13,11",
             "iPad14,1", "iPad14,2",
-            "iPad15,1", "iPad15,2",
-            // Macs
-            "MacBookAir10,1",
-            "MacBookPro17,1", "MacBookPro18,1",
-            "iMac21,1", "iMac21,2",
-            "Macmini9,1",
-            "MacStudio1,1",
-            "MacPro7,1"
+            "iPad15,1", "iPad15,2", "iPad15,3", "iPad15,4", "iPad15,5", "iPad15,6",
+            "iPad16,1", "iPad16,2",
+            // Macs (Apple Silicon)
+            "MacBookAir10,1", "MacBookAir10,2", "MacBookAir10,3", "MacBookAir15,1", "MacBookAir15,2",
+            "MacBookPro17,1", "MacBookPro18,1", "MacBookPro18,2", "MacBookPro18,3", "MacBookPro18,4",
+            "MacBookPro18,5", "MacBookPro18,6", "MacBookPro18,7", "MacBookPro18,8", "MacBookPro18,9",
+            "MacBookPro18,10", "MacBookPro18,11",
+            "Mac14,2", "Mac14,3", "Mac14,4", "Mac14,5", "Mac14,6", "Mac14,15", "Mac14,16",
+            "Mac15,1", "Mac15,2", "Mac15,3", "Mac15,4", "Mac15,5", "Mac15,6",
+            "Mac14,7", "Mac14,8", "Mac14,9", "Mac14,10", "Mac14,11", "Mac14,12",
+            "Mac14,17", "Mac14,18", "Mac14,19", "Mac14,20", "Mac14,21", "Mac14,22", "Mac14,23", "Mac14,24",
+            "Mac15,7", "Mac15,8", "Mac15,9", "Mac15,10", "Mac15,11", "Mac15,12", "Mac15,13", "Mac15,14"
         ]
         let isSupported = supportedModels.contains(getDeviceModelCode())
         logOnce(message: "Apple Intelligence Supported: \(isSupported)")

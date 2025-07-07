@@ -348,6 +348,14 @@
 			knownRegions = (
 				en,
 				Base,
+				ar,
+				"zh-Hans",
+				es,
+				ko,
+				"zh-Hant",
+				vi,
+				fr,
+				tl,
 			);
 			mainGroup = 79B50DC62CEE528E0095B386;
 			minimizedProjectReferenceProxies = 1;
@@ -613,7 +621,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.12;
+				MARKETING_VERSION = 1.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.Phone-Guardian";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -657,7 +665,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.12;
+				MARKETING_VERSION = 1.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "Infinitum-Imagery-LLC.Phone-Guardian";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;

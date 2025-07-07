@@ -17,19 +17,23 @@ struct StorageInfoView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     ModernSectionHeader(title: "Storage Overview", icon: "externaldrive")
                     
-                    HStack(alignment: .top, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 20) {
+                        // Chart at the top
+                        HStack {
+                            Spacer()
+                            StorageBarChart(usedPercentage: getUsedPercentage())
+                                .frame(width: 120, height: 120)
+                                .modernCard(padding: 12)
+                            Spacer()
+                        }
+                        
+                        // Storage info rows below
                         VStack(alignment: .leading, spacing: 8) {
                             ModernInfoRow(icon: "externaldrive.fill", label: "Total Storage", value: getTotalDiskSpace(), iconColor: .blue)
                             ModernInfoRow(icon: "externaldrive.badge.checkmark", label: "Used Storage", value: getUsedDiskSpace(), iconColor: .orange)
                             ModernInfoRow(icon: "externaldrive.badge.plus", label: "Free Storage", value: getFreeDiskSpace(), iconColor: .green)
                             ModernInfoRow(icon: "arrow.up.circle", label: "Releasable Space", value: getReleasableSpace(), iconColor: .purple)
                         }
-                        
-                        Spacer()
-                        
-                        StorageBarChart(usedPercentage: getUsedPercentage())
-                            .frame(width: 120, height: 120)
-                            .modernCard(padding: 12)
                     }
                 }
                 .modernCard()

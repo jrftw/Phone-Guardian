@@ -39,6 +39,7 @@ class ModuleManager: ObservableObject {
             Module(name: "Camera Info", viewName: "CameraInfoView", isEnabled: true, description: "View camera specifications and status", iconName: "camera"),
             Module(name: "Health Check", viewName: "HealthCheckView", isEnabled: true, description: "Run a full device health check for issues and errors", iconName: "heart.text.square"),
             Module(name: "GPU Info", viewName: "GPUInfoView", isEnabled: true, description: "Monitor GPU load and rendering", iconName: "gpu"),
+            Module(name: "Privacy Control", viewName: "PrivacyControlView", isEnabled: true, description: "Monitor and detect passive location access attempts", iconName: "lock.shield"),
             Module(name: "Thermal Info", viewName: "ThermalInfoView", isEnabled: true, description: "Track device thermal state", iconName: "thermometer")
         ]
         saveModules()

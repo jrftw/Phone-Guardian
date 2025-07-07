@@ -1,134 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- MARK: Version Information -->
-    <key>CFBundleShortVersionString</key>
-    <string>1.12</string>
-    <key>CFBundleVersion</key>
-    <string>1</string>
-    
-    <!-- MARK: Background Modes -->
-    <key>UIBackgroundModes</key>
-    <array>
-        <string>remote-notification</string>
-    </array>
-    
-    <!-- MARK: Google AdMob -->
-    <key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-6815311336585204~1234567890</string>
-    <key>GADBannerAdUnitID</key>
-    <string>ca-app-pub-6815311336585204/7321160278</string>
-    <key>GADInterstitialAdUnitID</key>
-    <string>ca-app-pub-6815311336585204/7741700785</string>
-    
-    <!-- MARK: App Transport Security -->
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
-    
-    <!-- MARK: App Icons -->
-    <key>CFBundleIcons</key>
-    <dict>
-        <key>CFBundlePrimaryIcon</key>
-        <dict>
-            <key>CFBundleIconFiles</key>
-            <array>
-                <string>AppIcon</string>
-            </array>
-        </dict>
-    </dict>
-    <key>CFBundleIconName</key>
-    <string>AppIcon</string>
-    
-    <!-- MARK: Usage Descriptions -->
-    <key>NSUserTrackingUsageDescription</key>
-    <string>We use tracking data to personalize experiences and display relevant ads. Some tracking may be simulated or constrained by system limitations.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>We need your location to enable location-based features and improve services. Some location features may be simulated or limited by Apple's guidelines.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>We need camera access to scan documents and capture media.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>We need access to your photo library to view, save, and manage images or videos.</string>
-    <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>We need permission to add and manage duplicates found in your photo library.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>We need access to your microphone to enable audio recording features.</string>
-    <key>NSFaceIDUsageDescription</key>
-    <string>We need Face ID access for secure authentication of sensitive actions.</string>
-    <key>NSBiometricUsageDescription</key>
-    <string>We need biometric authentication (Touch ID or Face ID) for secure data access.</string>
-    <key>NSCalendarsUsageDescription</key>
-    <string>We need access to your calendar to find duplicate events and improve organization. Some calendar data may be estimated or limited by Apple's guidelines.</string>
-    <key>NSContactsUsageDescription</key>
-    <string>We need access to your contacts to identify and manage duplicate entries. Some analyses may be simulated.</string>
-    <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>We need access to Bluetooth to connect to nearby devices and improve functionality.</string>
-    
-    <!-- MARK: iCloud & Ubiquity -->
-    <key>com.apple.developer.icloud-container-environment</key>
-    <string>Production</string>
-    <key>com.apple.developer.ubiquity-container-identifiers</key>
-    <array>
-        <string>iCloud.com.Infinitum-Imagery-LLC.phoneguardian</string>
-    </array>
-    
-    <!-- MARK: Interface Orientation & Status Bar -->
-    <key>UISupportedInterfaceOrientations</key>
-    <array>
-        <string>UIInterfaceOrientationPortrait</string>
-        <string>UIInterfaceOrientationLandscapeLeft</string>
-        <string>UIInterfaceOrientationLandscapeRight</string>
-    </array>
-    <key>UIStatusBarStyle</key>
-    <string>UIStatusBarStyleLightContent</string>
-    
-    <!-- MARK: SKAdNetwork -->
-    <key>SKAdNetworkItems</key>
-    <array>
-        <dict>
-            <key>SKAdNetworkIdentifier</key>
-            <string>cstr6suwn9.skadnetwork</string>
-        </dict>
-        <dict>
-            <key>SKAdNetworkIdentifier</key>
-            <string>4fzdc2evr5.skadnetwork</string>
-        </dict>
-        <dict>
-            <key>SKAdNetworkIdentifier</key>
-            <string>v9wttpbfk9.skadnetwork</string>
-        </dict>
-    </array>
-    
-    <!-- MARK: Bundle Info -->
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
-    <key>CFBundleExecutable</key>
-    <string>$(EXECUTABLE_NAME)</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.example.PhoneGuardian</string>
-    <key>CFBundleInfoDictionaryVersion</key>
-    <string>6.0</string>
-    <key>CFBundleName</key>
-    <string>Phone Guardian</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>LSRequiresIPhoneOS</key>
-    <true/>
-    
-    <!-- MARK: Launch Storyboard (replaces UILaunchImages) -->
-    <key>UILaunchStoryboardName</key>
-    <string>LaunchScreen</string>
-    
-    <!-- MARK: Scene Manifest -->
-    <key>UIApplicationSceneManifest</key>
-    <dict>
-        <key>UIApplicationSupportsMultipleScenes</key>
-        <false/>
-    </dict>
-    
-    <!-- Removed deprecated UILaunchImages array to avoid warning -->
+	<key>CFBundleShortVersionString</key>
+	<string>1.13</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-6815311336585204~1234567890</string>
+	<key>GADBannerAdUnitID</key>
+	<string>ca-app-pub-6815311336585204/7321160278</string>
+	<key>GADInterstitialAdUnitID</key>
+	<string>ca-app-pub-6815311336585204/7741700785</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>AppIcon</string>
+			</array>
+		</dict>
+	</dict>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>We use tracking data to personalize experiences and display relevant ads. Some tracking may be simulated or constrained by system limitations.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to enable location-based features and improve services. Some location features may be simulated or limited by Apple&apos;s guidelines.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need camera access to scan documents and capture media.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to view, save, and manage images or videos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need permission to add and manage duplicates found in your photo library.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to your microphone to enable audio recording features.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>We need Face ID access for secure authentication of sensitive actions.</string>
+	<key>NSBiometricUsageDescription</key>
+	<string>We need biometric authentication (Touch ID or Face ID) for secure data access.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>We need access to your calendar to find duplicate events and improve organization. Some calendar data may be estimated or limited by Apple&apos;s guidelines.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>We need access to your contacts to identify and manage duplicate entries. Some analyses may be simulated.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>We need access to Bluetooth to connect to nearby devices and improve functionality.</string>
+	<key>com.apple.developer.icloud-container-environment</key>
+	<string>Production</string>
+	<key>com.apple.developer.ubiquity-container-identifiers</key>
+	<array>
+		<string>iCloud.com.Infinitum-Imagery-LLC.phoneguardian</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>4fzdc2evr5.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>v9wttpbfk9.skadnetwork</string>
+		</dict>
+	</array>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.example.PhoneGuardian</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Phone Guardian</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
 </dict>
 </plist>
