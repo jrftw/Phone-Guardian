@@ -11,7 +11,6 @@ import os.log
 class PacketTunnelProvider: NEPacketTunnelProvider {
     private let logger = Logger(subsystem: "com.phoneguardian.infiloc.tunnel", category: "PacketTunnel")
     private var isMonitoring = false
-    private var packetFlow: NEPacketTunnelFlow?
     
     // Known location service domains to monitor
     private let locationDomains: [String: String] = [
@@ -115,39 +114,37 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             return
         }
         
-        self.packetFlow = packetFlow
-        
         // Start reading packets from the tunnel
-        readPacketsFromTunnel()
+        readPacketsFromTunnel(packetFlow: packetFlow)
     }
     
-    private func readPacketsFromTunnel() {
-        guard let packetFlow = packetFlow, isMonitoring else { return }
+    private func readPacketsFromTunnel(packetFlow: NEPacketTunnelFlow) {
+        guard isMonitoring else { return }
         
         packetFlow.readPackets { [weak self] packets, protocols in
             guard let self = self, self.isMonitoring else { return }
             
             for (index, packet) in packets.enumerated() {
-                let protocol = protocols[index]
-                self.analyzePacket(packet, protocol: protocol)
+                let protocolType = protocols[index]
+                self.analyzePacket(packet, protocolType: protocolType)
             }
             
             // Continue reading packets
-            self.readPacketsFromTunnel()
+            self.readPacketsFromTunnel(packetFlow: packetFlow)
         }
     }
     
-    private func analyzePacket(_ packet: Data, protocol: NSNumber) {
+    private func analyzePacket(_ packet: Data, protocolType: NSNumber) {
         // Parse the packet to extract domain information
         // This is a simplified implementation - in production you'd want more robust parsing
         
         // Check if this is a DNS packet (protocol 17 = UDP, port 53 = DNS)
-        if protocol.intValue == 17 {
+        if protocolType.intValue == 17 {
             analyzeDNSPacket(packet)
         }
         
         // Check if this is an HTTPS packet (protocol 6 = TCP, port 443 = HTTPS)
-        if protocol.intValue == 6 {
+        if protocolType.intValue == 6 {
             analyzeHTTPSPacket(packet)
         }
     }
