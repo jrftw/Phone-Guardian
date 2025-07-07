@@ -261,6 +261,7 @@ struct PrivacyControlView: View {
         Task {
             await vpnManager.startVPN()
             trafficAnalyzer.startAnalysis()
+            trafficAnalyzer.startRealTimeMonitoring()
         }
     }
     

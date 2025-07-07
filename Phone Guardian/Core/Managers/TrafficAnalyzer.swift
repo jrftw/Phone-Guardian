@@ -114,6 +114,13 @@ class TrafficAnalyzer: ObservableObject {
         }
     }
     
+    // MARK: - Real-time Monitoring
+    func startRealTimeMonitoring() {
+        // This method can be called to ensure real-time updates
+        // The actual monitoring is handled by the VPN tunnel extension
+        updateStatus()
+    }
+    
     // MARK: - Domain List Management
     func getKnownDomains() -> [String: String] {
         return locationDomains

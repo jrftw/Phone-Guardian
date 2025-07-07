@@ -11,6 +11,7 @@ import os.log
 class PacketTunnelProvider: NEPacketTunnelProvider {
     private let logger = Logger(subsystem: "com.phoneguardian.infiloc.tunnel", category: "PacketTunnel")
     private var isMonitoring = false
+    private var packetFlow: NEPacketTunnelFlow?
     
     // Known location service domains to monitor
     private let locationDomains: [String: String] = [
@@ -70,7 +71,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         settings.ipv4Settings = ipv4Settings
         
         // Apply the settings
-        setTunnelNetworkSettings(settings) { error in
+        setTunnelNetworkSettings(settings) { [weak self] error in
+            guard let self = self else { return }
+            
             if let error = error {
                 self.logger.error("Failed to set tunnel settings: \(error.localizedDescription)")
                 completionHandler(error)
@@ -107,35 +110,137 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
     
     private func startPacketProcessing() {
+        guard let packetFlow = self.packetTunnelFlow else {
+            logger.error("Packet flow not available")
+            return
+        }
+        
+        self.packetFlow = packetFlow
+        
         // Start reading packets from the tunnel
-        readPackets { [weak self] packets, protocols in
+        readPacketsFromTunnel()
+    }
+    
+    private func readPacketsFromTunnel() {
+        guard let packetFlow = packetFlow, isMonitoring else { return }
+        
+        packetFlow.readPackets { [weak self] packets, protocols in
             guard let self = self, self.isMonitoring else { return }
             
-            for packet in packets {
-                self.analyzePacket(packet)
+            for (index, packet) in packets.enumerated() {
+                let protocol = protocols[index]
+                self.analyzePacket(packet, protocol: protocol)
             }
             
             // Continue reading packets
-            self.startPacketProcessing()
+            self.readPacketsFromTunnel()
         }
     }
     
-    private func analyzePacket(_ packet: Data) {
-        // This is a simplified packet analysis
-        // In a real implementation, you would parse the packet headers and extract domain information
+    private func analyzePacket(_ packet: Data, protocol: NSNumber) {
+        // Parse the packet to extract domain information
+        // This is a simplified implementation - in production you'd want more robust parsing
         
-        // For demonstration, we'll simulate packet analysis
-        // In practice, you would:
-        // 1. Parse IP headers
-        // 2. Parse TCP/UDP headers
-        // 3. Extract DNS queries or HTTPS hostnames
-        // 4. Check against our domain list
+        // Check if this is a DNS packet (protocol 17 = UDP, port 53 = DNS)
+        if protocol.intValue == 17 {
+            analyzeDNSPacket(packet)
+        }
         
-        // Simulate finding a domain (this would come from actual packet parsing)
-        let simulatedDomains = ["gsp-ssl.ls.apple.com", "api.life360.com", "maps.googleapis.com"]
+        // Check if this is an HTTPS packet (protocol 6 = TCP, port 443 = HTTPS)
+        if protocol.intValue == 6 {
+            analyzeHTTPSPacket(packet)
+        }
+    }
+    
+    private func analyzeDNSPacket(_ packet: Data) {
+        // DNS packets are typically UDP packets to port 53
+        // Extract the domain name from DNS queries
         
-        for domain in simulatedDomains {
-            if let service = locationDomains[domain] {
+        guard packet.count > 12 else { return } // Minimum DNS header size
+        
+        // Parse DNS header and extract query domain
+        // This is a simplified DNS parser
+        if let domain = extractDomainFromDNSPacket(packet) {
+            checkDomainForLocationService(domain)
+        }
+    }
+    
+    private func analyzeHTTPSPacket(_ packet: Data) {
+        // HTTPS packets contain TLS handshakes with SNI (Server Name Indication)
+        // Extract the hostname from TLS SNI extension
+        
+        if let hostname = extractHostnameFromHTTPSPacket(packet) {
+            checkDomainForLocationService(hostname)
+        }
+    }
+    
+    private func extractDomainFromDNSPacket(_ packet: Data) -> String? {
+        // Simplified DNS packet parsing
+        // In a real implementation, you'd parse the DNS header and query section
+        
+        guard packet.count > 12 else { return nil }
+        
+        // Skip DNS header (12 bytes)
+        let queryData = packet.dropFirst(12)
+        
+        // Parse domain name from query section
+        // This is a basic implementation - production code would be more robust
+        var domain = ""
+        var position = 0
+        
+        while position < queryData.count {
+            let length = Int(queryData[queryData.startIndex + position])
+            if length == 0 { break } // End of domain name
+            
+            position += 1
+            if position + length <= queryData.count {
+                let domainPart = queryData[position..<(position + length)]
+                if let domainString = String(data: domainPart, encoding: .utf8) {
+                    if !domain.isEmpty { domain += "." }
+                    domain += domainString
+                }
+                position += length
+            } else {
+                break
+            }
+        }
+        
+        return domain.isEmpty ? nil : domain
+    }
+    
+    private func extractHostnameFromHTTPSPacket(_ packet: Data) -> String? {
+        // Simplified TLS SNI extraction
+        // In a real implementation, you'd parse the TLS handshake and extract SNI
+        
+        // Look for TLS handshake (type 0x16) and SNI extension (0x0000)
+        guard packet.count > 5 else { return nil }
+        
+        // Check if this is a TLS handshake
+        if packet[0] == 0x16 { // TLS Handshake
+            // Look for SNI extension in TLS extensions
+            // This is a simplified search - production code would parse TLS properly
+            if let sniRange = packet.range(of: Data([0x00, 0x00])) { // SNI extension type
+                // Extract hostname from SNI extension
+                // This is a basic implementation
+                let sniData = packet[sniRange.upperBound...]
+                if sniData.count > 2 {
+                    let hostnameLength = Int(sniData[sniData.startIndex + 1])
+                    if sniData.count > 2 + hostnameLength {
+                        let hostnameData = sniData[2..<(2 + hostnameLength)]
+                        return String(data: hostnameData, encoding: .utf8)
+                    }
+                }
+            }
+        }
+        
+        return nil
+    }
+    
+    private func checkDomainForLocationService(_ domain: String) {
+        let lowercasedDomain = domain.lowercased()
+        
+        for (knownDomain, service) in locationDomains {
+            if lowercasedDomain.contains(knownDomain.lowercased()) {
                 logger.info("🔍 Location access detected: \(domain) (\(service))")
                 recordDetection(domain: domain, service: service)
                 break
@@ -151,22 +256,20 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         ] as [String: Any]
         
         // Save detection to shared UserDefaults (App Group)
-        if let data = try? JSONSerialization.data(withJSONObject: detection) {
-            let userDefaults = UserDefaults(suiteName: "group.com.phoneguardian.infiloc")
-            var detections = userDefaults?.array(forKey: "tunnel_detections") as? [[String: Any]] ?? []
-            detections.append(detection)
-            
-            // Keep only last 100 detections
-            if detections.count > 100 {
-                detections = Array(detections.suffix(100))
-            }
-            
-            userDefaults?.set(detections, forKey: "tunnel_detections")
-            userDefaults?.synchronize()
-            
-            // Send notification to main app
-            sendDetectionNotification(domain: domain, service: service)
+        let userDefaults = UserDefaults(suiteName: "group.com.phoneguardian.infiloc")
+        var detections = userDefaults?.array(forKey: "tunnel_detections") as? [[String: Any]] ?? []
+        detections.append(detection)
+        
+        // Keep only last 100 detections
+        if detections.count > 100 {
+            detections = Array(detections.suffix(100))
         }
+        
+        userDefaults?.set(detections, forKey: "tunnel_detections")
+        userDefaults?.synchronize()
+        
+        // Send notification to main app
+        sendDetectionNotification(domain: domain, service: service)
     }
     
     private func sendDetectionNotification(domain: String, service: String) {
