@@ -109,7 +109,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
     
     private func startPacketProcessing() {
-        guard let packetFlow = self.packetTunnelFlow else {
+        guard let packetFlow = self.packetFlow else {
             logger.error("Packet flow not available")
             return
         }
