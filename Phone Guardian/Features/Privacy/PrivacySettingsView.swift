@@ -221,6 +221,20 @@ struct PrivacySettingsView: View {
                     }
                 }
                 
+                // Debug Section (Development Only)
+                #if DEBUG
+                Section("Debug Tools") {
+                    NavigationLink(destination: PrivacyDebugView()) {
+                        HStack {
+                            Image(systemName: "ladybug")
+                                .foregroundColor(.orange)
+                            Text("Debug Console")
+                            Spacer()
+                        }
+                    }
+                }
+                #endif
+                
                 // VPN Information
                 Section("About VPN Monitoring") {
                     VStack(alignment: .leading, spacing: 8) {

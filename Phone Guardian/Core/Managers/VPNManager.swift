@@ -8,9 +8,12 @@ class VPNManager: ObservableObject {
     @Published var isMonitoring = false
     @Published var lastDetectionTime: Date?
     @Published var detectionCount = 0
+    @Published var connectionStatus: NEVPNStatus = .invalid
+    @Published var lastError: String?
     
     private let logger = Logger(subsystem: "com.phoneguardian.infiloc", category: "VPNManager")
     private var manager: NETunnelProviderManager?
+    private var statusTimer: Timer?
     
     // SECURITY: Use App Group for secure data sharing between app and extension
     private let appGroupUserDefaults = UserDefaults(suiteName: "group.Infinitum-Imagery-LLC.Phone-Guardian.infiloc")
@@ -19,6 +22,12 @@ class VPNManager: ObservableObject {
         loadVPNStatus()
         setupNotificationListener()
         requestNotificationPermissions()
+        startStatusMonitoring()
+    }
+    
+    deinit {
+        statusTimer?.invalidate()
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - VPN Configuration
@@ -34,6 +43,13 @@ class VPNManager: ObservableObject {
         config.providerBundleIdentifier = "Infinitum-Imagery-LLC.Phone-Guardian.InfiLocTunnel"
         config.disconnectOnSleep = false
         
+        // Add custom configuration for better reliability
+        config.providerConfiguration = [
+            "enableLogging": true,
+            "privacyMode": true,
+            "maxRetries": 3
+        ]
+        
         manager.protocolConfiguration = config
         manager.isEnabled = true
         manager.localizedDescription = "INFILOC Privacy Monitor"
@@ -44,6 +60,9 @@ class VPNManager: ObservableObject {
             logger.info("VPN configuration saved successfully - Privacy Protected")
         } catch {
             logger.error("Failed to save VPN configuration: \(error.localizedDescription)")
+            await MainActor.run {
+                self.lastError = "Failed to setup VPN: \(error.localizedDescription)"
+            }
         }
     }
     
@@ -60,10 +79,14 @@ class VPNManager: ObservableObject {
             await MainActor.run {
                 self.isVPNEnabled = true
                 self.isMonitoring = true
+                self.lastError = nil
             }
             logger.info("INFILOC VPN started successfully - Privacy Active")
         } catch {
             logger.error("Failed to start VPN: \(error.localizedDescription)")
+            await MainActor.run {
+                self.lastError = "Failed to start VPN: \(error.localizedDescription)"
+            }
         }
     }
     
@@ -74,6 +97,7 @@ class VPNManager: ObservableObject {
         await MainActor.run {
             self.isVPNEnabled = false
             self.isMonitoring = false
+            self.lastError = nil
         }
         logger.info("INFILOC VPN stopped - Privacy Cleanup Complete")
     }
@@ -91,10 +115,84 @@ class VPNManager: ObservableObject {
             if let manager = managers?.first {
                 self.manager = manager
                 DispatchQueue.main.async {
+                    self.connectionStatus = manager.connection.status
                     self.isVPNEnabled = manager.connection.status == .connected
                     self.isMonitoring = manager.isEnabled
                 }
             }
+        }
+    }
+    
+    private func startStatusMonitoring() {
+        // Monitor VPN status every 10 seconds
+        statusTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { [weak self] _ in
+            self?.updateVPNStatus()
+        }
+    }
+    
+    private func updateVPNStatus() {
+        guard let manager = manager else { return }
+        
+        let newStatus = manager.connection.status
+        if newStatus != connectionStatus {
+            DispatchQueue.main.async {
+                self.connectionStatus = newStatus
+                self.isVPNEnabled = newStatus == .connected
+                
+                // Handle status changes
+                switch newStatus {
+                case .connected:
+                    self.logger.info("VPN connected successfully")
+                    self.lastError = nil
+                case .disconnected:
+                    self.logger.info("VPN disconnected")
+                case .connecting:
+                    self.logger.info("VPN connecting...")
+                case .disconnecting:
+                    self.logger.info("VPN disconnecting...")
+                case .reasserting:
+                    self.logger.info("VPN reasserting connection...")
+                case .invalid:
+                    self.logger.warning("VPN status invalid")
+                    self.lastError = "VPN configuration invalid"
+                @unknown default:
+                    self.logger.warning("Unknown VPN status: \(newStatus.rawValue)")
+                }
+            }
+        }
+    }
+    
+    // MARK: - Tunnel Communication
+    func getTunnelStatus() async -> [String: Any]? {
+        guard let manager = manager,
+              manager.connection.status == .connected else {
+            return nil
+        }
+        
+        do {
+            let response = try await manager.connection.sendProviderMessage(Data("get_status".utf8))
+            if let responseData = response,
+               let statusDict = try? JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
+                return statusDict
+            }
+        } catch {
+            logger.error("Failed to get tunnel status: \(error.localizedDescription)")
+        }
+        
+        return nil
+    }
+    
+    func clearTunnelDetections() async {
+        guard let manager = manager,
+              manager.connection.status == .connected else {
+            return
+        }
+        
+        do {
+            _ = try await manager.connection.sendProviderMessage(Data("clear_detections".utf8))
+            logger.info("Tunnel detections cleared")
+        } catch {
+            logger.error("Failed to clear tunnel detections: \(error.localizedDescription)")
         }
     }
     
@@ -238,6 +336,93 @@ class VPNManager: ObservableObject {
                 service: service
             )
         }
+    }
+    
+    // MARK: - Debug and Testing Utilities
+    func testTunnelConnection() async -> Bool {
+        guard let manager = manager else {
+            logger.error("No VPN manager available for testing")
+            return false
+        }
+        
+        do {
+            let response = try await manager.connection.sendProviderMessage(Data("test_connection".utf8))
+            if let responseData = response,
+               let responseString = String(data: responseData, encoding: .utf8) {
+                logger.info("Tunnel test response: \(responseString)")
+                return responseString == "ok"
+            }
+        } catch {
+            logger.error("Tunnel connection test failed: \(error.localizedDescription)")
+        }
+        
+        return false
+    }
+    
+    func getDebugInfo() -> [String: Any] {
+        var debugInfo: [String: Any] = [:]
+        
+        // VPN Status
+        debugInfo["vpn_enabled"] = isVPNEnabled
+        debugInfo["is_monitoring"] = isMonitoring
+        debugInfo["connection_status"] = connectionStatus.rawValue
+        debugInfo["last_error"] = lastError
+        
+        // Detection Stats
+        debugInfo["detection_count"] = detectionCount
+        debugInfo["last_detection_time"] = lastDetectionTime?.timeIntervalSince1970
+        
+        // App Group Status
+        debugInfo["app_group_available"] = appGroupUserDefaults != nil
+        debugInfo["tunnel_detections_count"] = loadTunnelDetections().count
+        
+        // Manager Status
+        if let manager = manager {
+            debugInfo["manager_loaded"] = true
+            debugInfo["manager_enabled"] = manager.isEnabled
+            debugInfo["connection_status_raw"] = manager.connection.status.rawValue
+        } else {
+            debugInfo["manager_loaded"] = false
+        }
+        
+        return debugInfo
+    }
+    
+    func exportDebugLog() -> String {
+        let debugInfo = getDebugInfo()
+        let detections = loadDetections()
+        let tunnelDetections = loadTunnelDetections()
+        
+        var log = "=== INFILOC Debug Log ===\n"
+        log += "Timestamp: \(Date())\n\n"
+        
+        // Debug Info
+        log += "--- Debug Information ---\n"
+        for (key, value) in debugInfo {
+            log += "\(key): \(value)\n"
+        }
+        log += "\n"
+        
+        // Local Detections
+        log += "--- Local Detections (\(detections.count)) ---\n"
+        for detection in detections {
+            log += "\(detection.timestamp): \(detection.service) - \(detection.domain)\n"
+        }
+        log += "\n"
+        
+        // Tunnel Detections
+        log += "--- Tunnel Detections (\(tunnelDetections.count)) ---\n"
+        for detection in tunnelDetections {
+            log += "\(detection.timestamp): \(detection.service) - \(detection.domain)\n"
+        }
+        
+        return log
+    }
+    
+    func simulateDetection() {
+        // SECURITY: Only for testing purposes
+        logger.info("Simulating location detection for testing")
+        recordDetection(domain: "test.example.com", service: "Test Service")
     }
 }
 

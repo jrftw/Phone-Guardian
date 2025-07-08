@@ -12,6 +12,9 @@ import CryptoKit
 class PacketTunnelProvider: NEPacketTunnelProvider {
     private let logger = Logger(subsystem: "com.phoneguardian.infiloc.tunnel", category: "PacketTunnel")
     private var isMonitoring = false
+    private var connectionTimer: Timer?
+    private var retryCount = 0
+    private let maxRetries = 3
     
     // SECURITY: All data processing is local-only, no external transmission
     // SECURITY: Domain matching is done locally without external lookups
@@ -77,13 +80,27 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             
             if let error = error {
                 self.logger.error("Failed to set tunnel settings: \(error.localizedDescription)")
+                
+                // Retry mechanism for connection issues
+                if self.retryCount < self.maxRetries {
+                    self.retryCount += 1
+                    self.logger.info("Retrying tunnel setup (attempt \(self.retryCount)/\(self.maxRetries))")
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        self.startTunnel(options: options, completionHandler: completionHandler)
+                    }
+                    return
+                }
+                
                 completionHandler(error)
                 return
             }
             
             self.logger.info("Tunnel settings applied successfully - Privacy Protected")
             self.isMonitoring = true
+            self.retryCount = 0 // Reset retry count on success
             self.startPacketProcessing()
+            self.startConnectionMonitoring()
             completionHandler(nil)
         }
     }
@@ -92,6 +109,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         logger.info("Stopping INFILOC tunnel - Cleaning up secure data")
         isMonitoring = false
         
+        // Stop connection monitoring
+        connectionTimer?.invalidate()
+        connectionTimer = nil
+        
         // SECURITY: Clear any sensitive data from memory
         clearSensitiveData()
         
@@ -99,25 +120,99 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
     
     override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)?) {
-        // Add code here to handle the message.
-        if let handler = completionHandler {
-            handler(messageData)
+        // Handle messages from the main app
+        if let messageString = String(data: messageData, encoding: .utf8) {
+            logger.info("Received app message: \(messageString)")
+            
+            // Handle different message types
+            switch messageString {
+            case "get_status":
+                let status = [
+                    "isMonitoring": isMonitoring,
+                    "retryCount": retryCount,
+                    "timestamp": Date().timeIntervalSince1970
+                ] as [String: Any]
+                
+                if let statusData = try? JSONSerialization.data(withJSONObject: status) {
+                    completionHandler?(statusData)
+                } else {
+                    completionHandler?(nil)
+                }
+                
+            case "clear_detections":
+                clearDetectionData()
+                completionHandler?(Data("cleared".utf8))
+                
+            case "test_connection":
+                logger.info("Connection test received - Tunnel is active")
+                completionHandler?(Data("ok".utf8))
+                
+            default:
+                completionHandler?(nil)
+            }
+        } else {
+            completionHandler?(nil)
         }
     }
     
     override func sleep(completionHandler: @escaping () -> Void) {
-        // Add code here to get ready to sleep.
+        // Pause monitoring during sleep to save battery
+        logger.info("Device going to sleep - Pausing monitoring")
+        isMonitoring = false
+        connectionTimer?.invalidate()
+        connectionTimer = nil
         completionHandler()
     }
     
     override func wake() {
-        // Add code here to wake up.
+        // Resume monitoring when device wakes
+        logger.info("Device waking up - Resuming monitoring")
+        isMonitoring = true
+        startPacketProcessing()
+        startConnectionMonitoring()
+    }
+    
+    // MARK: - Connection Monitoring
+    private func startConnectionMonitoring() {
+        // Monitor connection health every 30 seconds
+        connectionTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { [weak self] _ in
+            self?.checkConnectionHealth()
+        }
+    }
+    
+    private func checkConnectionHealth() {
+        guard isMonitoring else { return }
+        
+        // Check if packet flow is still active
+        if packetFlow == nil {
+            logger.warning("Packet flow lost - Attempting to restart")
+            restartPacketProcessing()
+        }
+        
+        // Log connection status for debugging
+        logger.info("Connection health check - Monitoring active: \(isMonitoring)")
+    }
+    
+    private func restartPacketProcessing() {
+        guard isMonitoring else { return }
+        
+        logger.info("Restarting packet processing")
+        startPacketProcessing()
     }
     
     // SECURITY: Clear sensitive data from memory
     private func clearSensitiveData() {
         // Clear any cached data to prevent memory leaks
         logger.info("Clearing sensitive data from memory")
+        retryCount = 0
+    }
+    
+    private func clearDetectionData() {
+        // SECURITY: Clear detection data from App Group
+        let userDefaults = UserDefaults(suiteName: "group.Infinitum-Imagery-LLC.Phone-Guardian.infiloc")
+        userDefaults?.removeObject(forKey: "tunnel_detections")
+        userDefaults?.synchronize()
+        logger.info("Detection data cleared from App Group")
     }
     
     private func startPacketProcessing() {

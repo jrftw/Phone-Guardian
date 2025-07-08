@@ -1,310 +1,329 @@
 import SwiftUI
 import os.log
+import NetworkExtension
 
 struct PrivacyControlView: View {
     @StateObject private var vpnManager = VPNManager()
-    @StateObject private var trafficAnalyzer: TrafficAnalyzer
-    @State private var showingDetectionLog = false
-    @State private var showingSettings = false
-    @State private var showingAlert = false
-    @State private var alertMessage = ""
     @State private var showingVPNExplanation = false
-    @State private var showingVPNPermission = false
-    
-    init() {
-        let vpn = VPNManager()
-        self._vpnManager = StateObject(wrappedValue: vpn)
-        self._trafficAnalyzer = StateObject(wrappedValue: TrafficAnalyzer(vpnManager: vpn))
-    }
+    @State private var showingErrorAlert = false
+    @State private var errorMessage = ""
+    @State private var tunnelStatus: [String: Any]?
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                // Header
-                headerSection
+        VStack(spacing: 20) {
+            // Header
+            VStack(spacing: 8) {
+                Image(systemName: "shield.checkered")
+                    .font(.system(size: 40))
+                    .foregroundColor(.blue)
                 
-                // Status Card
-                statusCard
+                Text("INFILOC Privacy Monitor")
+                    .font(.title2)
+                    .fontWeight(.semibold)
                 
-                // Control Buttons
-                controlButtons
+                Text("Monitor location access attempts")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+            .padding(.top)
+            
+            // Status Card
+            VStack(spacing: 16) {
+                HStack {
+                    Image(systemName: statusIcon)
+                        .font(.title2)
+                        .foregroundColor(statusColor)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(statusText)
+                            .font(.headline)
+                            .foregroundColor(statusColor)
+                        
+                        Text(statusDescription)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                    
+                    if vpnManager.connectionStatus == .connecting {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                    }
+                }
                 
-                // Statistics
-                statisticsSection
-                
-                // Recent Detections
-                recentDetectionsSection
-                
-                // Settings & Info
-                settingsSection
+                // Connection Details
+                if vpnManager.isVPNEnabled {
+                    VStack(spacing: 8) {
+                        HStack {
+                            Text("Connection Status:")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Text(connectionStatusText)
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                        }
+                        
+                        if let status = tunnelStatus {
+                            HStack {
+                                Text("Tunnel Health:")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                Text("Active")
+                                    .font(.caption)
+                                    .foregroundColor(.green)
+                            }
+                            
+                            if let retryCount = status["retryCount"] as? Int, retryCount > 0 {
+                                HStack {
+                                    Text("Retry Attempts:")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                    Text("\(retryCount)")
+                                        .font(.caption)
+                                        .foregroundColor(.orange)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                }
             }
             .padding()
-        }
-        .navigationTitle("Privacy Control")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { showingSettings = true }) {
-                    Image(systemName: "gear")
-                }
-            }
-        }
-        .sheet(isPresented: $showingDetectionLog) {
-            DetectionLogView(vpnManager: vpnManager)
-        }
-        .sheet(isPresented: $showingSettings) {
-            PrivacySettingsView(vpnManager: vpnManager, trafficAnalyzer: trafficAnalyzer)
-        }
-        .sheet(isPresented: $showingVPNExplanation) {
-            VPNExplanationView(showingPermission: $showingVPNPermission)
-        }
-        .alert("INFILOC Alert", isPresented: $showingAlert) {
-            Button("OK") { }
-        } message: {
-            Text(alertMessage)
-        }
-        .alert("Enable VPN Monitoring?", isPresented: $showingVPNPermission) {
-            Button("Enable") {
-                startMonitoring()
-            }
-            Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("INFILOC needs to create a VPN connection to monitor network traffic for location access attempts. This VPN only processes data locally and NEVER sends your data anywhere. Your privacy is 100% protected.")
-        }
-        .onAppear {
-            // Check if this is the first time accessing Privacy Control
-            if !UserDefaults.standard.bool(forKey: "infiloc_first_launch_seen") {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    showingVPNExplanation = true
-                }
-            }
-        }
-    }
-    
-    // MARK: - Header Section
-    private var headerSection: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "lock.shield")
-                .font(.system(size: 48))
-                .foregroundColor(.accentColor)
+            .background(Color(.systemBackground))
+            .cornerRadius(12)
+            .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
             
-            Text("INFILOC")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-            
-            Text("Passive Location Access Detection")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-            
-            Text("Monitors network traffic to detect when apps or services attempt to access your location without your knowledge.")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-            
-            HStack {
-                Image(systemName: "lock.shield.fill")
-                    .foregroundColor(.green)
-                    .font(.caption)
-                Text("100% Private - No Data Ever Shared")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.green)
-            }
-            .padding(.horizontal)
-        }
-    }
-    
-    // MARK: - Status Card
-    private var statusCard: some View {
-        VStack(spacing: 16) {
-            HStack {
-                Image(systemName: vpnManager.isMonitoring ? "checkmark.circle.fill" : "xmark.circle.fill")
-                    .foregroundColor(vpnManager.isMonitoring ? .green : .red)
-                    .font(.title2)
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(vpnManager.isMonitoring ? "Monitoring Active" : "Monitoring Inactive")
-                        .font(.headline)
-                        .fontWeight(.semibold)
+            // Statistics
+            if vpnManager.detectionCount > 0 {
+                VStack(spacing: 12) {
+                    HStack {
+                        Image(systemName: "chart.bar.fill")
+                            .foregroundColor(.blue)
+                        Text("Detection Statistics")
+                            .font(.headline)
+                        Spacer()
+                    }
                     
-                    Text(trafficAnalyzer.currentStatus)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Total Detections")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text("\(vpnManager.detectionCount)")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                        }
+                        
+                        Spacer()
+                        
+                        VStack(alignment: .trailing, spacing: 4) {
+                            Text("Last Detection")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            if let lastTime = vpnManager.lastDetectionTime {
+                                Text(lastTime, style: .relative)
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                            } else {
+                                Text("None")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                }
+                .padding()
+                .background(Color(.systemBackground))
+                .cornerRadius(12)
+                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+            }
+            
+            // Control Buttons
+            VStack(spacing: 12) {
+                Button(action: toggleVPN) {
+                    HStack {
+                        Image(systemName: vpnManager.isVPNEnabled ? "stop.fill" : "play.fill")
+                        Text(vpnManager.isVPNEnabled ? "Stop Monitoring" : "Start Monitoring")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(vpnManager.isVPNEnabled ? Color.red : Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                }
+                .disabled(vpnManager.connectionStatus == .connecting || vpnManager.connectionStatus == .disconnecting)
+                
+                if vpnManager.isVPNEnabled {
+                    Button(action: clearDetections) {
+                        HStack {
+                            Image(systemName: "trash")
+                            Text("Clear Detection History")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(.systemGray5))
+                        .foregroundColor(.primary)
+                        .cornerRadius(10)
+                    }
                 }
                 
-                Spacer()
-            }
-            
-            if vpnManager.isMonitoring {
-                HStack {
-                    Image(systemName: "network")
-                        .foregroundColor(.blue)
-                    
-                    Text("VPN Tunnel Active")
-                        .font(.caption)
-                        .foregroundColor(.blue)
-                    
-                    Spacer()
+                Button(action: { showingVPNExplanation = true }) {
+                    HStack {
+                        Image(systemName: "info.circle")
+                        Text("How It Works")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .foregroundColor(.primary)
+                    .cornerRadius(10)
                 }
             }
+            
+            Spacer()
         }
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(.quaternary, lineWidth: 0.5)
-                )
-        )
-    }
-    
-    // MARK: - Control Buttons
-    private var controlButtons: some View {
-        HStack(spacing: 16) {
-            Button(action: {
-                if !vpnManager.isMonitoring {
-                    showingVPNExplanation = true
-                }
-            }) {
-                HStack {
-                    Image(systemName: "play.fill")
-                    Text("Start Monitoring")
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(12)
-            }
-            .disabled(vpnManager.isMonitoring)
-            
-            Button(action: stopMonitoring) {
-                HStack {
-                    Image(systemName: "stop.fill")
-                    Text("Stop Monitoring")
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.red)
-                .foregroundColor(.white)
-                .cornerRadius(12)
-            }
-            .disabled(!vpnManager.isMonitoring)
+        .navigationTitle("Privacy Monitor")
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingVPNExplanation) {
+            VPNExplanationView()
+        }
+        .alert("Error", isPresented: $showingErrorAlert) {
+            Button("OK") { }
+        } message: {
+            Text(errorMessage)
+        }
+        .onAppear {
+            loadTunnelStatus()
+        }
+        .onChange(of: vpnManager.connectionStatus) { _ in
+            loadTunnelStatus()
         }
     }
     
-    // MARK: - Statistics Section
-    private var statisticsSection: some View {
-        let stats = trafficAnalyzer.getDetectionStats()
-        
-        return VStack(spacing: 16) {
-            Text("Detection Statistics")
-                .font(.headline)
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            HStack(spacing: 16) {
-                StatCard(title: "Total", value: "\(stats.total)", icon: "chart.bar.fill", color: .blue)
-                StatCard(title: "Today", value: "\(stats.today)", icon: "calendar", color: .green)
-                StatCard(title: "This Week", value: "\(stats.thisWeek)", icon: "calendar.badge.clock", color: .orange)
-            }
+    // MARK: - Computed Properties
+    private var statusIcon: String {
+        switch vpnManager.connectionStatus {
+        case .connected:
+            return "checkmark.shield.fill"
+        case .connecting:
+            return "arrow.clockwise"
+        case .disconnected:
+            return "xmark.shield"
+        case .disconnecting:
+            return "arrow.clockwise"
+        case .reasserting:
+            return "arrow.clockwise"
+        case .invalid:
+            return "exclamationmark.shield"
+        @unknown default:
+            return "questionmark.shield"
         }
     }
     
-    // MARK: - Recent Detections Section
-    private var recentDetectionsSection: some View {
-        VStack(spacing: 16) {
-            HStack {
-                Text("Recent Detections")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                Spacer()
-                
-                Button("View All") {
-                    showingDetectionLog = true
-                }
-                .font(.caption)
-                .foregroundColor(.accentColor)
-            }
-            
-            let recentDetections = Array(vpnManager.loadDetections().prefix(3))
-            
-            if recentDetections.isEmpty {
-                VStack(spacing: 8) {
-                    Image(systemName: "checkmark.shield")
-                        .font(.title2)
-                        .foregroundColor(.green)
-                    
-                    Text("No location access detected")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.ultraThinMaterial)
-                )
-            } else {
-                ForEach(recentDetections) { detection in
-                    DetectionRow(detection: detection)
-                }
-            }
+    private var statusColor: Color {
+        switch vpnManager.connectionStatus {
+        case .connected:
+            return .green
+        case .connecting, .disconnecting, .reasserting:
+            return .orange
+        case .disconnected:
+            return .gray
+        case .invalid:
+            return .red
+        @unknown default:
+            return .gray
         }
     }
     
-    // MARK: - Settings Section
-    private var settingsSection: some View {
-        VStack(spacing: 12) {
-            Button(action: { showingSettings = true }) {
-                HStack {
-                    Image(systemName: "gear")
-                    Text("Privacy Settings")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.ultraThinMaterial)
-                )
-            }
-            .foregroundColor(.primary)
-            
-            Button(action: { showingDetectionLog = true }) {
-                HStack {
-                    Image(systemName: "list.bullet")
-                    Text("Detection History")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.ultraThinMaterial)
-                )
-            }
-            .foregroundColor(.primary)
+    private var statusText: String {
+        switch vpnManager.connectionStatus {
+        case .connected:
+            return "Privacy Protected"
+        case .connecting:
+            return "Connecting..."
+        case .disconnected:
+            return "Not Protected"
+        case .disconnecting:
+            return "Disconnecting..."
+        case .reasserting:
+            return "Reconnecting..."
+        case .invalid:
+            return "Configuration Error"
+        @unknown default:
+            return "Unknown Status"
+        }
+    }
+    
+    private var statusDescription: String {
+        switch vpnManager.connectionStatus {
+        case .connected:
+            return "Monitoring location access attempts"
+        case .connecting:
+            return "Setting up privacy protection"
+        case .disconnected:
+            return "VPN is not active"
+        case .disconnecting:
+            return "Stopping privacy protection"
+        case .reasserting:
+            return "Reconnecting to privacy service"
+        case .invalid:
+            return "VPN configuration needs attention"
+        @unknown default:
+            return "Status unknown"
+        }
+    }
+    
+    private var connectionStatusText: String {
+        switch vpnManager.connectionStatus {
+        case .connected:
+            return "Connected"
+        case .connecting:
+            return "Connecting"
+        case .disconnected:
+            return "Disconnected"
+        case .disconnecting:
+            return "Disconnecting"
+        case .reasserting:
+            return "Reasserting"
+        case .invalid:
+            return "Invalid"
+        @unknown default:
+            return "Unknown"
         }
     }
     
     // MARK: - Actions
-    private func startMonitoring() {
+    private func toggleVPN() {
         Task {
-            await vpnManager.startVPN()
-            trafficAnalyzer.startAnalysis()
-            trafficAnalyzer.startRealTimeMonitoring()
+            if vpnManager.isVPNEnabled {
+                await vpnManager.stopVPN()
+            } else {
+                await vpnManager.startVPN()
+            }
         }
     }
     
-    private func stopMonitoring() {
+    private func clearDetections() {
         Task {
-            await vpnManager.stopVPN()
-            trafficAnalyzer.stopAnalysis()
+            await vpnManager.clearTunnelDetections()
+            vpnManager.clearDetections()
+        }
+    }
+    
+    private func loadTunnelStatus() {
+        Task {
+            let status = await vpnManager.getTunnelStatus()
+            await MainActor.run {
+                self.tunnelStatus = status
+            }
         }
     }
 }
