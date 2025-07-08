@@ -8,7 +8,7 @@
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.phoneguardian.infiloc</string>
+		<string>group.Infinitum-Imagery-LLC.Phone-Guardian.infiloc</string>
 	</array>
 </dict>
 </plist>

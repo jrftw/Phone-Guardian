@@ -55,6 +55,8 @@
 	<string>We need access to your contacts to identify and manage duplicate entries. Some analyses may be simulated.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>We need access to Bluetooth to connect to nearby devices and improve functionality.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Phone Guardian uses motion data to enhance device performance monitoring and battery optimization features. This helps provide accurate device health metrics and improve the overall user experience.</string>
 	<key>com.apple.developer.icloud-container-environment</key>
 	<string>Production</string>
 	<key>com.apple.developer.ubiquity-container-identifiers</key>

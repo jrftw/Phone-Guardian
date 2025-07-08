@@ -4,6 +4,16 @@
 
 INFILOC is designed with **privacy-first principles** and implements comprehensive security measures to ensure user data is never compromised, tracked, or transmitted to external servers.
 
+## 🛡️ Privacy Guarantee
+
+**INFILOC GUARANTEES:**
+- ✅ **NO data collection by developers**
+- ✅ **NO data sharing with advertisers** 
+- ✅ **NO external data transmission**
+- ✅ **NO tracking or analytics**
+- ✅ **100% local processing only**
+- ✅ **100% Apple Privacy Guidelines compliant**
+
 ## 🛡️ Core Security Principles
 
 ### 1. **Local-Only Processing**

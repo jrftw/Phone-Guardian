@@ -8,6 +8,8 @@ struct PrivacyControlView: View {
     @State private var showingSettings = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
+    @State private var showingVPNExplanation = false
+    @State private var showingVPNPermission = false
     
     init() {
         let vpn = VPNManager()
@@ -53,10 +55,29 @@ struct PrivacyControlView: View {
         .sheet(isPresented: $showingSettings) {
             PrivacySettingsView(vpnManager: vpnManager, trafficAnalyzer: trafficAnalyzer)
         }
+        .sheet(isPresented: $showingVPNExplanation) {
+            VPNExplanationView(showingPermission: $showingVPNPermission)
+        }
         .alert("INFILOC Alert", isPresented: $showingAlert) {
             Button("OK") { }
         } message: {
             Text(alertMessage)
+        }
+        .alert("Enable VPN Monitoring?", isPresented: $showingVPNPermission) {
+            Button("Enable") {
+                startMonitoring()
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("INFILOC needs to create a VPN connection to monitor network traffic for location access attempts. This VPN only processes data locally and NEVER sends your data anywhere. Your privacy is 100% protected.")
+        }
+        .onAppear {
+            // Check if this is the first time accessing Privacy Control
+            if !UserDefaults.standard.bool(forKey: "infiloc_first_launch_seen") {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    showingVPNExplanation = true
+                }
+            }
         }
     }
     
@@ -81,6 +102,17 @@ struct PrivacyControlView: View {
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
+            
+            HStack {
+                Image(systemName: "lock.shield.fill")
+                    .foregroundColor(.green)
+                    .font(.caption)
+                Text("100% Private - No Data Ever Shared")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.green)
+            }
+            .padding(.horizontal)
         }
     }
     
@@ -132,7 +164,11 @@ struct PrivacyControlView: View {
     // MARK: - Control Buttons
     private var controlButtons: some View {
         HStack(spacing: 16) {
-            Button(action: startMonitoring) {
+            Button(action: {
+                if !vpnManager.isMonitoring {
+                    showingVPNExplanation = true
+                }
+            }) {
                 HStack {
                     Image(systemName: "play.fill")
                     Text("Start Monitoring")

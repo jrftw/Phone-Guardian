@@ -33,6 +33,47 @@ struct PrivacySettingsView: View {
                         }
                 }
                 
+                // VPN Control
+                Section("VPN Control") {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("VPN Monitoring")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            
+                            Text("Controls the VPN tunnel used for network monitoring")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Button(vpnManager.isVPNEnabled ? "Disable" : "Enable") {
+                            if vpnManager.isVPNEnabled {
+                                Task {
+                                    await vpnManager.stopVPN()
+                                }
+                            } else {
+                                Task {
+                                    await vpnManager.startVPN()
+                                }
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .foregroundColor(vpnManager.isVPNEnabled ? .red : .green)
+                    }
+                    
+                    if vpnManager.isVPNEnabled {
+                        HStack {
+                            Image(systemName: "info.circle")
+                                .foregroundColor(.blue)
+                            Text("VPN is active and monitoring network traffic")
+                                .font(.caption)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }
+                
                 // Monitoring Settings
                 Section("Monitoring") {
                     HStack {
@@ -180,15 +221,133 @@ struct PrivacySettingsView: View {
                     }
                 }
                 
+                // VPN Information
+                Section("About VPN Monitoring") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Why does INFILOC need a VPN?")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        
+                        Text("INFILOC creates a local VPN tunnel to intercept and analyze network traffic for location access attempts. This VPN:")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                    .font(.caption)
+                                Text("Only processes data locally on your device")
+                                    .font(.caption)
+                            }
+                            
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                    .font(.caption)
+                                Text("NEVER sends your data to external servers")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                            }
+                            
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                    .font(.caption)
+                                Text("NO data shared with developers or advertisers")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                            }
+                            
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                    .font(.caption)
+                                Text("Only analyzes packet headers, never content")
+                                    .font(.caption)
+                            }
+                            
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                    .font(.caption)
+                                Text("Can be disabled anytime in settings")
+                                    .font(.caption)
+                            }
+                            
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                    .font(.caption)
+                                Text("100% compliant with Apple Privacy Guidelines")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+                
+                // Privacy Guarantee
+                Section("Privacy Guarantee") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: "lock.shield.fill")
+                                .foregroundColor(.green)
+                            Text("Your Data is 100% Private")
+                                .font(.subheadline)
+                                .foregroundColor(.green)
+                        }
+                        
+                        Text("INFILOC is designed for personal privacy monitoring only. We guarantee:")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.red)
+                                    .font(.caption2)
+                                Text("NO data collection by developers")
+                                    .font(.caption2)
+                            }
+                            
+                            HStack(spacing: 8) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.red)
+                                    .font(.caption2)
+                                Text("NO data sharing with advertisers")
+                                    .font(.caption2)
+                            }
+                            
+                            HStack(spacing: 8) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.red)
+                                    .font(.caption2)
+                                Text("NO external data transmission")
+                                    .font(.caption2)
+                            }
+                            
+                            HStack(spacing: 8) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.red)
+                                    .font(.caption2)
+                                Text("NO tracking or analytics")
+                                    .font(.caption2)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+                
                 // Legal Notice
                 Section {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Legal Notice")
                             .font(.caption)
-                            .fontWeight(.semibold)
                             .foregroundColor(.secondary)
                         
-                        Text("INFILOC is designed for personal privacy monitoring only. This tool does not decrypt, inject, or violate user privacy. All monitoring is performed locally on your device.")
+                        Text("INFILOC is designed for personal privacy monitoring only. This tool does not decrypt, inject, or violate user privacy. All monitoring is performed locally on your device. We do not collect, store, or transmit any user data to external servers.")
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
@@ -254,7 +413,6 @@ struct DomainListView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(domain)
                                 .font(.subheadline)
-                                .fontWeight(.medium)
                             
                             Text(trafficAnalyzer.getKnownDomains()[domain] ?? "Unknown Service")
                                 .font(.caption)
@@ -298,7 +456,6 @@ struct AboutINFILOCView: View {
                         
                         Text("INFILOC")
                             .font(.largeTitle)
-                            .fontWeight(.bold)
                         
                         Text("Passive Location Access Detection System")
                             .font(.subheadline)
@@ -312,7 +469,6 @@ struct AboutINFILOCView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("What is INFILOC?")
                             .font(.headline)
-                            .fontWeight(.semibold)
                         
                         Text("INFILOC is a privacy-focused monitoring system that passively detects when apps or services attempt to access your location without your explicit knowledge. It uses a VPN-based approach to monitor network traffic and identify location-related requests.")
                             .font(.body)
@@ -323,7 +479,6 @@ struct AboutINFILOCView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("How it Works")
                             .font(.headline)
-                            .fontWeight(.semibold)
                         
                         VStack(alignment: .leading, spacing: 8) {
                             PrivacyFeatureRow(icon: "network", title: "VPN Tunnel", description: "Creates a local VPN tunnel to monitor outgoing traffic")
@@ -337,7 +492,6 @@ struct AboutINFILOCView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Supported Services")
                             .font(.headline)
-                            .fontWeight(.semibold)
                         
                         LazyVGrid(columns: [
                             GridItem(.flexible()),
@@ -358,7 +512,6 @@ struct AboutINFILOCView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Privacy & Security")
                             .font(.headline)
-                            .fontWeight(.semibold)
                         
                         Text("• No data is sent to external servers\n• All monitoring is performed locally\n• No personal information is collected\n• VPN tunnel is device-local only\n• Compatible with iOS privacy guidelines")
                             .font(.body)
@@ -369,7 +522,6 @@ struct AboutINFILOCView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Version Information")
                             .font(.headline)
-                            .fontWeight(.semibold)
                         
                         HStack {
                             Text("Version:")
@@ -378,7 +530,6 @@ struct AboutINFILOCView: View {
                             Spacer()
                             Text("1.0.0")
                                 .font(.subheadline)
-                                .fontWeight(.medium)
                         }
                         
                         HStack {
@@ -388,7 +539,6 @@ struct AboutINFILOCView: View {
                             Spacer()
                             Text("10")
                                 .font(.subheadline)
-                                .fontWeight(.medium)
                         }
                     }
                 }
@@ -423,7 +573,6 @@ struct PrivacyFeatureRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.subheadline)
-                    .fontWeight(.medium)
                 
                 Text(description)
                     .font(.caption)
@@ -445,7 +594,6 @@ struct ServiceTag: View {
     var body: some View {
         Text(name)
             .font(.caption)
-            .fontWeight(.medium)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(

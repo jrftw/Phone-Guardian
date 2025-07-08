@@ -264,7 +264,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         ] as [String: Any]
         
         // SECURITY: Store in App Group UserDefaults (local device only)
-        let userDefaults = UserDefaults(suiteName: "group.com.phoneguardian.infiloc")
+        let userDefaults = UserDefaults(suiteName: "group.Infinitum-Imagery-LLC.Phone-Guardian.infiloc")
         var detections = userDefaults?.array(forKey: "tunnel_detections") as? [[String: Any]] ?? []
         detections.append(detection)
         

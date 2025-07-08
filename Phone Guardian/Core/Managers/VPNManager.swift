@@ -13,7 +13,7 @@ class VPNManager: ObservableObject {
     private var manager: NETunnelProviderManager?
     
     // SECURITY: Use App Group for secure data sharing between app and extension
-    private let appGroupUserDefaults = UserDefaults(suiteName: "group.com.phoneguardian.infiloc")
+    private let appGroupUserDefaults = UserDefaults(suiteName: "group.Infinitum-Imagery-LLC.Phone-Guardian.infiloc")
     
     init() {
         loadVPNStatus()
@@ -31,7 +31,7 @@ class VPNManager: ObservableObject {
         
         // SECURITY: Use localhost as server to ensure no external data transmission
         config.serverAddress = "127.0.0.1"
-        config.providerBundleIdentifier = "com.phoneguardian.infiloc.tunnel"
+        config.providerBundleIdentifier = "Infinitum-Imagery-LLC.Phone-Guardian.InfiLocTunnel"
         config.disconnectOnSleep = false
         
         manager.protocolConfiguration = config
