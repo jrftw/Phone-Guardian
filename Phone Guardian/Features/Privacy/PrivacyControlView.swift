@@ -5,9 +5,18 @@ import NetworkExtension
 struct PrivacyControlView: View {
     @StateObject private var vpnManager = VPNManager()
     @StateObject private var subscriptionManager = INFILOCSubscriptionManager()
+    @StateObject private var trafficAnalyzer: TrafficAnalyzer
+    
+    init() {
+        let vpnManager = VPNManager()
+        self._vpnManager = StateObject(wrappedValue: vpnManager)
+        self._trafficAnalyzer = StateObject(wrappedValue: TrafficAnalyzer(vpnManager: vpnManager))
+    }
     @State private var showingVPNExplanation = false
     @State private var showingErrorAlert = false
     @State private var showingSubscription = false
+    @State private var showingSettings = false
+    @State private var showingDetectionLog = false
     @State private var errorMessage = ""
     @State private var tunnelStatus: [String: Any]?
     
@@ -192,6 +201,32 @@ struct PrivacyControlView: View {
                             .cornerRadius(10)
                         }
                     }
+                    
+                    // Settings Button
+                    Button(action: { showingSettings = true }) {
+                        HStack {
+                            Image(systemName: "gear")
+                            Text("Privacy Settings")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .foregroundColor(.primary)
+                        .cornerRadius(10)
+                    }
+                    
+                    // Detection Log Button
+                    Button(action: { showingDetectionLog = true }) {
+                        HStack {
+                            Image(systemName: "list.bullet")
+                            Text("Detection History")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .foregroundColor(.primary)
+                        .cornerRadius(10)
+                    }
                 } else {
                     // Subscription Required
                     VStack(spacing: 12) {
@@ -241,11 +276,18 @@ struct PrivacyControlView: View {
         .padding()
         .navigationTitle("Privacy Monitor")
         .navigationBarTitleDisplayMode(.inline)
+
         .sheet(isPresented: $showingVPNExplanation) {
             VPNExplanationView(showingPermission: $showingVPNExplanation)
         }
         .sheet(isPresented: $showingSubscription) {
             INFILOCSubscriptionView(subscriptionManager: subscriptionManager)
+        }
+        .sheet(isPresented: $showingSettings) {
+            PrivacySettingsView(vpnManager: vpnManager, trafficAnalyzer: trafficAnalyzer)
+        }
+        .sheet(isPresented: $showingDetectionLog) {
+            DetectionLogView(vpnManager: vpnManager)
         }
         .alert("Error", isPresented: $showingErrorAlert) {
             Button("OK") { }
