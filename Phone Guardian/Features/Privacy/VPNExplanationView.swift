@@ -26,6 +26,9 @@ struct VPNExplanationView: View {
                     // User Control
                     controlSection
                     
+                    // Legal Disclaimers
+                    legalDisclaimersSection
+                    
                     // Action Buttons
                     actionButtons
                 }
@@ -317,6 +320,60 @@ struct VPNExplanationView: View {
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(.ultraThinMaterial)
+        )
+    }
+    
+    // MARK: - Legal Disclaimers
+    private var legalDisclaimersSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Important Legal Information")
+                .font(.headline)
+                .fontWeight(.semibold)
+                .foregroundColor(.orange)
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("⚠️ Detection Accuracy Disclaimer")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.orange)
+                
+                Text("INFILOC location detection is not 100% accurate and may not catch all location access attempts. Detection effectiveness depends on network traffic patterns, encryption methods, VPN usage, and other network configurations.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Text("While INFILOC uses advanced packet analysis techniques, it cannot guarantee detection of all location access attempts due to the complex nature of modern network communications.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Text("Service Limitations:")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("• Cannot decrypt encrypted traffic content")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    Text("• May not detect location access through certain VPNs")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    Text("• Detection accuracy varies by network environment")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    Text("• Results are for informational purposes only")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+                )
         )
     }
     

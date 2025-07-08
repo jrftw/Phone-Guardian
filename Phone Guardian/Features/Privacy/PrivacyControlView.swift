@@ -4,8 +4,10 @@ import NetworkExtension
 
 struct PrivacyControlView: View {
     @StateObject private var vpnManager = VPNManager()
+    @StateObject private var subscriptionManager = INFILOCSubscriptionManager()
     @State private var showingVPNExplanation = false
     @State private var showingErrorAlert = false
+    @State private var showingSubscription = false
     @State private var errorMessage = ""
     @State private var tunnelStatus: [String: Any]?
     
@@ -147,29 +149,60 @@ struct PrivacyControlView: View {
             
             // Control Buttons
             VStack(spacing: 12) {
-                Button(action: toggleVPN) {
-                    HStack {
-                        Image(systemName: vpnManager.isVPNEnabled ? "stop.fill" : "play.fill")
-                        Text(vpnManager.isVPNEnabled ? "Stop Monitoring" : "Start Monitoring")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(vpnManager.isVPNEnabled ? Color.red : Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                }
-                .disabled(vpnManager.connectionStatus == .connecting || vpnManager.connectionStatus == .disconnecting)
-                
-                if vpnManager.isVPNEnabled {
-                    Button(action: clearDetections) {
+                if subscriptionManager.isSubscribed {
+                    Button(action: toggleVPN) {
                         HStack {
-                            Image(systemName: "trash")
-                            Text("Clear Detection History")
+                            Image(systemName: vpnManager.isVPNEnabled ? "stop.fill" : "play.fill")
+                            Text(vpnManager.isVPNEnabled ? "Stop Monitoring" : "Start Monitoring")
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color(.systemGray5))
-                        .foregroundColor(.primary)
+                        .background(vpnManager.isVPNEnabled ? Color.red : Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                    }
+                    .disabled(vpnManager.connectionStatus == .connecting || vpnManager.connectionStatus == .disconnecting)
+                    
+                    if vpnManager.isVPNEnabled {
+                        Button(action: clearDetections) {
+                            HStack {
+                                Image(systemName: "trash")
+                                Text("Clear Detection History")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(.systemGray5))
+                            .foregroundColor(.primary)
+                            .cornerRadius(10)
+                        }
+                    }
+                } else {
+                    // Subscription Required
+                    VStack(spacing: 12) {
+                        Button(action: { showingSubscription = true }) {
+                            HStack {
+                                Image(systemName: "lock.fill")
+                                Text("Subscribe to INFILOC")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        }
+                        
+                        VStack(spacing: 8) {
+                            Text("🔒 Premium Feature")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                            
+                            Text("INFILOC requires a subscription to access advanced location monitoring features.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
                         .cornerRadius(10)
                     }
                 }
@@ -194,6 +227,9 @@ struct PrivacyControlView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingVPNExplanation) {
             VPNExplanationView()
+        }
+        .sheet(isPresented: $showingSubscription) {
+            INFILOCSubscriptionView()
         }
         .alert("Error", isPresented: $showingErrorAlert) {
             Button("OK") { }
@@ -302,6 +338,11 @@ struct PrivacyControlView: View {
     
     // MARK: - Actions
     private func toggleVPN() {
+        guard subscriptionManager.isSubscribed else {
+            showingSubscription = true
+            return
+        }
+        
         Task {
             if vpnManager.isVPNEnabled {
                 await vpnManager.stopVPN()

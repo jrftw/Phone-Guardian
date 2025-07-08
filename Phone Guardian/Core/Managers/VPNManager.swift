@@ -68,6 +68,18 @@ class VPNManager: ObservableObject {
     
     // MARK: - Start/Stop VPN
     func startVPN() async {
+        // Check subscription status before starting VPN
+        let subscriptionManager = INFILOCSubscriptionManager()
+        await subscriptionManager.updateSubscriptionStatus()
+        
+        guard subscriptionManager.isSubscribed else {
+            logger.error("VPN start blocked - No active INFILOC subscription")
+            await MainActor.run {
+                self.lastError = "INFILOC subscription required"
+            }
+            return
+        }
+        
         guard let manager = manager else {
             await setupVPN()
             return
