@@ -66,7 +66,7 @@ struct PrivacyDebugView: View {
                         Button(action: refreshDebugInfo) {
                             HStack {
                                 Image(systemName: "arrow.clockwise")
-                                Text("Refresh Status")
+                                Text("Refresh Debug Info")
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -83,18 +83,6 @@ struct PrivacyDebugView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color.green)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                        }
-                        
-                        Button(action: simulateDetection) {
-                            HStack {
-                                Image(systemName: "plus.circle")
-                                Text("Simulate Detection")
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.orange)
                             .foregroundColor(.white)
                             .cornerRadius(8)
                         }
@@ -246,13 +234,6 @@ struct PrivacyDebugView: View {
                 refreshDebugInfo()
             }
         }
-    }
-    
-    private func simulateDetection() {
-        vpnManager.simulateDetection()
-        alertMessage = "Detection simulation completed"
-        showingAlert = true
-        refreshDebugInfo()
     }
     
     private func exportDebugLog() {

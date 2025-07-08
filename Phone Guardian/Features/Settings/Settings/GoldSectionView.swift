@@ -23,16 +23,16 @@ struct GoldSectionView: View {
                         .font(.headline)
 
                     NavigationLink(destination: TestKitView()) {
-                        FeatureRow(title: "Test Kit", icon: "checkmark.seal")
+                        FeatureRow(icon: "checkmark.seal", title: "Test Kit", description: "Run device diagnostics and privacy tests")
                     }
                     NavigationLink(destination: ReportsView()) {
-                        FeatureRow(title: "Export Reports to PDF", icon: "doc.text")
+                        FeatureRow(icon: "doc.text", title: "Export Reports to PDF", description: "Save and share detailed device reports")
                     }
                     NavigationLink(destination: NotificationsView()) {
-                        FeatureRow(title: "Notification Kit", icon: "bell.badge")
+                        FeatureRow(icon: "bell.badge", title: "Notification Kit", description: "Advanced privacy and security notifications")
                     }
                     NavigationLink(destination: UnlockPromptView(feature: "Clean Duplicates")) {
-                        FeatureRow(title: "Clean Duplicates", icon: "trash.circle")
+                        FeatureRow(icon: "trash.circle", title: "Clean Duplicates", description: "Find and remove duplicate files")
                     }
                 }
             } else {
@@ -40,11 +40,11 @@ struct GoldSectionView: View {
                     .font(.subheadline)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    FeatureRow(title: "Ad-Free Experience", icon: "nosign")
-                    FeatureRow(title: "Test Kit", icon: "checkmark.seal")
-                    FeatureRow(title: "Export Reports to PDF", icon: "doc.text")
-                    FeatureRow(title: "Notification Kit", icon: "bell.badge")
-                    FeatureRow(title: "Clean Duplicates", icon: "trash.circle")
+                    FeatureRow(icon: "nosign", title: "Ad-Free Experience", description: "Enjoy the app with no ads")
+                    FeatureRow(icon: "checkmark.seal", title: "Test Kit", description: "Run device diagnostics and privacy tests")
+                    FeatureRow(icon: "doc.text", title: "Export Reports to PDF", description: "Save and share detailed device reports")
+                    FeatureRow(icon: "bell.badge", title: "Notification Kit", description: "Advanced privacy and security notifications")
+                    FeatureRow(icon: "trash.circle", title: "Clean Duplicates", description: "Find and remove duplicate files")
                 }
 
                 HStack {

@@ -2,153 +2,33 @@ import SwiftUI
 import StoreKit
 
 struct INFILOCSubscriptionView: View {
-    @StateObject private var subscriptionManager = INFILOCSubscriptionManager()
+    @ObservedObject var subscriptionManager: INFILOCSubscriptionManager
     @Environment(\.dismiss) private var dismiss
+    
     @State private var selectedProduct: Product?
-    @State private var showingPurchaseAlert = false
-    @State private var showingRestoreAlert = false
     @State private var showingLegalDisclaimer = false
+    @State private var showingRestoreAlert = false
     
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 24) {
                     // Header
-                    VStack(spacing: 16) {
-                        Image(systemName: "shield.checkered")
-                            .font(.system(size: 60))
-                            .foregroundColor(.blue)
-                        
-                        VStack(spacing: 8) {
-                            Text("INFILOC Privacy Monitor")
-                                .font(.title)
-                                .fontWeight(.bold)
-                            
-                            Text("Advanced Location Access Detection")
-                                .font(.title3)
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        VStack(spacing: 12) {
-                            FeatureRow(icon: "location.slash", title: "Real-time Monitoring", description: "Detect location access attempts instantly")
-                            FeatureRow(icon: "bell", title: "Smart Notifications", description: "Get alerted when apps access your location")
-                            FeatureRow(icon: "lock.shield", title: "100% Private", description: "All processing done locally on your device")
-                            FeatureRow(icon: "chart.bar", title: "Detailed Analytics", description: "Track and analyze location access patterns")
-                        }
-                        .padding(.horizontal)
-                    }
+                    headerSection
                     
                     // Subscription Options
-                    VStack(spacing: 16) {
-                        Text("Choose Your Plan")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        
-                        if subscriptionManager.isLoading {
-                            ProgressView("Loading subscription options...")
-                                .padding()
-                        } else {
-                            LazyVGrid(columns: [
-                                GridItem(.flexible()),
-                                GridItem(.flexible())
-                            ], spacing: 16) {
-                                ForEach(subscriptionManager.availableProducts, id: \.id) { product in
-                                    SubscriptionCard(
-                                        product: product,
-                                        isSelected: selectedProduct?.id == product.id,
-                                        action: { selectedProduct = product }
-                                    )
-                                }
-                            }
-                            .padding(.horizontal)
-                        }
-                    }
+                    subscriptionOptionsSection
                     
-                    // Purchase Button
-                    if let selectedProduct = selectedProduct {
-                        VStack(spacing: 12) {
-                            Button(action: purchaseSubscription) {
-                                HStack {
-                                    if subscriptionManager.isLoading {
-                                        ProgressView()
-                                            .scaleEffect(0.8)
-                                            .foregroundColor(.white)
-                                    } else {
-                                        Image(systemName: "lock.open")
-                                    }
-                                    Text("Subscribe to INFILOC")
-                                        .fontWeight(.semibold)
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(12)
-                            }
-                            .disabled(subscriptionManager.isLoading)
-                            
-                            Text("\(selectedProduct.formattedPrice) per \(selectedProduct.subscriptionPeriod)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.horizontal)
-                    }
+                    // Features
+                    featuresSection
                     
                     // Legal Disclaimers
-                    VStack(spacing: 16) {
-                        Button(action: { showingLegalDisclaimer = true }) {
-                            HStack {
-                                Image(systemName: "exclamationmark.triangle")
-                                    .foregroundColor(.orange)
-                                Text("Important Legal Information")
-                                    .foregroundColor(.orange)
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("⚠️ Detection Accuracy Disclaimer")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.orange)
-                            
-                            Text("INFILOC location detection is not 100% accurate and may not catch all location access attempts. Detection depends on network traffic patterns and may be affected by encryption, VPN usage, or other network configurations.")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(8)
-                    }
-                    .padding(.horizontal)
+                    legalDisclaimersSection
                     
-                    // Additional Information
-                    VStack(spacing: 12) {
-                        Button(action: restorePurchases) {
-                            HStack {
-                                Image(systemName: "arrow.clockwise")
-                                Text("Restore Purchases")
-                            }
-                            .foregroundColor(.blue)
-                        }
-                        
-                        Button(action: subscriptionManager.openSubscriptionManagement) {
-                            HStack {
-                                Image(systemName: "gear")
-                                Text("Manage Subscription")
-                            }
-                            .foregroundColor(.blue)
-                        }
-                    }
-                    .padding(.horizontal)
+                    // Action Buttons
+                    actionButtons
                 }
-                .padding(.vertical)
+                .padding()
             }
             .navigationTitle("INFILOC Subscription")
             .navigationBarTitleDisplayMode(.inline)
@@ -159,6 +39,19 @@ struct INFILOCSubscriptionView: View {
                     }
                 }
             }
+            .alert("Restore Purchases", isPresented: $showingRestoreAlert) {
+                Button("Restore") {
+                    Task {
+                        await restorePurchases()
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("This will attempt to restore any previous INFILOC subscriptions.")
+            }
+            .sheet(isPresented: $showingLegalDisclaimer) {
+                LegalDisclaimerView()
+            }
             .alert("Purchase Error", isPresented: .constant(subscriptionManager.errorMessage != nil)) {
                 Button("OK") {
                     subscriptionManager.errorMessage = nil
@@ -168,20 +61,148 @@ struct INFILOCSubscriptionView: View {
                     Text(errorMessage)
                 }
             }
-            .alert("Restore Purchases", isPresented: $showingRestoreAlert) {
-                Button("Restore") {
-                    Task {
-                        await restorePurchases()
+        }
+    }
+    
+    // MARK: - Sections
+    private var headerSection: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "shield.checkered")
+                .font(.system(size: 60))
+                .foregroundColor(.blue)
+            
+            VStack(spacing: 8) {
+                Text("INFILOC Privacy Monitor")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                Text("Advanced Location Access Detection")
+                    .font(.title3)
+                    .foregroundColor(.secondary)
+            }
+            
+            VStack(spacing: 12) {
+                FeatureRow(icon: "location.slash", title: "Real-time Monitoring", description: "Detect location access attempts instantly")
+                FeatureRow(icon: "bell", title: "Smart Notifications", description: "Get alerted when apps access your location")
+                FeatureRow(icon: "lock.shield", title: "100% Private", description: "All processing done locally on your device")
+                FeatureRow(icon: "chart.bar", title: "Detailed Analytics", description: "Track and analyze location access patterns")
+            }
+            .padding(.horizontal)
+        }
+    }
+    
+    private var subscriptionOptionsSection: some View {
+        VStack(spacing: 16) {
+            Text("Choose Your Plan")
+                .font(.headline)
+                .fontWeight(.semibold)
+            
+            if subscriptionManager.isLoading {
+                ProgressView("Loading subscription options...")
+                    .padding()
+            } else {
+                LazyVGrid(columns: [
+                    GridItem(.flexible()),
+                    GridItem(.flexible())
+                ], spacing: 16) {
+                    ForEach(subscriptionManager.availableProducts, id: \.id) { product in
+                        SubscriptionCard(
+                            product: product,
+                            isSelected: selectedProduct?.id == product.id,
+                            action: { selectedProduct = product }
+                        )
                     }
                 }
-                Button("Cancel", role: .cancel) { }
-            } message: {
-                Text("This will restore any previous INFILOC subscriptions you may have purchased.")
-            }
-            .sheet(isPresented: $showingLegalDisclaimer) {
-                LegalDisclaimerView()
+                .padding(.horizontal)
             }
         }
+    }
+    
+    private var featuresSection: some View {
+        VStack(spacing: 12) {
+            Button(action: purchaseSubscription) {
+                HStack {
+                    if subscriptionManager.isLoading {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .foregroundColor(.white)
+                    } else {
+                        Image(systemName: "lock.open")
+                    }
+                    Text("Subscribe to INFILOC")
+                        .fontWeight(.semibold)
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(12)
+            }
+            .disabled(subscriptionManager.isLoading)
+            
+            if let selectedProduct = selectedProduct {
+                Text("\(selectedProduct.formattedPrice) per \(selectedProduct.subscriptionPeriod)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    private var legalDisclaimersSection: some View {
+        VStack(spacing: 16) {
+            Button(action: { showingLegalDisclaimer = true }) {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle")
+                        .foregroundColor(.orange)
+                    Text("Important Legal Information")
+                        .foregroundColor(.orange)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+            }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("⚠️ Detection Accuracy Disclaimer")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.orange)
+                
+                Text("INFILOC location detection is not 100% accurate and may not catch all location access attempts. Detection depends on network traffic patterns and may be affected by encryption, VPN usage, or other network configurations.")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+            .padding()
+            .background(Color(.systemGray6))
+            .cornerRadius(8)
+        }
+        .padding(.horizontal)
+    }
+    
+    private var actionButtons: some View {
+        VStack(spacing: 12) {
+            Button(action: restorePurchases) {
+                HStack {
+                    Image(systemName: "arrow.clockwise")
+                    Text("Restore Purchases")
+                }
+                .foregroundColor(.blue)
+            }
+            
+            Button(action: subscriptionManager.openSubscriptionManagement) {
+                HStack {
+                    Image(systemName: "gear")
+                    Text("Manage Subscription")
+                }
+                .foregroundColor(.blue)
+            }
+        }
+        .padding(.horizontal)
     }
     
     // MARK: - Actions
@@ -191,6 +212,8 @@ struct INFILOCSubscriptionView: View {
         Task {
             let success = await subscriptionManager.purchase(selectedProduct)
             if success {
+                // Update subscription status and dismiss
+                await subscriptionManager.updateSubscriptionStatus()
                 dismiss()
             }
         }
@@ -203,6 +226,8 @@ struct INFILOCSubscriptionView: View {
     private func restorePurchases() async {
         let success = await subscriptionManager.restorePurchases()
         if success {
+            // Update subscription status and dismiss
+            await subscriptionManager.updateSubscriptionStatus()
             dismiss()
         }
     }
@@ -402,5 +427,5 @@ struct BulletPoint: View {
 }
 
 #Preview {
-    INFILOCSubscriptionView()
+    INFILOCSubscriptionView(subscriptionManager: INFILOCSubscriptionManager())
 } 

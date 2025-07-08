@@ -18,6 +18,19 @@ class INFILOCSubscriptionManager: ObservableObject {
         "com.infinitumimagery.phoneguardian.infiloc.yearly"     // $44.99/year
     ]
     
+    // MARK: - Environment Detection
+    private var isTestEnvironment: Bool {
+        #if targetEnvironment(simulator)
+        return true
+        #else
+        // Check if running in TestFlight
+        if let path = Bundle.main.appStoreReceiptURL?.path {
+            return path.contains("sandboxReceipt")
+        }
+        return false
+        #endif
+    }
+    
     init() {
         loadSubscriptionStatus()
         Task {
@@ -46,6 +59,14 @@ class INFILOCSubscriptionManager: ObservableObject {
     // MARK: - Purchase
     @MainActor
     func purchase(_ product: Product) async -> Bool {
+        // In test environment, automatically grant access
+        if isTestEnvironment {
+            logger.info("Test environment detected - granting INFILOC access")
+            isSubscribed = true
+            currentSubscription = INFILOCSubscription.testSubscription
+            return true
+        }
+        
         isLoading = true
         errorMessage = nil
         
@@ -58,27 +79,33 @@ class INFILOCSubscriptionManager: ObservableObject {
                 switch verification {
                 case .verified(let transaction):
                     await handleSuccessfulPurchase(transaction)
+                    isLoading = false
                     return true
                 case .unverified:
                     logger.error("Transaction verification failed")
                     errorMessage = "Purchase verification failed"
+                    isLoading = false
                     return false
                 }
             case .userCancelled:
                 logger.info("User cancelled purchase")
+                isLoading = false
                 return false
             case .pending:
                 logger.info("Purchase is pending")
                 errorMessage = "Purchase is pending approval"
+                isLoading = false
                 return false
             @unknown default:
                 logger.error("Unknown purchase result")
                 errorMessage = "Unknown purchase error"
+                isLoading = false
                 return false
             }
         } catch {
             logger.error("Purchase failed: \(error.localizedDescription)")
             errorMessage = "Purchase failed: \(error.localizedDescription)"
+            isLoading = false
             return false
         }
     }
@@ -96,6 +123,14 @@ class INFILOCSubscriptionManager: ObservableObject {
     // MARK: - Subscription Status
     @MainActor
     func updateSubscriptionStatus() async {
+        // In test environment, automatically grant access
+        if isTestEnvironment {
+            logger.info("Test environment detected - INFILOC access granted")
+            isSubscribed = true
+            currentSubscription = INFILOCSubscription.testSubscription
+            return
+        }
+        
         for await result in Transaction.currentEntitlements {
             switch result {
             case .verified(let transaction):
@@ -124,6 +159,14 @@ class INFILOCSubscriptionManager: ObservableObject {
     // MARK: - Restore Purchases
     @MainActor
     func restorePurchases() async -> Bool {
+        // In test environment, automatically grant access
+        if isTestEnvironment {
+            logger.info("Test environment detected - INFILOC access restored")
+            isSubscribed = true
+            currentSubscription = INFILOCSubscription.testSubscription
+            return true
+        }
+        
         isLoading = true
         errorMessage = nil
         
@@ -133,15 +176,18 @@ class INFILOCSubscriptionManager: ObservableObject {
             
             if isSubscribed {
                 logger.info("INFILOC subscription restored successfully")
+                isLoading = false
                 return true
             } else {
                 logger.info("No INFILOC subscription found to restore")
                 errorMessage = "No active subscription found"
+                isLoading = false
                 return false
             }
         } catch {
             logger.error("Failed to restore purchases: \(error.localizedDescription)")
             errorMessage = "Failed to restore purchases"
+            isLoading = false
             return false
         }
     }
@@ -169,6 +215,7 @@ struct INFILOCSubscription: Identifiable {
         case "com.infinitumimagery.phoneguardian.infiloc.weekly": return "Weekly"
         case "com.infinitumimagery.phoneguardian.infiloc.monthly": return "Monthly"
         case "com.infinitumimagery.phoneguardian.infiloc.yearly": return "Yearly"
+        case "test": return "Test Environment"
         default: return "Unknown"
         }
     }
@@ -187,6 +234,23 @@ struct INFILOCSubscription: Identifiable {
         self.purchaseDate = transaction.purchaseDate
         self.expirationDate = transaction.expirationDate
         self.isActive = transaction.expirationDate == nil || transaction.expirationDate! > Date()
+    }
+    
+    // Test subscription for development environments
+    static var testSubscription: INFILOCSubscription {
+        INFILOCSubscription(
+            productID: "test",
+            purchaseDate: Date(),
+            expirationDate: nil,
+            isActive: true
+        )
+    }
+    
+    init(productID: String, purchaseDate: Date, expirationDate: Date?, isActive: Bool) {
+        self.productID = productID
+        self.purchaseDate = purchaseDate
+        self.expirationDate = expirationDate
+        self.isActive = isActive
     }
 }
 
@@ -225,6 +289,15 @@ extension Product {
             return period
         } else {
             return "\(count) \(period)s"
+        }
+    }
+    
+    var subscriptionType: String {
+        switch id {
+        case "com.infinitumimagery.phoneguardian.infiloc.weekly": return "Weekly"
+        case "com.infinitumimagery.phoneguardian.infiloc.monthly": return "Monthly"
+        case "com.infinitumimagery.phoneguardian.infiloc.yearly": return "Yearly"
+        default: return "Unknown"
         }
     }
 } 

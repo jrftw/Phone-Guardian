@@ -54,6 +54,22 @@ struct PrivacyControlView: View {
                     }
                 }
                 
+                // Test Environment Indicator
+                if vpnManager.isTestEnvironment {
+                    HStack {
+                        Image(systemName: "iphone.gen3")
+                            .foregroundColor(.orange)
+                        Text("Test Environment - Full Access Granted")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .background(Color.orange.opacity(0.1))
+                    .cornerRadius(8)
+                }
+                
                 // Connection Details
                 if vpnManager.isVPNEnabled {
                     VStack(spacing: 8) {
@@ -226,10 +242,10 @@ struct PrivacyControlView: View {
         .navigationTitle("Privacy Monitor")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingVPNExplanation) {
-            VPNExplanationView()
+            VPNExplanationView(showingPermission: $showingVPNExplanation)
         }
         .sheet(isPresented: $showingSubscription) {
-            INFILOCSubscriptionView()
+            INFILOCSubscriptionView(subscriptionManager: subscriptionManager)
         }
         .alert("Error", isPresented: $showingErrorAlert) {
             Button("OK") { }
@@ -238,9 +254,21 @@ struct PrivacyControlView: View {
         }
         .onAppear {
             loadTunnelStatus()
+            // Update subscription status when view appears
+            Task {
+                await subscriptionManager.updateSubscriptionStatus()
+            }
         }
         .onChange(of: vpnManager.connectionStatus) { _ in
             loadTunnelStatus()
+        }
+        .onChange(of: subscriptionManager.isSubscribed) { isSubscribed in
+            // Automatically start VPN if subscription is granted
+            if isSubscribed && !vpnManager.isVPNEnabled {
+                Task {
+                    await vpnManager.startVPN()
+                }
+            }
         }
     }
     

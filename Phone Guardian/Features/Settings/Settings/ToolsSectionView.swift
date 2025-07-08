@@ -23,16 +23,48 @@ struct ToolsSectionView: View {
                         .font(.headline)
 
                     NavigationLink(destination: NetworkSpeedTestView()) {
-                        FeatureRow(title: "Network Speed Test", icon: "speedometer")
+                        HStack(spacing: 10) {
+                            Image(systemName: "speedometer")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.blue)
+                            Text("Network Speed Test")
+                                .font(.body)
+                        }
+                        .padding(.vertical, 5)
                     }
                     NavigationLink(destination: ScannerView()) {
-                        FeatureRow(title: "Scanner (PDF, Docs, etc.)", icon: "doc.text.viewfinder")
+                        HStack(spacing: 10) {
+                            Image(systemName: "doc.text.viewfinder")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.blue)
+                            Text("Scanner (PDF, Docs, etc.)")
+                                .font(.body)
+                        }
+                        .padding(.vertical, 5)
                     }
                     NavigationLink(destination: DocumentConversionView()) {
-                        FeatureRow(title: "Document Conversion", icon: "arrow.2.squarepath")
+                        HStack(spacing: 10) {
+                            Image(systemName: "arrow.2.squarepath")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.blue)
+                            Text("Document Conversion")
+                                .font(.body)
+                        }
+                        .padding(.vertical, 5)
                     }
                     NavigationLink(destination: PrivateStorageView()) {
-                        FeatureRow(title: "Private Storage for Files", icon: "lock.shield")
+                        HStack(spacing: 10) {
+                            Image(systemName: "lock.shield")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.blue)
+                            Text("Private Storage for Files")
+                                .font(.body)
+                        }
+                        .padding(.vertical, 5)
                     }
                 }
             } else {
@@ -40,10 +72,42 @@ struct ToolsSectionView: View {
                     .font(.subheadline)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    FeatureRow(title: "Network Speed Test", icon: "speedometer")
-                    FeatureRow(title: "Scanner (PDF, Docs, etc.)", icon: "doc.text.viewfinder")
-                    FeatureRow(title: "Document Conversion", icon: "arrow.2.squarepath")
-                    FeatureRow(title: "Private Storage for Files", icon: "lock.shield")
+                    HStack(spacing: 10) {
+                        Image(systemName: "speedometer")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.blue)
+                        Text("Network Speed Test")
+                            .font(.body)
+                    }
+                    .padding(.vertical, 5)
+                    HStack(spacing: 10) {
+                        Image(systemName: "doc.text.viewfinder")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.blue)
+                        Text("Scanner (PDF, Docs, etc.)")
+                            .font(.body)
+                    }
+                    .padding(.vertical, 5)
+                    HStack(spacing: 10) {
+                        Image(systemName: "arrow.2.squarepath")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.blue)
+                        Text("Document Conversion")
+                            .font(.body)
+                    }
+                    .padding(.vertical, 5)
+                    HStack(spacing: 10) {
+                        Image(systemName: "lock.shield")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.blue)
+                        Text("Private Storage for Files")
+                            .font(.body)
+                    }
+                    .padding(.vertical, 5)
                 }
 
                 HStack {
@@ -76,22 +140,5 @@ struct ToolsSectionView: View {
         .background(Color(UIColor.systemBackground))
         .cornerRadius(12)
         .shadow(color: Color(UIColor.black).opacity(0.1), radius: 4, x: 0, y: 2)
-    }
-}
-
-struct FeatureRow: View {
-    let title: String
-    let icon: String
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: icon)
-                .resizable()
-                .frame(width: 20, height: 20)
-                .foregroundColor(.blue)
-            Text(title)
-                .font(.body)
-        }
-        .padding(.vertical, 5)
     }
 }
