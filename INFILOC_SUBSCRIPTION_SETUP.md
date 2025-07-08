@@ -10,14 +10,14 @@ This guide provides step-by-step instructions for setting up the INFILOC subscri
 2. Navigate to your app
 3. Go to **Features** → **In-App Purchases**
 4. Click **+** to create a new subscription group
-5. Name it: `INFILOC_Privacy_Monitor`
+5. Name it: `com.infinitumimagery.phoneguardian.infiloc.subscriptiongroup`
 6. Set the reference name: `INFILOC Privacy Monitor`
 
 ### 2. Create Subscription Products
 
 #### Weekly Subscription ($1.99/week)
 1. Click **+** to add a new subscription
-2. **Product ID**: `infiloc_weekly`
+2. **Product ID**: `com.infinitumimagery.phoneguardian.infiloc.weekly`
 3. **Reference Name**: `INFILOC Weekly`
 4. **Subscription Duration**: 1 Week
 5. **Price**: $1.99 USD
@@ -28,7 +28,7 @@ This guide provides step-by-step instructions for setting up the INFILOC subscri
 
 #### Monthly Subscription ($3.99/month)
 1. Click **+** to add a new subscription
-2. **Product ID**: `infiloc_monthly`
+2. **Product ID**: `com.infinitumimagery.phoneguardian.infiloc.monthly`
 3. **Reference Name**: `INFILOC Monthly`
 4. **Subscription Duration**: 1 Month
 5. **Price**: $3.99 USD
@@ -39,7 +39,7 @@ This guide provides step-by-step instructions for setting up the INFILOC subscri
 
 #### Yearly Subscription ($44.99/year)
 1. Click **+** to add a new subscription
-2. **Product ID**: `infiloc_yearly`
+2. **Product ID**: `com.infinitumimagery.phoneguardian.infiloc.yearly`
 3. **Reference Name**: `INFILOC Yearly`
 4. **Subscription Duration**: 1 Year
 5. **Price**: $44.99 USD
@@ -101,96 +101,96 @@ This guide provides step-by-step instructions for setting up the INFILOC subscri
       }
     ]
   },
-  "subscriptionGroups" : [
-    {
-      "id" : "INFILOC_Privacy_Monitor",
-      "localizations" : [
+        "subscriptionGroups" : [
         {
-          "description" : "Advanced privacy monitoring for location access detection",
-          "displayName" : "INFILOC Privacy Monitor",
-          "locale" : "en_US"
+          "id" : "com.infinitumimagery.phoneguardian.infiloc.subscriptiongroup",
+          "localizations" : [
+            {
+              "description" : "Advanced privacy monitoring for location access detection",
+              "displayName" : "INFILOC Privacy Monitor",
+              "locale" : "en_US"
+            }
+          ],
+          "name" : "INFILOC Privacy Monitor",
+          "subscriptions" : [
+            {
+              "adHocOffers" : [
+
+              ],
+              "codeOffers" : [
+
+              ],
+              "displayPrice" : "1.99",
+              "familyShareable" : false,
+              "groupNumber" : 1,
+              "internalID" : "1234567890",
+              "introductoryOffer" : null,
+              "localizations" : [
+                {
+                  "description" : "Weekly access to INFILOC privacy monitoring features",
+                  "displayName" : "INFILOC Weekly",
+                  "locale" : "en_US"
+                }
+              ],
+              "productID" : "com.infinitumimagery.phoneguardian.infiloc.weekly",
+              "recurringSubscriptionPeriod" : "P1W",
+              "referenceName" : "INFILOC Weekly",
+              "subscriptionGroupID" : "com.infinitumimagery.phoneguardian.infiloc.subscriptiongroup",
+              "type" : "RecurringSubscription"
+            },
+            {
+              "adHocOffers" : [
+
+              ],
+              "codeOffers" : [
+
+              ],
+              "displayPrice" : "3.99",
+              "familyShareable" : false,
+              "groupNumber" : 2,
+              "internalID" : "1234567891",
+              "introductoryOffer" : null,
+              "localizations" : [
+                {
+                  "description" : "Monthly access to INFILOC privacy monitoring features",
+                  "displayName" : "INFILOC Monthly",
+                  "locale" : "en_US"
+                }
+              ],
+              "productID" : "com.infinitumimagery.phoneguardian.infiloc.monthly",
+              "recurringSubscriptionPeriod" : "P1M",
+              "referenceName" : "INFILOC Monthly",
+              "subscriptionGroupID" : "com.infinitumimagery.phoneguardian.infiloc.subscriptiongroup",
+              "type" : "RecurringSubscription"
+            },
+            {
+              "adHocOffers" : [
+
+              ],
+              "codeOffers" : [
+
+              ],
+              "displayPrice" : "44.99",
+              "familyShareable" : false,
+              "groupNumber" : 3,
+              "internalID" : "1234567892",
+              "introductoryOffer" : null,
+              "localizations" : [
+                {
+                  "description" : "Annual access to INFILOC privacy monitoring features (Save 40%)",
+                  "displayName" : "INFILOC Yearly",
+                  "locale" : "en_US"
+                }
+              ],
+              "productID" : "com.infinitumimagery.phoneguardian.infiloc.yearly",
+              "recurringSubscriptionPeriod" : "P1Y",
+              "referenceName" : "INFILOC Yearly",
+              "subscriptionGroupID" : "com.infinitumimagery.phoneguardian.infiloc.subscriptiongroup",
+              "type" : "RecurringSubscription"
+            }
+          ]
         }
       ],
-      "name" : "INFILOC Privacy Monitor",
-      "subscriptions" : [
-        {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "1.99",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "1234567890",
-          "introductoryOffer" : null,
-          "localizations" : [
-            {
-              "description" : "Weekly access to INFILOC privacy monitoring features",
-              "displayName" : "INFILOC Weekly",
-              "locale" : "en_US"
-            }
-          ],
-          "productID" : "infiloc_weekly",
-          "recurringSubscriptionPeriod" : "P1W",
-          "referenceName" : "INFILOC Weekly",
-          "subscriptionGroupID" : "INFILOC_Privacy_Monitor",
-          "type" : "RecurringSubscription"
-        },
-        {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "3.99",
-          "familyShareable" : false,
-          "groupNumber" : 2,
-          "internalID" : "1234567891",
-          "introductoryOffer" : null,
-          "localizations" : [
-            {
-              "description" : "Monthly access to INFILOC privacy monitoring features",
-              "displayName" : "INFILOC Monthly",
-              "locale" : "en_US"
-            }
-          ],
-          "productID" : "infiloc_monthly",
-          "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "INFILOC Monthly",
-          "subscriptionGroupID" : "INFILOC_Privacy_Monitor",
-          "type" : "RecurringSubscription"
-        },
-        {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "44.99",
-          "familyShareable" : false,
-          "groupNumber" : 3,
-          "internalID" : "1234567892",
-          "introductoryOffer" : null,
-          "localizations" : [
-            {
-              "description" : "Annual access to INFILOC privacy monitoring features (Save 40%)",
-              "displayName" : "INFILOC Yearly",
-              "locale" : "en_US"
-            }
-          ],
-          "productID" : "infiloc_yearly",
-          "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "INFILOC Yearly",
-          "subscriptionGroupID" : "INFILOC_Privacy_Monitor",
-          "type" : "RecurringSubscription"
-        }
-      ]
-    }
-  ],
   "version" : {
     "major" : 3,
     "minor" : 0

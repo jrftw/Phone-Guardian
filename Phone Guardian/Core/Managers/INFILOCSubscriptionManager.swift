@@ -13,9 +13,9 @@ class INFILOCSubscriptionManager: ObservableObject {
     
     // INFILOC Product IDs
     private let productIDs = [
-        "infiloc_weekly",    // $1.99/week
-        "infiloc_monthly",   // $3.99/month
-        "infiloc_yearly"     // $44.99/year
+        "com.infinitumimagery.phoneguardian.infiloc.weekly",    // $1.99/week
+        "com.infinitumimagery.phoneguardian.infiloc.monthly",   // $3.99/month
+        "com.infinitumimagery.phoneguardian.infiloc.yearly"     // $44.99/year
     ]
     
     init() {
@@ -166,9 +166,9 @@ struct INFILOCSubscription: Identifiable {
     
     var subscriptionType: String {
         switch productID {
-        case "infiloc_weekly": return "Weekly"
-        case "infiloc_monthly": return "Monthly"
-        case "infiloc_yearly": return "Yearly"
+        case "com.infinitumimagery.phoneguardian.infiloc.weekly": return "Weekly"
+        case "com.infinitumimagery.phoneguardian.infiloc.monthly": return "Monthly"
+        case "com.infinitumimagery.phoneguardian.infiloc.yearly": return "Yearly"
         default: return "Unknown"
         }
     }
