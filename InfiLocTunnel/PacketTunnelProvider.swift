@@ -181,20 +181,18 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
     
     private func checkConnectionHealth() {
-        guard isMonitoring else { return }
+        guard self.isMonitoring else { return }
         
-        // Check if packet flow is still active
-        if packetFlow == nil {
-            logger.warning("Packet flow lost - Attempting to restart")
-            restartPacketProcessing()
-        }
+        // Check if packet flow is still active (packetFlow is not optional in NEPacketTunnelProvider)
+        // Since packetFlow is not optional, we don't need to check for nil
+        // Just verify that monitoring is still active
         
         // Log connection status for debugging
-        logger.info("Connection health check - Monitoring active: \(isMonitoring)")
+        logger.info("Connection health check - Monitoring active: \(self.isMonitoring)")
     }
     
     private func restartPacketProcessing() {
-        guard isMonitoring else { return }
+        guard self.isMonitoring else { return }
         
         logger.info("Restarting packet processing")
         startPacketProcessing()
@@ -224,7 +222,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
     
     private func readPacketsFromTunnel(packetFlow: NEPacketTunnelFlow) {
-        guard isMonitoring else { return }
+        guard self.isMonitoring else { return }
         
         packetFlow.readPackets { [weak self] packets, protocols in
             guard let self = self, self.isMonitoring else { return }
