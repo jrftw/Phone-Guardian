@@ -70,7 +70,7 @@ class VPNManager: ObservableObject {
     func startVPN() async {
         // Check subscription status before starting VPN
         let subscriptionManager = INFILOCSubscriptionManager()
-        await subscriptionManager.updateSubscriptionStatus()
+        subscriptionManager.updateSubscriptionStatus()
         
         guard subscriptionManager.isSubscribed else {
             logger.error("VPN start blocked - No active INFILOC subscription")
@@ -177,12 +177,13 @@ class VPNManager: ObservableObject {
     // MARK: - Tunnel Communication
     func getTunnelStatus() async -> [String: Any]? {
         guard let manager = manager,
-              manager.connection.status == .connected else {
+              manager.connection.status == .connected,
+              let session = manager.connection as? NETunnelProviderSession else {
             return nil
         }
         
         do {
-            let response = try await manager.connection.sendProviderMessage(Data("get_status".utf8))
+            let response = try await session.sendProviderMessage(Data("get_status".utf8))
             if let responseData = response,
                let statusDict = try? JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
                 return statusDict
@@ -196,12 +197,13 @@ class VPNManager: ObservableObject {
     
     func clearTunnelDetections() async {
         guard let manager = manager,
-              manager.connection.status == .connected else {
+              manager.connection.status == .connected,
+              let session = manager.connection as? NETunnelProviderSession else {
             return
         }
         
         do {
-            _ = try await manager.connection.sendProviderMessage(Data("clear_detections".utf8))
+            _ = try await session.sendProviderMessage(Data("clear_detections".utf8))
             logger.info("Tunnel detections cleared")
         } catch {
             logger.error("Failed to clear tunnel detections: \(error.localizedDescription)")
@@ -352,13 +354,14 @@ class VPNManager: ObservableObject {
     
     // MARK: - Debug and Testing Utilities
     func testTunnelConnection() async -> Bool {
-        guard let manager = manager else {
+        guard let manager = manager,
+              let session = manager.connection as? NETunnelProviderSession else {
             logger.error("No VPN manager available for testing")
             return false
         }
         
         do {
-            let response = try await manager.connection.sendProviderMessage(Data("test_connection".utf8))
+            let response = try await session.sendProviderMessage(Data("test_connection".utf8))
             if let responseData = response,
                let responseString = String(data: responseData, encoding: .utf8) {
                 logger.info("Tunnel test response: \(responseString)")

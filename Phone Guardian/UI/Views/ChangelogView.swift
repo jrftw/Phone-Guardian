@@ -16,7 +16,7 @@ struct ChangelogView: View {
                         
                     }
                 }
-                Section(header: Text("Version 1.13 - Builds 1")) {
+                Section(header: Text("Version 1.13 - Builds 1, 2 & 3")) {
                     VStack(alignment: .leading, spacing: 5) {
                         Text("**Build 1**:")
                         Text("• Bug Fixes")
